@@ -87,7 +87,7 @@ const poolLeaderboardController = function(dataService, contestants, $interval, 
 		this.stop = $interval(() => refreshData(), refreshTime);		
 	};
 
-	this.$onDestory = () => {
+	this.$onDestroy = () => {
 		this.stop();
 	};
 
@@ -134,7 +134,7 @@ const golferLeaderboardController = function(dataService, $interval, refreshTime
 		this.stop = $interval(() => refreshData(), refreshTime);		
 	};
 
-	this.$onDestory = () => {
+	this.$onDestroy = () => {
 		this.stop();
 	};
 };
