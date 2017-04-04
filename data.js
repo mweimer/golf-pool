@@ -1,4 +1,4 @@
-const golfers = [
+const golferData = [
 	{ id: 1, firstName: 'Dustin', lastName: 'Johnson', tier: 'A' },
 	{ id: 2, firstName: 'Rory', lastName: 'McIlroy', tier: 'A' },
 	{ id: 3, firstName: 'Jordan', lastName: 'Spieth', tier: 'A' },
@@ -33,7 +33,7 @@ const golfers = [
 
 	{ id: 31, firstName: 'Alexander', lastName: 'Noren', tier: 'C' },
 	{ id: 32, firstName: 'Branden', lastName: 'Grace', tier: 'C' },
-	{ Id: 33, firstName: 'J.B.', lastName: 'Holmes', tier: 'C' },
+	{ id: 33, firstName: 'J.B.', lastName: 'Holmes', tier: 'C' },
 	{ id: 34, firstName: 'Bill', lastName: 'Haas', tier: 'C' },
 	{ id: 35, firstName: 'Jimmy', lastName: 'Walker', tier: 'C' },
 	{ id: 36, firstName: 'Danny', lastName: 'Willett', tier: 'C' },
@@ -99,6 +99,7 @@ const golfers = [
 ];
 
 
-const players = [
-	{ name: 'Matt Weimer', entries: [[3, 28, 49, 69], [1, 17, 45, 62], [6, 15, 41, 63]] }
-]
+const contestantData = [
+	{ name: 'Matt Weimer', entries: [[3, 28, 49, 71], [1, 17, 45, 62], [6, 15, 32, 76]] },
+	{ name: 'Cameron Weimer', entries: [[1, 11, 34, 58], [2, 12, 32, 64], [3, 13, 33, 66]] }
+];

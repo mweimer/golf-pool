@@ -1,0 +1,13 @@
+{
+  "name": "golf-pool",
+  "scripts": {
+    "start": "browser-sync start --server --files '*.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mweimer/golf-pool.git"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.8"
+  }
+}
