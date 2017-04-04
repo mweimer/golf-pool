@@ -16,15 +16,15 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 	});
 
 const poolLeaderboardTemplate = `
-<table class="table table-striped">
+<table class="table">
 	<thead><tr><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>Total Score</th><th>To Par</th></tr></thead>
 	<tbody>
-		<tr ng-repeat="entry in $ctrl.entries track by $index" ng-class="{'danger': entry.isDQ}">
+		<tr ng-repeat="entry in $ctrl.entries track by $index" ng-class="{danger: entry.isDQ}">
 			<td ng-bind="entry.name"></td>
-			<td ng-bind-html="$ctrl.getGolferInfo(entry, 0)"></td>
-			<td ng-bind-html="$ctrl.getGolferInfo(entry, 1)"></td>
-			<td ng-bind-html="$ctrl.getGolferInfo(entry, 2)"></td>
-			<td ng-bind-html="$ctrl.getGolferInfo(entry, 3)"></td>
+			<td ng-class="entry.golfers[0].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 0)"></td>
+			<td ng-class="entry.golfers[1].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 1)"></td>
+			<td ng-class="entry.golfers[2].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 2)"></td>
+			<td ng-class="entry.golfers[3].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 3)"></td>
 			<td ng-bind="entry.overallTotalScore"></td>
 			<th ng-bind="entry.overallToPar"></th>
 		</tr>
@@ -40,12 +40,11 @@ const poolLeaderboardController = function(dataService, contestants, $interval, 
 	const addDataToEntries = (golfersWithScores) => {
 		const entriesWithData = entries.map(entry => {
 			const entryGolfers = entry.golferIds.map(gid => angular.copy(golfersWithScores.find(golfer => golfer.id === gid)));
-			const worstScore = Math.max(...entryGolfers.map(g => g.score.relativeScore));
-
 			let overallRelativeScore, overallTotalScore, overallToPar;
-
 			const isDQ = entryGolfers.filter(golfer => golfer.score.isDNF).length > 1;
+
 			if (!isDQ) {
+				const worstScore = Math.max(...entryGolfers.map(g => g.score.relativeScore));
 				entryGolfers.find(golfer => golfer.score.relativeScore === worstScore).throwaway = true;
 				overallRelativeScore = entryGolfers
 					.filter(golfer => golfer.throwaway !== true)
@@ -82,22 +81,29 @@ const poolLeaderboardController = function(dataService, contestants, $interval, 
 		});
 	};
 
+	let stop;
 	this.$onInit = () => {
 		refreshData();
-		this.stop = $interval(() => refreshData(), refreshTime);		
+		stop = $interval(() => refreshData(), refreshTime);		
 	};
 
 	this.$onDestroy = () => {
-		this.stop();
+		if (angular.isDefined(stop)) {
+	        $interval.cancel(stop);
+	        stop = undefined;
+        }
 	};
 
 	this.getGolferInfo = (entry, index) => {
 		const golfer = entry.golfers[index];
-		if (golfer.throwaway || entry.isDQ) {
-			return `${golfer.firstName} ${golfer.lastName}: ${golfer.score.toPar}`;
-		} else {
-			return `<b>${golfer.firstName} ${golfer.lastName}: ${golfer.score.toPar}</b>`;
-		}
+
+		const info = `${golfer.score.shortName}${golfer.isAmateur ? ' (A)' : ''}: ${golfer.score.toPar}`
+		return info;
+		// if (golfer.throwaway || entry.isDQ) {
+		// 	return info;
+		// } else {
+		// 	return `<b>${info}</b>`;
+		// }
 	};
 };
 
@@ -111,7 +117,7 @@ const golferLeaderboardTemplate = `
 	<tbody>
 		<tr ng-repeat="golfer in $ctrl.golfers track by $index">
 			<td ng-bind="golfer.score.position"></td>
-			<td ng-bind="golfer.firstName + ' ' + golfer.lastName"></td>
+			<td ng-bind="$ctrl.getName(golfer)"></td>
 			<td ng-bind="golfer.score.toPar"></td>
 			<td ng-bind="golfer.score.round1Score"></td>
 			<td ng-bind="golfer.score.round2Score"></td>
@@ -129,13 +135,21 @@ const golferLeaderboardController = function(dataService, $interval, refreshTime
 		});
 	};
 
+	let stop;
 	this.$onInit = () => {
 		refreshData();
-		this.stop = $interval(() => refreshData(), refreshTime);		
+		stop = $interval(() => refreshData(), refreshTime);		
 	};
 
 	this.$onDestroy = () => {
-		this.stop();
+		if (angular.isDefined(stop)) {
+	        $interval.cancel(stop);
+	        stop = undefined;
+        }
+	};
+
+	this.getName = golfer => {
+		return `${golfer.firstName} ${golfer.lastName}${golfer.isAmateur ? ' (A)' : ''}`;
 	};
 };
 
@@ -171,7 +185,7 @@ const dataService = function($http, golfers, contestants) {
 				if (score) {
 					golferCopy.score = score;
 				} else {
-					golferCopy.score = emptyScore();
+					golferCopy.score = emptyScore(golfer);
 				}
 
 				return golferCopy;
@@ -182,7 +196,7 @@ const dataService = function($http, golfers, contestants) {
 		});
 	};
 
-	const emptyScore = () => {
+	const emptyScore = (golfer) => {
 		return {
 			index: Number.MAX_SAFE_INTEGER,
 			position: '--',
@@ -197,7 +211,7 @@ const dataService = function($http, golfers, contestants) {
 			totalScore: Number.MAX_SAFE_INTEGER,
 			totalScoreDisplay: '--',
 			fullName: '',
-			shortName: '',
+			shortName: `${golfer.firstName[0]}. golfer.lastName`,
 			isDNF: true
 		}
 	}
