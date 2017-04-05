@@ -17,7 +17,9 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 
 const poolLeaderboardTemplate = `
 <table class="table">
-	<thead><tr><th>Pos</th><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>Total Score</th><th>To Par</th></tr></thead>
+	<thead><tr>
+		<th>Pos</th><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>Total Score</th><th>To Par</th>
+	</tr></thead>
 	<tbody>
 		<tr ng-repeat="entry in $ctrl.entries track by $index" ng-class="{danger: entry.isDQ}">
 			<td ng-bind="entry.position"></td>
@@ -124,7 +126,9 @@ app.component('poolLeaderboard', {
 });
 const golferLeaderboardTemplate = `
 <table class="table table-striped">
-	<thead><tr><th>Pos</th><th>Player</th><th>To Par</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Tot</th></tr></thead>
+	<thead><tr>
+		<th>Pos</th><th>Player</th><th>To Par</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Tot</th>
+	</tr></thead>
 	<tbody>
 		<tr ng-repeat="golfer in $ctrl.golfers track by $index">
 			<td ng-bind="golfer.score.position"></td>
@@ -174,7 +178,7 @@ const dataService = function($http, golfers, contestants) {
 	this.get = () => {
 		return $http({
 			method: 'GET',
-			url: 'http://www.espn.com/golf/leaderboard?tournamentId=2493'
+			url: '/test-leaderboard.html' //http://www.espn.com/golf/leaderboard?tournamentId=2700
 		}).then(response => {
 			const scorePage = $(response.data);
 			const golferRows = scorePage.find('.leaderboard-table .player-overview');
@@ -188,7 +192,7 @@ const dataService = function($http, golfers, contestants) {
 				const firstName = golfer.firstName.toLowerCase();
 				const lastName = golfer.lastName.toLowerCase();
 				const score = scores.find(score => {
-					const fullName = score.fullName.toLowerCase()
+					const fullName = score.fullName.toLowerCase();
 					return fullName.includes(firstName) && fullName.includes(lastName);
 				});
 
