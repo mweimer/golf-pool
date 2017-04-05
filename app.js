@@ -17,9 +17,10 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 
 const poolLeaderboardTemplate = `
 <table class="table">
-	<thead><tr><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>Total Score</th><th>To Par</th></tr></thead>
+	<thead><tr><th>Pos</th><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>Total Score</th><th>To Par</th></tr></thead>
 	<tbody>
 		<tr ng-repeat="entry in $ctrl.entries track by $index" ng-class="{danger: entry.isDQ}">
+			<td ng-bind="entry.position"></td>
 			<td ng-bind="entry.name"></td>
 			<td ng-class="entry.golfers[0].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 0)"></td>
 			<td ng-class="entry.golfers[1].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 1)"></td>
@@ -36,7 +37,6 @@ const poolLeaderboardController = function(dataService, contestants, $interval, 
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' - Entry ' + (i + 1), golferIds: e})))
 		.reduce((prev, curr) => prev.concat(curr));
 
-	
 	const addDataToEntries = (golfersWithScores) => {
 		const entriesWithData = entries.map(entry => {
 			const entryGolfers = entry.golferIds.map(gid => angular.copy(golfersWithScores.find(golfer => golfer.id === gid)));
@@ -44,8 +44,9 @@ const poolLeaderboardController = function(dataService, contestants, $interval, 
 			const isDQ = entryGolfers.filter(golfer => golfer.score.isDNF).length > 1;
 
 			if (!isDQ) {
-				const worstScore = Math.max(...entryGolfers.map(g => g.score.relativeScore));
-				entryGolfers.find(golfer => golfer.score.relativeScore === worstScore).throwaway = true;
+				const worstGolfers = _.orderBy(entryGolfers, ['score.relativeScore', 'score.totalScore'], ['desc', 'desc']);
+				worstGolfers[0].throwaway = true;
+
 				overallRelativeScore = entryGolfers
 					.filter(golfer => golfer.throwaway !== true)
 					.reduce((prev, curr) => prev + curr.score.relativeScore, 0);
@@ -71,13 +72,29 @@ const poolLeaderboardController = function(dataService, contestants, $interval, 
 			};
 		});
 
-		return entriesWithData;
+		return addPositions(entriesWithData);
 	};
+
+	const addPositions = entriesWithData => {
+		const sortedEntries = _.sortBy(entriesWithData, e => e.overallRelativeScore)
+
+		let position = 1;
+		let lastScore = 0;
+		sortedEntries.forEach((entry, index) => {
+			const isTied = sortedEntries.filter(e => e.overallRelativeScore === entry.overallRelativeScore).length > 1;
+			if (entry.overallRelativeScore > lastScore) {
+				position = index + 1;
+			} 
+ 			entry.position = isTied ? 'T' + position : position.toString() ;
+ 			lastScore = entry.overallRelativeScore;
+		})
+
+		return sortedEntries;
+	}
 
 	const refreshData = () => {
 		dataService.get().then(golfersWithScores => {
-			const entriesWithData = addDataToEntries(golfersWithScores)
-			this.entries = entriesWithData.sort((a, b) => a.overallRelativeScore - b.overallRelativeScore);
+			this.entries = addDataToEntries(golfersWithScores);
 		});
 	};
 
@@ -96,14 +113,8 @@ const poolLeaderboardController = function(dataService, contestants, $interval, 
 
 	this.getGolferInfo = (entry, index) => {
 		const golfer = entry.golfers[index];
-
 		const info = `${golfer.score.shortName}${golfer.isAmateur ? ' (A)' : ''}: ${golfer.score.toPar}`
 		return info;
-		// if (golfer.throwaway || entry.isDQ) {
-		// 	return info;
-		// } else {
-		// 	return `<b>${info}</b>`;
-		// }
 	};
 };
 
@@ -131,7 +142,7 @@ const golferLeaderboardTemplate = `
 const golferLeaderboardController = function(dataService, $interval, refreshTime) {
 	const refreshData = () => {
 		dataService.get().then(golfersWithScores => {
-			this.golfers = golfersWithScores.sort((a, b) => a.score.index - b.score.index)
+			this.golfers = _.sortBy(golfersWithScores, g => g.score.index)
 		});
 	};
 
@@ -211,7 +222,7 @@ const dataService = function($http, golfers, contestants) {
 			totalScore: Number.MAX_SAFE_INTEGER,
 			totalScoreDisplay: '--',
 			fullName: '',
-			shortName: `${golfer.firstName[0]}. golfer.lastName`,
+			shortName: `${golfer.firstName[0]}. ${golfer.lastName}`,
 			isDNF: true
 		}
 	}
@@ -219,7 +230,6 @@ const dataService = function($http, golfers, contestants) {
 	const extract = (row, index) => {
 		const positionText = row.find('.position').text()
 		const position = positionText;
-		const tied = row.find('.position').text().startsWith('T');
 		const toPar = row.find('.relativeScore').text();
 		let isDNF = false;
 		let relativeScore = toPar === 'E' ? 0 : parseInt(toPar);

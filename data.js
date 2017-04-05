@@ -101,5 +101,7 @@ const golferData = [
 
 const contestantData = [
 	{ name: 'Matt Weimer', entries: [[3, 28, 49, 71], [1, 17, 45, 62], [6, 15, 32, 76]] },
-	{ name: 'Cameron Weimer', entries: [[1, 11, 34, 58], [2, 12, 32, 64], [3, 13, 33, 66]] }
+	{ name: 'Cameron Weimer', entries: [[2, 12, 34, 64], [2, 12, 32, 64], [3, 13, 33, 66]] },
+	{ name: 'Goober McGoober', entries: [[10, 28, 54, 76], [9, 29, 56, 64], [8, 27, 56, 92]] },
+
 ];
