@@ -132,7 +132,7 @@ const golferLeaderboardTemplate = `
 	<tbody>
 		<tr ng-repeat="golfer in $ctrl.golfers track by $index">
 			<td ng-bind="golfer.score.position"></td>
-			<td ng-bind="$ctrl.getName(golfer)"></td>
+			<td><div class="logo"><img ng-src="{{golfer.score.logoImage}}" /></div><span ng-bind="$ctrl.getName(golfer)"></span></td>
 			<td ng-bind="golfer.score.toPar"></td>
 			<td ng-bind="golfer.score.round1Score"></td>
 			<td ng-bind="golfer.score.round2Score"></td>
@@ -226,7 +226,8 @@ const dataService = function($http, golfers, contestants) {
 			round3Score: '--',
 			round4Score: '--',
 			fullName: '',
-			shortName: `${golfer.firstName[0]}. ${golfer.lastName}`
+			shortName: `${golfer.firstName[0]}. ${golfer.lastName}`,
+			logoImage: ''
 		}
 	}
 
@@ -253,8 +254,9 @@ const dataService = function($http, golfers, contestants) {
 		const round2Score = row.find('.round2').text();
 		const round3Score = row.find('.round3').text();
 		const round4Score = row.find('.round4').text();
-		const fullName =  row.find('.full-name').text();
-		const shortName =  row.find('.short-name').text();
+		const fullName = row.find('.full-name').text();
+		const shortName = row.find('.short-name').text();
+		const logoImage = row.find('.team-logo img').attr('src');
 
 		return {
 			index,
@@ -271,7 +273,8 @@ const dataService = function($http, golfers, contestants) {
 			round3Score,
 			round4Score,
 			fullName,
-			shortName
+			shortName,
+			logoImage
 		};
 	};
 
