@@ -31,7 +31,7 @@ const golferData = [
 	{ id: 29, firstName: 'Matt', lastName: 'Kuchar', tier: 'B' },
 	{ id: 30, firstName: 'Tommy', lastName: 'Fleetwood', tier: 'B' },
 
-	{ id: 31, firstName: 'Alexander', lastName: 'Noren', tier: 'C' },
+	{ id: 31, firstName: 'Alex', lastName: 'Noren', tier: 'C' },
 	{ id: 32, firstName: 'Branden', lastName: 'Grace', tier: 'C' },
 	{ id: 33, firstName: 'J.B.', lastName: 'Holmes', tier: 'C' },
 	{ id: 34, firstName: 'Bill', lastName: 'Haas', tier: 'C' },
@@ -71,7 +71,7 @@ const golferData = [
 	{ id: 67, firstName: 'Jhonattan', lastName: 'Vegas', tier: 'D' },
 	{ id: 68, firstName: 'Fred', lastName: 'Couples', tier: 'D' },
 	{ id: 69, firstName: 'James', lastName: 'Hahn', tier: 'D' },
-	{ id: 70, firstName: 'Jeung Hun', lastName: 'Wang', tier: 'D' },
+	{ id: 70, firstName: 'Jeunghun', lastName: 'Wang', tier: 'D' },
 	{ id: 71, firstName: 'Bernhard', lastName: 'Langer', tier: 'D' },
 	{ id: 72, firstName: 'Roberto', lastName: 'Castro', tier: 'D' },
 	{ id: 73, firstName: 'Sean', lastName: 'O\'Hair', tier: 'D' },
@@ -98,10 +98,23 @@ const golferData = [
 	{ id: 94, firstName: 'Sandy', lastName: 'Lyle', tier: 'D' }
 ];
 
-
 const contestantData = [
-	{ name: 'Matt Weimer', entries: [[3, 28, 49, 71], [1, 17, 45, 62], [6, 15, 32, 76]] },
-	{ name: 'Cameron Weimer', entries: [[2, 12, 34, 64], [2, 12, 32, 64], [3, 13, 33, 66]] },
-	{ name: 'Goober McGoober', entries: [[10, 28, 54, 76], [9, 29, 56, 64], [8, 27, 56, 92]] },
-
+	{ name: 'Alex Duff', entries: [[2, 11, 37, 62], [5, 19, 47, 65], [7, 27, 39, 63]] },
+	{ name: 'Alex Prevo', entries: [[1, 15, 34, 68], [3, 12, 53, 65], [5, 29, 54, 66]] },
+	{ name: 'Bob Kelly', entries: [[3, 16, 39, 62], [5, 12, 33, 67], [6, 14, 53, 65]] },
+	{ name: 'Cameron Weimer', entries: [[7, 13, 34, 66], [3, 24, 40, 66], [2, 11, 41, 64]] },
+	{ name: 'Drew Serruto', entries: [[1, 15, 33, 62], [6, 11, 39, 65], [5, 28, 45, 68]] },
+	{ name: 'Ian Horwich', entries: [[1, 15, 53, 76], [4, 12, 33, 83], [5, 29, 39, 62]] },
+	{ name: 'Joey Graham', entries: [[2, 16, 47, 76], [3, 11, 35, 67], [6, 15, 58, 68]] },
+	{ name: 'Kevin Donoher', entries: [[7, 14, 43, 67], [2, 23, 41, 66], [3, 22, 34, 62]] },
+	{ name: 'Kevin O\'Brien', entries: [[4, 16, 36, 65], [6, 12, 32, 61], [1, 14, 34, 68]] },
+	{ name: 'Matt Dorow', entries: [[9, 28, 41, 67], [5, 14, 39, 67], [3, 15, 43, 61]] },
+	{ name: 'Matt Kilianski', entries: [[3, 12, 35, 67], [3, 28, 41, 68], [2, 11, 33, 67]] },
+	{ name: 'Matt Walker', entries: [[2, 15, 38, 64], [3, 14, 32, 64], [6, 11, 32, 64]] },
+	{ name: 'Matt Weimer', entries: [[3, 28, 49, 69], [2, 17, 45, 62], [6, 15, 41, 63]] },
+	{ name: 'Nick Royer', entries: [[1, 12, 33, 67], [3, 13, 37, 67], [2, 12, 33, 67]] },
+	{ name: 'Rob Stoecklein', entries: [[6, 12, 42, 63], [3, 16, 33, 76], [8, 17, 39, 62]] },
+	{ name: 'Ryan Boudouris', entries: [[2, 11, 37, 62], [5, 14, 35, 64], [4, 15, 39, 65]] },
+	{ name: 'Tony Drake', entries: [[9, 19, 53, 70], [3, 16, 34, 62], [3, 26, 47, 67]] }
 ];
+

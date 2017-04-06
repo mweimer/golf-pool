@@ -178,7 +178,7 @@ const dataService = function($http, golfers, contestants) {
 	this.get = () => {
 		return $http({
 			method: 'GET',
-			url: '/test-leaderboard.html' //http://www.espn.com/golf/leaderboard?tournamentId=2700
+			url: 'http://www.espn.com/golf/leaderboard?tournamentId=2700'
 		}).then(response => {
 			const scorePage = $(response.data);
 			const golferRows = scorePage.find('.leaderboard-table .player-overview');
@@ -248,7 +248,7 @@ const dataService = function($http, golfers, contestants) {
 		const round3Score = row.find('.round3').text();
 		const round4Score = row.find('.round4').text();
 		const totalScoreDisplay = row.find('.totalScore').text();
-		let totalScore = parseInt(totalScoreDisplay);
+		let totalScore = totalScoreDisplay === '--' ? 0 : parseInt(totalScoreDisplay);
 		if (isNaN(totalScore)) {
 			totalScore = Number.MAX_SAFE_INTEGER;
 		}
