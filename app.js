@@ -78,7 +78,7 @@ const poolLeaderboardController = function(dataService, contestants, $interval, 
 	};
 
 	const addPositions = entriesWithData => {
-		const sortedEntries = _.sortBy(entriesWithData, e => e.overallRelativeScore)
+		const sortedEntries = _.sortBy(entriesWithData, ['overallRelativeScore', 'overallTotalScore']);
 
 		let position = 1;
 		let lastScore = 0;
@@ -206,7 +206,6 @@ const dataService = function($http, golfers, contestants) {
 				return golferCopy;
 			});
 			
-
 			return golfersWithScores;
 		});
 	};
