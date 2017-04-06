@@ -30,8 +30,8 @@ const golferData = [
 	{ id: 28, firstName: 'Lee', lastName: 'Westwood', tier: 'B' },
 	{ id: 29, firstName: 'Matt', lastName: 'Kuchar', tier: 'B' },
 	{ id: 30, firstName: 'Tommy', lastName: 'Fleetwood', tier: 'B' },
+	{ id: 31, firstName: 'Alex', lastName: 'Noren', tier: 'B' },
 
-	{ id: 31, firstName: 'Alex', lastName: 'Noren', tier: 'C' },
 	{ id: 32, firstName: 'Branden', lastName: 'Grace', tier: 'C' },
 	{ id: 33, firstName: 'J.B.', lastName: 'Holmes', tier: 'C' },
 	{ id: 34, firstName: 'Bill', lastName: 'Haas', tier: 'C' },
@@ -58,9 +58,9 @@ const golferData = [
 	{ id: 55, firstName: 'Pat', lastName: 'Perez', tier: 'C' },
 	{ id: 56, firstName: 'Andy', lastName: 'Sullivan', tier: 'C' },
 	{ id: 57, firstName: 'Russell', lastName: 'Knox', tier: 'C' },
+	{ id: 58, firstName: 'Angel', lastName: 'Cabrera', tier: 'C' },
+	{ id: 59, firstName: 'Hudson', lastName: 'Swafford', tier: 'C' },
 
-	{ id: 58, firstName: 'Angel', lastName: 'Cabrera', tier: 'D' },
-	{ id: 59, firstName: 'Hudson', lastName: 'Swafford', tier: 'D' },
 	{ id: 60, firstName: 'Hideto', lastName: 'Tanihara', tier: 'D' },
 	{ id: 61, firstName: 'Kevin', lastName: 'Chappell', tier: 'D' },
 	{ id: 62, firstName: 'Webb', lastName: 'Simpson', tier: 'D' },

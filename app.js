@@ -127,13 +127,15 @@ app.component('poolLeaderboard', {
 const golferLeaderboardTemplate = `
 <table class="table table-striped">
 	<thead><tr>
-		<th>Pos</th><th>Player</th><th>To Par</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Tot</th>
+		<th>Pos</th><th>Player</th><th>To Par</th><th>Today</th><th>Thru</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Tot</th>
 	</tr></thead>
 	<tbody>
 		<tr ng-repeat="golfer in $ctrl.golfers track by $index">
 			<td ng-bind="golfer.score.position"></td>
 			<td><div class="logo"><img ng-src="{{golfer.score.logoImage}}" /></div><span ng-bind="$ctrl.getName(golfer)"></span></td>
 			<td ng-bind="golfer.score.toPar"></td>
+			<td ng-bind="golfer.score.currentRoundScore"></td>
+			<td ng-bind="golfer.score.thru"></td>
 			<td ng-bind="golfer.score.round1Score"></td>
 			<td ng-bind="golfer.score.round2Score"></td>
 			<td ng-bind="golfer.score.round3Score"></td>
