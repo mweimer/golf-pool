@@ -115,6 +115,7 @@ const contestantData = [
 	{ name: 'Nick Royer', entries: [[1, 12, 33, 67], [3, 13, 37, 67], [2, 12, 33, 67]] },
 	{ name: 'Rob Stoecklein', entries: [[6, 12, 42, 63], [3, 16, 33, 76], [8, 17, 39, 62]] },
 	{ name: 'Ryan Boudouris', entries: [[2, 11, 37, 62], [5, 14, 35, 64], [4, 15, 39, 65]] },
+	{ name: 'Ryan Buckle', entries: [[3, 11, 33, 70], [6, 12, 36, 65], [2, 17, 54, 64]] },
 	{ name: 'Tony Drake', entries: [[9, 19, 53, 70], [3, 16, 34, 62], [3, 26, 47, 67]] }
 ];
 
