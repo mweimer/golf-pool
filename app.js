@@ -46,7 +46,7 @@ const poolLeaderboardController = function(dataService, contestants, $interval, 
 			const isDQ = entryGolfers.filter(golfer => golfer.score.isDNF).length > 1;
 
 			if (!isDQ) {
-				const worstGolfers = _.orderBy(entryGolfers, ['score.relativeScore', 'score.totalScore'], ['desc', 'desc']);
+				const worstGolfers = _.orderBy(entryGolfers, ['score.relativeScore', 'score.totalScore', 'id'], ['desc', 'desc', 'desc']);
 				worstGolfers[0].throwaway = true;
 
 				overallRelativeScore = entryGolfers
@@ -138,7 +138,7 @@ const golferLeaderboardTemplate = `
 			<td ng-bind="golfer.score.round2Score"></td>
 			<td ng-bind="golfer.score.round3Score"></td>
 			<td ng-bind="golfer.score.round4Score"></td>
-			<td ng-bind="golfer.score.totalScoreDisplay"></td>
+			<td ng-bind="golfer.score.total"></td>
 		</tr>
 	</tbody>
 </table>`;
@@ -214,62 +214,63 @@ const dataService = function($http, golfers, contestants) {
 	const emptyScore = (golfer) => {
 		return {
 			index: Number.MAX_SAFE_INTEGER,
-			position: '--',
+			isDNF: true,
 			toPar: '--',
 			relativeScore: Number.MAX_SAFE_INTEGER,
+			total: '--',
+			totalScore: Number.MAX_SAFE_INTEGER,
+			position: '--',
 			currentRoundScore: '--',
 			thru: '--',
 			round1Score: '--',
 			round2Score: '--',
 			round3Score: '--',
 			round4Score: '--',
-			totalScore: Number.MAX_SAFE_INTEGER,
-			totalScoreDisplay: '--',
 			fullName: '',
-			shortName: `${golfer.firstName[0]}. ${golfer.lastName}`,
-			isDNF: true
+			shortName: `${golfer.firstName[0]}. ${golfer.lastName}`
 		}
 	}
 
 	const extract = (row, index) => {
-		const positionText = row.find('.position').text()
-		const position = positionText;
-		const toPar = row.find('.relativeScore').text();
 		let isDNF = false;
+
+		const toPar = row.find('.relativeScore').text();
 		let relativeScore = toPar === 'E' ? 0 : parseInt(toPar);
 		if (isNaN(relativeScore)) {
 			relativeScore = Number.MAX_SAFE_INTEGER;
 			isDNF = true;
 		}
+
+		const total = row.find('.totalScore').text();
+		let totalScore = total === '--' ? 0 : parseInt(total);
+		if (isNaN(totalScore)) {
+			totalScore = Number.MAX_SAFE_INTEGER;
+		}
+
+		const position = row.find('.position').text();
 		const currentRoundScore = row.find('.currentRoundScore').text();
 		const thru = row.find('.thru').text();
 		const round1Score = row.find('.round1').text();
 		const round2Score = row.find('.round2').text();
 		const round3Score = row.find('.round3').text();
 		const round4Score = row.find('.round4').text();
-		const totalScoreDisplay = row.find('.totalScore').text();
-		let totalScore = totalScoreDisplay === '--' ? 0 : parseInt(totalScoreDisplay);
-		if (isNaN(totalScore)) {
-			totalScore = Number.MAX_SAFE_INTEGER;
-		}
-
 		const fullName =  row.find('.full-name').text();
 		const shortName =  row.find('.short-name').text();
 
 		return {
 			index,
-			position,
+			isDNF,
 			toPar,
 			relativeScore,
-			isDNF,
+			total,
+			totalScore,
+			position,
 			currentRoundScore,
 			thru,
 			round1Score,
 			round2Score,
 			round3Score,
 			round4Score,
-			totalScore,
-			totalScoreDisplay,
 			fullName,
 			shortName
 		};
