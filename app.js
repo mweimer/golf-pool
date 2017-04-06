@@ -134,7 +134,8 @@ const golferLeaderboardTemplate = `
 			<td ng-bind="golfer.entryCount"></td>
 			<td ng-bind="golfer.score.toPar"></td>
 			<td ng-bind="golfer.score.currentRoundScore"></td>
-			<td ng-bind="golfer.score.thru"></td>
+			<td ng-if="golfer.score.thru" ng-bind="golfer.score.thru"></td>
+			<td ng-if="!golfer.score.thru" ng-bind="golfer.score.startTime | date:'shortTime'"></td>
 			<td ng-bind="golfer.score.round1Score"></td>
 			<td ng-bind="golfer.score.round2Score"></td>
 			<td ng-bind="golfer.score.round3Score"></td>
@@ -238,7 +239,8 @@ const dataService = function($http, golfers, contestants) {
 			round4Score: '--',
 			fullName: '',
 			shortName: `${golfer.firstName[0]}. ${golfer.lastName}`,
-			logoImage: ''
+			logoImage: '',
+			startTime: null
 		}
 	}
 
@@ -258,9 +260,18 @@ const dataService = function($http, golfers, contestants) {
 			totalScore = Number.MAX_SAFE_INTEGER;
 		}
 
+		const thru = row.find('.thru').text();
+		let startTime;
+		if (thru === '') {
+			let time = row.find('.thru .date-container').attr('data-date');
+			startTime = new Date(time);
+		} else {
+			startTime = null;
+		}
+
 		const position = row.find('.position').text();
 		const currentRoundScore = row.find('.currentRoundScore').text();
-		const thru = row.find('.thru').text();
+		
 		const round1Score = row.find('.round1').text();
 		const round2Score = row.find('.round2').text();
 		const round3Score = row.find('.round3').text();
@@ -285,7 +296,8 @@ const dataService = function($http, golfers, contestants) {
 			round4Score,
 			fullName,
 			shortName,
-			logoImage
+			logoImage,
+			startTime
 		};
 	};
 
