@@ -35,9 +35,7 @@ const poolLeaderboardTemplate = `
 </table>`;
 
 const poolLeaderboardController = function(dataService, contestants, $interval, refreshTime) {
-	const entries = contestants
-		.map(c => c.entries.map((e, i) => ({ name: c.name + ' - Entry ' + (i + 1), golferIds: e})))
-		.reduce((prev, curr) => prev.concat(curr));
+	const entries = dataService.getEntries();
 
 	const addDataToEntries = (golfersWithScores) => {
 		const entriesWithData = entries.map(entry => {
@@ -127,12 +125,13 @@ app.component('poolLeaderboard', {
 const golferLeaderboardTemplate = `
 <table class="table table-striped">
 	<thead><tr>
-		<th>Pos</th><th>Player</th><th>To Par</th><th>Today</th><th>Thru</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Tot</th>
+		<th>Pos</th><th>Player</th><th>Entries</th><th>To Par</th><th>Today</th><th>Thru</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Tot</th>
 	</tr></thead>
 	<tbody>
 		<tr ng-repeat="golfer in $ctrl.golfers track by $index">
 			<td ng-bind="golfer.score.position"></td>
 			<td><div class="logo"><img ng-src="{{golfer.score.logoImage}}" /></div><span ng-bind="$ctrl.getName(golfer)"></span></td>
+			<td ng-bind="golfer.entryCount"></td>
 			<td ng-bind="golfer.score.toPar"></td>
 			<td ng-bind="golfer.score.currentRoundScore"></td>
 			<td ng-bind="golfer.score.thru"></td>
@@ -177,6 +176,13 @@ app.component('golferLeaderboard', {
 
 
 const dataService = function($http, golfers, contestants) {
+
+	const entries = contestants
+		.map(c => c.entries.map((e, i) => ({ name: c.name + ' - Entry ' + (i + 1), golferIds: e})))
+		.reduce((prev, curr) => prev.concat(curr));
+
+	this.getEntries = () => entries;	
+
 	this.get = () => {
 		return $http({
 			method: 'GET',
@@ -204,6 +210,9 @@ const dataService = function($http, golfers, contestants) {
 				} else {
 					golferCopy.score = emptyScore(golfer);
 				}
+
+				const entryCount = entries.filter(e => e.golferIds.includes(golferCopy.id)).length;
+				golferCopy.entryCount = entryCount;
 
 				return golferCopy;
 			});
