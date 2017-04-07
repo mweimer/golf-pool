@@ -130,7 +130,7 @@ const golferLeaderboardTemplate = `
 	<tbody>
 		<tr ng-repeat="golfer in $ctrl.golfers track by $index">
 			<td ng-bind="golfer.score.position"></td>
-			<td><div class="logo"><img ng-src="{{golfer.score.logoImage}}" /></div><span ng-bind="$ctrl.getName(golfer)"></span></td>
+			<td><div ng-if="golfer.score.logoImage" class="logo"><img ng-src="{{golfer.score.logoImage}}" /></div><span ng-bind="$ctrl.getName(golfer)"></span></td>
 			<td ng-bind="golfer.entryCount"></td>
 			<td ng-bind="golfer.score.toPar"></td>
 			<td ng-bind="golfer.score.currentRoundScore"></td>
