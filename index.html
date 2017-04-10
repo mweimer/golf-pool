@@ -12,7 +12,7 @@
         }
 
         a {
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .logo {
@@ -25,6 +25,28 @@
             position: relative;
             width: 20px;
             margin-bottom: -14px;
+        }
+
+        table th.movement:before {
+            content: "\2B06";
+            position: relative;
+            top: -1px;
+        }
+        table th.movement:after {
+            content: "\2B07";
+            top: 1px;
+        }
+        table td.negative {
+            color: #d00;
+        }
+        table td.negative:before {
+            content: "\2B07";
+        }
+        table td.positive {
+            color: #094;
+        }
+        table td.positive:before {
+            content: "\2B06";
         }
 
     </style>

@@ -1,7 +1,7 @@
 {
   "name": "golf-pool",
   "scripts": {
-    "start": "browser-sync start --server --files '*.js'"
+    "start": "browser-sync start --server --files 'index.html,*.js'"
   },
   "repository": {
     "type": "git",

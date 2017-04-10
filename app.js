@@ -4,6 +4,11 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 	.constant('golfers', golferData)
 	.constant('contestants', contestantData)
 	.constant('refreshTime', 60000)
+	.constant('movement', {
+		positive: 'positive',
+		negative: 'negative',
+		none: 'none'
+	})
 	.config(($routeProvider) => {
 		$routeProvider.when('/', { 
 			template: '<pool-leaderboard></pool-leaderboard>'
@@ -124,12 +129,15 @@ app.component('poolLeaderboard', {
 });
 const golferLeaderboardTemplate = `
 <table class="table table-striped">
-	<thead><tr>
-		<th>Pos</th><th>Player</th><th>Entries</th><th>To Par</th><th>Today</th><th>Thru</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Tot</th>
-	</tr></thead>
+	<thead>
+	<tr>
+		<th>Pos</th><th class="movement"></th><th>Player</th><th>Entries</th><th>To Par</th><th>Today</th><th>Thru</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Tot</th>
+	</tr>
+	</thead>
 	<tbody>
 		<tr ng-repeat="golfer in $ctrl.golfers track by $index">
 			<td ng-bind="golfer.score.position"></td>
+			<td ng-class="golfer.score.movement.direction" ng-bind="golfer.score.movement.text"></td>
 			<td><div ng-if="golfer.score.logoImage" class="logo"><img ng-src="{{golfer.score.logoImage}}" /></div><span ng-bind="$ctrl.getName(golfer)"></span></td>
 			<td ng-bind="golfer.entryCount"></td>
 			<td ng-bind="golfer.score.toPar"></td>
@@ -176,10 +184,10 @@ app.component('golferLeaderboard', {
 });
 
 
-const dataService = function($http, golfers, contestants) {
+const dataService = function($http, golfers, contestants, movement) {
 
 	const entries = contestants
-		.map(c => c.entries.map((e, i) => ({ name: c.name + ' - Entry ' + (i + 1), golferIds: e})))
+		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e})))
 		.reduce((prev, curr) => prev.concat(curr));
 
 	this.getEntries = () => entries;	
@@ -187,7 +195,7 @@ const dataService = function($http, golfers, contestants) {
 	this.get = () => {
 		return $http({
 			method: 'GET',
-			url: 'http://www.espn.com/golf/leaderboard?tournamentId=2700'
+			url: '/test-leaderboard.html' //'http://www.espn.com/golf/leaderboard?tournamentId=2700'
 		}).then(response => {
 			const scorePage = $(response.data);
 			const golferRows = scorePage.find('.leaderboard-table .player-overview');
@@ -240,7 +248,8 @@ const dataService = function($http, golfers, contestants) {
 			fullName: '',
 			shortName: `${golfer.firstName[0]}. ${golfer.lastName}`,
 			logoImage: '',
-			startTime: null
+			startTime: null,
+			movement:  { text: '-', direction: movementDirection.none }
 		}
 	}
 
@@ -280,6 +289,17 @@ const dataService = function($http, golfers, contestants) {
 		const shortName = row.find('.short-name').text();
 		const logoImage = row.find('.team-logo img').attr('src');
 
+		const movementElement = row.find('.movement');
+		const movementText = movementElement.text();
+		let movementDirection;
+		if (movementElement.hasClass('positive')) {
+			movementDirection = movement.positive;
+		} else if (movementElement.hasClass('negative')) {
+			movementDirection = movement.negative;
+		} else {
+			movementDirection = movement.none;
+		}
+
 		return {
 			index,
 			isDNF,
@@ -297,7 +317,11 @@ const dataService = function($http, golfers, contestants) {
 			fullName,
 			shortName,
 			logoImage,
-			startTime
+			startTime,
+			movement: {
+				text: movementText,
+				direction: movementDirection
+			}
 		};
 	};
 
