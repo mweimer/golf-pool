@@ -28,25 +28,28 @@
         }
 
         table th.movement:before {
-            content: "\2B06";
-            position: relative;
-            top: -1px;
+            content: "↑";/*"\2B06";*/
         }
         table th.movement:after {
-            content: "\2B07";
-            top: 1px;
+            content: "↓";
         }
         table td.negative {
             color: #d00;
         }
         table td.negative:before {
-            content: "\2B07";
+            content: "↑";
+            position: relative;
+            top: -1px;
+            margin-right: 2px;
         }
         table td.positive {
             color: #094;
         }
         table td.positive:before {
-            content: "\2B06";
+            content: "↓";
+            position: relative;
+            top: -1px;
+            margin-right: 2px;
         }
 
     </style>
