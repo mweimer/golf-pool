@@ -195,7 +195,7 @@ const dataService = function($http, golfers, contestants, movement) {
 	this.get = () => {
 		return $http({
 			method: 'GET',
-			url: '/test-leaderboard.html' //'http://www.espn.com/golf/leaderboard?tournamentId=2700'
+			url: 'http://www.espn.com/golf/leaderboard?tournamentId=2706'
 		}).then(response => {
 			const scorePage = $(response.data);
 			const golferRows = scorePage.find('.leaderboard-table .player-overview');
