@@ -121,7 +121,7 @@ const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME)
 
 	this.getGolferInfo = (entry, index) => {
 		const golfer = entry.golfers[index];
-		const info = `${golfer.score.shortName}${golfer.isAmateur ? ' (A)' : ''}: ${golfer.score.toPar}`
+		const info = `${golfer.score.shortName}${golfer.isAmateur ? ' (A)' : ''}: ${golfer.score.toPar} (${golfer.score.thru})`
 		return info;
 	};
 };
