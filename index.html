@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="golfPool">
 <head>
     <base href="/">
     <meta name="viewport" content="width=device-width">
-    <title>2017 Memorial Pool</title>
+    <title>{{::tourneyTitle}} Player Pool</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css" />
     <style type="text/css">
@@ -54,7 +54,7 @@
 
     </style>
 </head>
-<body ng-app="golfPool">
+<body>
     <div class="container-fluid">
        <a href="/">Pool Leaderboard</a>&nbsp;|&nbsp;<a href="#!/golfers">Golfer Leaderboard</a>
 	   <div ng-view></div>

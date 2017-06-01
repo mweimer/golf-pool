@@ -1,9 +1,11 @@
 'use strict';
 
 const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
-	.constant('golfers', golferData)
-	.constant('contestants', contestantData)
-	.constant('refreshTime', 60000)
+	.constant('GOLFERS', golferData)
+	.constant('CONTESTANTS', contestantData)
+	.constant('REFRESH_TIME', 60000)
+	.constant('LEADERBOARD_URL', leaderboardUrl)
+	.constant('TOURNEY_TITLE', tourneyTitle)
 	.constant('movement', {
 		positive: 'positive',
 		negative: 'negative',
@@ -16,8 +18,9 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 			template: '<golfer-leaderboard></golfer-leaderboard>'
 		});
 	})
-	.run(($rootScope, refreshTime) => {
-		$rootScope.refreshTime = `Refresh Time: ${refreshTime / 1000} seconds`;
+	.run(($rootScope, REFRESH_TIME, TOURNEY_TITLE) => {
+		$rootScope.refreshTime = `Refresh Time: ${REFRESH_TIME / 1000} seconds`;
+		$rootScope.tourneyTitle = TOURNEY_TITLE;
 	});
 
 const poolLeaderboardTemplate = `
@@ -39,7 +42,7 @@ const poolLeaderboardTemplate = `
 	</tbody>
 </table>`;
 
-const poolLeaderboardController = function(dataService, contestants, $interval, refreshTime) {
+const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME) {
 	const entries = dataService.getEntries();
 
 	const addDataToEntries = (golfersWithScores) => {
@@ -106,7 +109,7 @@ const poolLeaderboardController = function(dataService, contestants, $interval, 
 	let stop;
 	this.$onInit = () => {
 		refreshData();
-		stop = $interval(() => refreshData(), refreshTime);		
+		stop = $interval(() => refreshData(), REFRESH_TIME);		
 	};
 
 	this.$onDestroy = () => {
@@ -153,7 +156,7 @@ const golferLeaderboardTemplate = `
 	</tbody>
 </table>`;
 
-const golferLeaderboardController = function(dataService, $interval, refreshTime) {
+const golferLeaderboardController = function(dataService, $interval, REFRESH_TIME) {
 	const refreshData = () => {
 		dataService.get().then(golfersWithScores => {
 			this.golfers = _.sortBy(golfersWithScores, g => g.score.index)
@@ -163,7 +166,7 @@ const golferLeaderboardController = function(dataService, $interval, refreshTime
 	let stop;
 	this.$onInit = () => {
 		refreshData();
-		stop = $interval(() => refreshData(), refreshTime);		
+		stop = $interval(() => refreshData(), REFRESH_TIME);		
 	};
 
 	this.$onDestroy = () => {
@@ -184,9 +187,9 @@ app.component('golferLeaderboard', {
 });
 
 
-const dataService = function($http, golfers, contestants, movement) {
+const dataService = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL) {
 
-	const entries = contestants
+	const entries = CONTESTANTS
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e})))
 		.reduce((prev, curr) => prev.concat(curr));
 
@@ -195,7 +198,7 @@ const dataService = function($http, golfers, contestants, movement) {
 	this.get = () => {
 		return $http({
 			method: 'GET',
-			url: 'http://www.espn.com/golf/leaderboard?tournamentId=2706'
+			url: LEADERBOARD_URL
 		}).then(response => {
 			const scorePage = $(response.data);
 			const golferRows = scorePage.find('.leaderboard-table .player-overview');
@@ -205,7 +208,7 @@ const dataService = function($http, golfers, contestants, movement) {
 				scores.push(extract($(this), index));
 			});
 
-			const golfersWithScores = golfers.map(golfer => {
+			const golfersWithScores = GOLFERS.map(golfer => {
 				const firstName = golfer.firstName.toLowerCase();
 				const lastName = golfer.lastName.toLowerCase();
 				const score = scores.find(score => {

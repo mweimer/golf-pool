@@ -1,3 +1,7 @@
+const tourneyTitle = '2017 Memorial';
+
+const leaderboardUrl = 'http://www.espn.com/golf/leaderboard?tournamentId=2706';
+
 const golferData = [
     { id: 1, firstName: 'Dustin', lastName: 'Johnson', tier: 'A' },
     { id: 2, firstName: 'Jon', lastName: 'Rahm', tier: 'A' },
