@@ -145,7 +145,7 @@ const golferLeaderboardTemplate = `
 	</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="golfer in $ctrl.golfers track by $index" ng-attr-id="golfer-{{golfer.id}}">
+		<tr ng-repeat="golfer in $ctrl.golfers track by $index" ng-attr-id="golfer-{{golfer.id}}" ng-class="{'success': golfer.isHighlighted}">
 			<td ng-bind="golfer.score.position"></td>
 			<td ng-class="golfer.score.movement.direction" ng-bind="golfer.score.movement.text"></td>
 			<td><div ng-if="golfer.score.logoImage" class="logo"><img ng-src="{{golfer.score.logoImage}}" /></div><span ng-bind="$ctrl.getName(golfer)"></span></td>
@@ -170,16 +170,22 @@ const golferLeaderboardController = function(dataService, $interval, REFRESH_TIM
 		});
 	};
 
+	const scrollHighlightGolfer = () => {
+		const golferId = dataService.getGotoGolferId();
+		if (golferId) {
+			dataService.setGotoGolferId(null);
+			$timeout(() => $anchorScroll('golfer-' + golferId), 10);
+			const golfer = this.golfers.find(g => g.id === golferId);
+			if (golfer) {
+				golfer.isHighlighted = true;
+				$timeout(() => golfer.isHighlighted = false, 3000);
+			}
+		}
+	}
+
 	let stop;
 	this.$onInit = () => {
-		const golferId = dataService.getGotoGolferId();
-		
-		refreshData().then(() => {
-			if (golferId) {
-				dataService.setGotoGolferId(null);
-				$timeout(() => $anchorScroll('golfer-' + golferId), 10);
-			}
-		});
+		refreshData().then(() => scrollHighlightGolfer());
 		stop = $interval(() => refreshData(), REFRESH_TIME);		
 	};
 
