@@ -42,7 +42,9 @@ const poolLeaderboardTemplate = `
 	</tbody>
 </table>`;
 
-const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME) {
+const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME, $filter) {
+	const dateFilter = $filter('date');
+
 	const entries = dataService.getEntries();
 
 	const addDataToEntries = (golfersWithScores) => {
@@ -121,7 +123,7 @@ const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME)
 
 	this.getGolferInfo = (entry, index) => {
 		const golfer = entry.golfers[index];
-		const info = `${golfer.score.shortName}${golfer.isAmateur ? ' (A)' : ''}: ${golfer.score.toPar} (${golfer.score.thru})`
+		const info = `${golfer.score.shortName}${golfer.isAmateur ? ' (A)' : ''}: ${golfer.score.toPar} (${golfer.score.thru ? golfer.score.thru : dateFilter(golfer.score.startTime, 'shortTime')})`
 		return info;
 	};
 };
