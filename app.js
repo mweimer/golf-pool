@@ -32,17 +32,17 @@ const poolLeaderboardTemplate = `
 		<tr ng-repeat="entry in $ctrl.entries track by $index" ng-class="{danger: entry.isDQ}">
 			<td ng-bind="entry.position"></td>
 			<td ng-bind="entry.name"></td>
-			<td ng-class="entry.golfers[0].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 0)"></td>
-			<td ng-class="entry.golfers[1].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 1)"></td>
-			<td ng-class="entry.golfers[2].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 2)"></td>
-			<td ng-class="entry.golfers[3].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 3)"></td>
+			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[0])" ng-class="entry.golfers[0].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 0)"></td>
+			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[1])" ng-class="entry.golfers[1].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 1)"></td>
+			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[2])" ng-class="entry.golfers[2].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 2)"></td>
+			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[3])" ng-class="entry.golfers[3].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 3)"></td>
 			<td ng-bind="entry.overallTotalScore"></td>
 			<th ng-bind="entry.overallToPar"></th>
 		</tr>
 	</tbody>
 </table>`;
 
-const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME, $filter) {
+const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME, $filter, $location) {
 	const dateFilter = $filter('date');
 
 	const entries = dataService.getEntries();
@@ -126,6 +126,11 @@ const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME,
 		const info = `${golfer.score.shortName}${golfer.isAmateur ? ' (A)' : ''}: ${golfer.score.toPar} (${golfer.score.thru ? golfer.score.thru : dateFilter(golfer.score.startTime, 'shortTime')})`
 		return info;
 	};
+
+	this.gotoGolfer = golfer => {
+		dataService.setGotoGolferId(golfer.id);
+		$location.url('/golfers');
+	};
 };
 
 app.component('poolLeaderboard', {
@@ -140,7 +145,7 @@ const golferLeaderboardTemplate = `
 	</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="golfer in $ctrl.golfers track by $index">
+		<tr ng-repeat="golfer in $ctrl.golfers track by $index" ng-attr-id="golfer-{{golfer.id}}">
 			<td ng-bind="golfer.score.position"></td>
 			<td ng-class="golfer.score.movement.direction" ng-bind="golfer.score.movement.text"></td>
 			<td><div ng-if="golfer.score.logoImage" class="logo"><img ng-src="{{golfer.score.logoImage}}" /></div><span ng-bind="$ctrl.getName(golfer)"></span></td>
@@ -158,16 +163,23 @@ const golferLeaderboardTemplate = `
 	</tbody>
 </table>`;
 
-const golferLeaderboardController = function(dataService, $interval, REFRESH_TIME) {
+const golferLeaderboardController = function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout) {
 	const refreshData = () => {
-		dataService.get().then(golfersWithScores => {
+		return dataService.get().then(golfersWithScores => {
 			this.golfers = _.sortBy(golfersWithScores, g => g.score.index)
 		});
 	};
 
 	let stop;
 	this.$onInit = () => {
-		refreshData();
+		const golferId = dataService.getGotoGolferId();
+		
+		refreshData().then(() => {
+			if (golferId) {
+				dataService.setGotoGolferId(null);
+				$timeout(() => $anchorScroll('golfer-' + golferId), 10);
+			}
+		});
 		stop = $interval(() => refreshData(), REFRESH_TIME);		
 	};
 
@@ -234,6 +246,14 @@ const dataService = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_
 			return golfersWithScores;
 		});
 	};
+
+	let gotoGolferId = null;
+
+	this.setGotoGolferId = (id) => {
+		gotoGolferId = id;
+	};
+
+	this.getGotoGolferId = () => gotoGolferId;
 
 	const emptyScore = (golfer) => {
 		return {
