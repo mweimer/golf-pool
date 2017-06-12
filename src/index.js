@@ -1,8 +1,9 @@
 'use strict';
 
-require("./style.css");
+import './style.css';
 
 import app from './app.js';
+
 
 import dataService from './data.service.js';
 import settingsService from './settings.service.js';

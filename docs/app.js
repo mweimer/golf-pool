@@ -1251,32 +1251,35 @@ const contestantData = [
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__data_service_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__settings_service_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__golfer_leaderboard_component_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pool_leaderboard_component_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__settings_component_js__ = __webpack_require__(5);
-
-
-__webpack_require__(0);
-
-
-
-
-
-
-__WEBPACK_IMPORTED_MODULE_0__app_js__["a" /* default */].service('dataService', __WEBPACK_IMPORTED_MODULE_1__data_service_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_0__app_js__["a" /* default */].service('settingsService', __WEBPACK_IMPORTED_MODULE_2__settings_service_js__["a" /* default */]);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__style_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data_service_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__settings_service_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__golfer_leaderboard_component_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pool_leaderboard_component_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__settings_component_js__ = __webpack_require__(5);
 
 
 
 
 
 
-__WEBPACK_IMPORTED_MODULE_0__app_js__["a" /* default */].component('golferLeaderboard', __WEBPACK_IMPORTED_MODULE_3__golfer_leaderboard_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_0__app_js__["a" /* default */].component('poolLeaderboard', __WEBPACK_IMPORTED_MODULE_4__pool_leaderboard_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_0__app_js__["a" /* default */].component('settings', __WEBPACK_IMPORTED_MODULE_5__settings_component_js__["a" /* default */]);
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('dataService', __WEBPACK_IMPORTED_MODULE_2__data_service_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('settingsService', __WEBPACK_IMPORTED_MODULE_3__settings_service_js__["a" /* default */]);
+
+
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('golferLeaderboard', __WEBPACK_IMPORTED_MODULE_4__golfer_leaderboard_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('poolLeaderboard', __WEBPACK_IMPORTED_MODULE_5__pool_leaderboard_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('settings', __WEBPACK_IMPORTED_MODULE_6__settings_component_js__["a" /* default */]);
 
 
 
