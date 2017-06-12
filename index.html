@@ -53,14 +53,26 @@
             top: -1px;
             margin-right: 2px;
         }
+        table tr.selected {
+            border: 2px solid black;
+        }
+        table tr.selected:first-child {
+            border-top-width: 3px;
+        }
         .golfer-score {
             cursor: pointer;;
         }
+        .settings {
+            margin-top: 10px 0;
+        }
+
     </style>
 </head>
 <body>
     <div class="container-fluid">
-       <a href="/">Pool Leaderboard</a>&nbsp;|&nbsp;<a href="#!/golfers">Golfer Leaderboard</a>
+       <a href="/">Pool Leaderboard</a>&nbsp;|
+       &nbsp;<a href="#!/golfers">Golfer Leaderboard</a>&nbsp;|
+       &nbsp;<a href="#!/settings">Settings</a>
 	   <div ng-view></div>
        <span ng-bind="::refreshTime">
     </div>

@@ -1,5 +1,7 @@
 'use strict';
 
+contestantData.forEach((c, i) => c.id = i);
+
 const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 	.constant('GOLFERS', golferData)
 	.constant('CONTESTANTS', contestantData)
@@ -16,6 +18,8 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 			template: '<pool-leaderboard></pool-leaderboard>'
 		}).when('/golfers', { 
 			template: '<golfer-leaderboard></golfer-leaderboard>'
+		}).when('/settings', { 
+			template: '<settings></settings>'
 		});
 	})
 	.run(($rootScope, REFRESH_TIME, TOURNEY_TITLE) => {
@@ -29,7 +33,7 @@ const poolLeaderboardTemplate = `
 		<th>Pos</th><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>Total Score</th><th>To Par</th>
 	</tr></thead>
 	<tbody>
-		<tr ng-repeat="entry in $ctrl.entries track by $index" ng-class="{danger: entry.isDQ}">
+		<tr ng-repeat="entry in $ctrl.entries track by $index" ng-class="{danger: entry.isDQ, selected: entry.isSelected}">
 			<td ng-bind="entry.position"></td>
 			<td ng-bind="entry.name"></td>
 			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[0])" ng-class="entry.golfers[0].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 0)"></td>
@@ -42,7 +46,7 @@ const poolLeaderboardTemplate = `
 	</tbody>
 </table>`;
 
-const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME, $filter, $location) {
+const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME, $filter, $location, settingsService) {
 	const dateFilter = $filter('date');
 
 	const entries = dataService.getEntries();
@@ -52,6 +56,8 @@ const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME,
 			const entryGolfers = entry.golferIds.map(gid => angular.copy(golfersWithScores.find(golfer => golfer.id === gid)));
 			let overallRelativeScore, overallTotalScore, overallToPar;
 			const isDQ = entryGolfers.filter(golfer => golfer.score.isDNF).length > 1;
+			const selectedContestantId = settingsService.getSelectedContestantId();
+			const isSelected = entry.contestantId === selectedContestantId;
 
 			if (!isDQ) {
 				const worstGolfers = _.orderBy(entryGolfers, ['score.relativeScore', 'score.totalScore', 'id'], ['desc', 'desc', 'desc']);
@@ -78,7 +84,8 @@ const poolLeaderboardController = function(dataService, $interval, REFRESH_TIME,
 				overallRelativeScore,
 				overallTotalScore,
 				overallToPar,
-				isDQ
+				isDQ,
+				isSelected
 			};
 		});
 
@@ -207,10 +214,55 @@ app.component('golferLeaderboard', {
 });
 
 
+
+const settingsTemplate = `
+<div class="settings">
+<select ng-model="$ctrl.selectedContestantId" ng-change="$ctrl.contestantSelected()">
+	<option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
+</select>
+</div>`;
+
+const settingsController = function(CONTESTANTS, settingsService) {
+	this.contestantSelected = () => {
+		settingsService.setSelectedContestantId(this.selectedContestantId);
+	};
+
+	this.$onInit = () => {
+		this.contestants = _.concat([{name: 'none', id: -1}], CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
+		this.selectedContestantId = settingsService.getSelectedContestantId().toString();
+	}
+};
+
+app.component('settings', {
+	template: settingsTemplate,
+	controller: settingsController
+});
+
+
+const settingsService = function(TOURNEY_TITLE) {
+	const hasLocalStorage = typeof(Storage) !== 'undefined';
+	const key = TOURNEY_TITLE + '-selectedContestantId';
+
+	this.getSelectedContestantId = () => {
+		if (!hasLocalStorage || !localStorage.getItem(key)) {
+			return -1;
+		}
+
+		return parseInt(localStorage.getItem(key));
+	};
+
+	this.setSelectedContestantId = value => {
+		localStorage.setItem(key, value)
+	};
+
+};
+
+app.service('settingsService', settingsService);
+
 const dataService = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL) {
 
 	const entries = CONTESTANTS
-		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e})))
+		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
 		.reduce((prev, curr) => prev.concat(curr));
 
 	this.getEntries = () => entries;	
