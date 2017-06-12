@@ -1,6 +1,6 @@
 'use strict';
 
-import { tourneyTitle, leaderboardUrl, golferData, contestantData } from './data';
+import { tourneyTitle, leaderboardUrl, golferData, contestantData } from './config';
 
 contestantData.forEach((c, i) => c.id = i);
 

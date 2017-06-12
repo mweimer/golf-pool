@@ -1,6 +1,6 @@
 'use strict';
 
-const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL) {
+const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL, settingsService) {
 
 	const entries = CONTESTANTS
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
@@ -36,8 +36,9 @@ const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL)
 					golferCopy.score = emptyScore(golfer);
 				}
 
-				const entryCount = entries.filter(e => e.golferIds.includes(golferCopy.id)).length;
-				golferCopy.entryCount = entryCount;
+				const selectedContestantId = settingsService.getSelectedContestantId();
+				golferCopy.entryCount = entries.filter(e => e.golferIds.includes(golferCopy.id)).length;;
+				golferCopy.isSelected = entries.some(e => e.golferIds.includes(golferCopy.id) && e.contestantId === selectedContestantId);
 
 				return golferCopy;
 			});

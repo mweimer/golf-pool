@@ -8,7 +8,7 @@ const template = `
 	</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="golfer in $ctrl.golfers track by $index" ng-attr-id="golfer-{{golfer.id}}" ng-class="{'success': golfer.isHighlighted}">
+		<tr ng-repeat="golfer in $ctrl.golfers track by $index" ng-attr-id="golfer-{{golfer.id}}" ng-class="{'success': golfer.isHighlighted, 'selected': golfer.isSelected}">
 			<td ng-bind="golfer.score.position"></td>
 			<td ng-class="golfer.score.movement.direction" ng-bind="golfer.score.movement.text"></td>
 			<td><div ng-if="golfer.score.logoImage" class="logo"><img ng-src="{{golfer.score.logoImage}}" /></div><span ng-bind="$ctrl.getName(golfer)"></span></td>
