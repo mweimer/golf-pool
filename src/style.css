@@ -1,0 +1,56 @@
+body {
+    font-size: 12px;
+}
+
+a {
+    font-size: 16px;
+}
+
+.logo {
+    display: inline;
+    margin-right: 5px;
+}
+
+.logo img {
+    bottom: 8px;
+    position: relative;
+    width: 20px;
+    margin-bottom: -14px;
+}
+
+table th.movement:before {
+    content: "↑";/*"\2B06";*/
+}
+table th.movement:after {
+    content: "↓";
+}
+table td.negative {
+    color: #d00;
+}
+table td.negative:before {
+    content: "↓";
+    position: relative;
+    top: -1px;
+    margin-right: 2px;
+}
+table td.positive {
+    color: #094;
+}
+table td.positive:before {
+    content: "↑";
+    position: relative;
+    top: -1px;
+    margin-right: 2px;
+}
+table tr.selected {
+    border: 2px solid black;
+}
+table tr.selected:first-child {
+    border-top-width: 3px;
+}
+.golfer-score {
+    cursor: pointer;;
+}
+.settings {
+    margin-top: 10px 0;
+}

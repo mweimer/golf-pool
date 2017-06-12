@@ -134,3 +134,4 @@ const contestantData = [
 	{ name: 'Ryan Boudouris', entries: [[8, 13, 35, 67], [1, 12, 39, 87], [4, 12, 37, 107]] }
 ];
 
+export { tourneyTitle, leaderboardUrl, golferData, contestantData };
