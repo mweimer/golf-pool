@@ -52,5 +52,9 @@ table tr.selected:first-child {
     cursor: pointer;;
 }
 .settings {
-    margin-top: 10px 0;
+    margin: 20px 0;
+}
+
+.settings .lbl {
+    font-size: 15px;
 }
