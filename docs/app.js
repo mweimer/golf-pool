@@ -102,19 +102,19 @@ if(false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(11);
 
 
 
 
-__WEBPACK_IMPORTED_MODULE_0__data__["a" /* contestantData */].forEach((c, i) => c.id = i);
+__WEBPACK_IMPORTED_MODULE_0__config__["a" /* contestantData */].forEach((c, i) => c.id = i);
 
 const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
-	.constant('GOLFERS', __WEBPACK_IMPORTED_MODULE_0__data__["b" /* golferData */])
-	.constant('CONTESTANTS', __WEBPACK_IMPORTED_MODULE_0__data__["a" /* contestantData */])
+	.constant('GOLFERS', __WEBPACK_IMPORTED_MODULE_0__config__["b" /* golferData */])
+	.constant('CONTESTANTS', __WEBPACK_IMPORTED_MODULE_0__config__["a" /* contestantData */])
 	.constant('REFRESH_TIME', 60000)
-	.constant('LEADERBOARD_URL', __WEBPACK_IMPORTED_MODULE_0__data__["c" /* leaderboardUrl */])
-	.constant('TOURNEY_TITLE', __WEBPACK_IMPORTED_MODULE_0__data__["d" /* tourneyTitle */])
+	.constant('LEADERBOARD_URL', __WEBPACK_IMPORTED_MODULE_0__config__["c" /* leaderboardUrl */])
+	.constant('TOURNEY_TITLE', __WEBPACK_IMPORTED_MODULE_0__config__["d" /* tourneyTitle */])
 	.constant('movement', {
 		positive: 'positive',
 		negative: 'negative',
@@ -143,7 +143,7 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 "use strict";
 
 
-const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL) {
+const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL, settingsService) {
 
 	const entries = CONTESTANTS
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
@@ -179,8 +179,9 @@ const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL)
 					golferCopy.score = emptyScore(golfer);
 				}
 
-				const entryCount = entries.filter(e => e.golferIds.includes(golferCopy.id)).length;
-				golferCopy.entryCount = entryCount;
+				const selectedContestantId = settingsService.getSelectedContestantId();
+				golferCopy.entryCount = entries.filter(e => e.golferIds.includes(golferCopy.id)).length;;
+				golferCopy.isSelected = entries.some(e => e.golferIds.includes(golferCopy.id) && e.contestantId === selectedContestantId);
 
 				return golferCopy;
 			});
@@ -311,7 +312,7 @@ const template = `
 	</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="golfer in $ctrl.golfers track by $index" ng-attr-id="golfer-{{golfer.id}}" ng-class="{'success': golfer.isHighlighted}">
+		<tr ng-repeat="golfer in $ctrl.golfers track by $index" ng-attr-id="golfer-{{golfer.id}}" ng-class="{'success': golfer.isHighlighted, 'selected': golfer.isSelected}">
 			<td ng-bind="golfer.score.position"></td>
 			<td ng-class="golfer.score.movement.direction" ng-bind="golfer.score.movement.text"></td>
 			<td><div ng-if="golfer.score.logoImage" class="logo"><img ng-src="{{golfer.score.logoImage}}" /></div><span ng-bind="$ctrl.getName(golfer)"></span></td>
@@ -1288,3 +1289,4 @@ __WEBPACK_IMPORTED_MODULE_0__app_js__["a" /* default */].component('settings', _
 
 /***/ })
 /******/ ]);
+//# sourceMappingURL=app.js.map
