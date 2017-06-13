@@ -66,6 +66,9 @@ table tr.selected:first-child {
 .settings {
     margin: 20px 0;
 }
+.settings .form-control {
+    font-size: 16px;
+}
 .navbar .navbar-brand img {
     height: 25px;
 }
