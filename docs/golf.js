@@ -671,7 +671,7 @@ const template = `
   </div>
   <div class="checkbox">
     <label>
-      <input ng-enabled="$ctrl.hasNotifications" type="checkbox" ng-model="$ctrl.enableNotifications" ng-change="$ctrl.enableNotificationsSelected()"> Enable Notifications
+      <input ng-disabled="!$ctrl.hasNotifications" type="checkbox" ng-model="$ctrl.enableNotifications" ng-change="$ctrl.enableNotificationsSelected()"> Enable Notifications
     </label>
   </div>
 </form>`;
