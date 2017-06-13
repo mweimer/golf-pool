@@ -4,6 +4,9 @@ import { tourneyTitle, leaderboardUrl, golferData, contestantData } from './conf
 
 contestantData.forEach((c, i) => c.id = i);
 
+import logoUrl from './logo.png';
+import faviconUrl from './favicon.ico';
+
 const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 	.constant('GOLFERS', golferData)
 	.constant('CONTESTANTS', contestantData)
@@ -24,9 +27,23 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 			template: '<settings></settings>'
 		});
 	})
-	.run(($rootScope, REFRESH_TIME, TOURNEY_TITLE) => {
+	.run(($rootScope, REFRESH_TIME, TOURNEY_TITLE, $location) => {
 		$rootScope.refreshTime = `Refresh Time: ${REFRESH_TIME / 1000} seconds`;
 		$rootScope.tourneyTitle = TOURNEY_TITLE;
+		$rootScope.logoUrl = logoUrl;
+		$rootScope.faviconUrl = faviconUrl;
+
+		$rootScope.currentRoute = () => {
+			if ($location.path() === '/') {
+				return 'pool';
+			} else if ($location.path() === '/golfers') {
+				return 'golfers';
+			} else if ($location.path() === '/settings') {
+				return 'settings';
+			}
+
+			return '';
+		};
 	});
 
 export default app;	

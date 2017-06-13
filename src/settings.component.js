@@ -1,12 +1,14 @@
 'use strict';
 
 const template = `
-<div class="settings">
-<span class="lbl">Selected Contestant: </span>
-<select ng-model="$ctrl.selectedContestantId" ng-change="$ctrl.contestantSelected()">
-	<option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
-</select>
-</div>`;
+<form class="settings">
+  <div class="form-group">
+    <label for="contestantDropdown">Selected Contestant: </label>
+    <select id="contestantDropdown" class="form-control" ng-model="$ctrl.selectedContestantId" ng-change="$ctrl.contestantSelected()">
+		<option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
+	</select>
+  </div>
+</form>`;
 
 const controller = function(CONTESTANTS, settingsService) {
 	this.contestantSelected = () => {

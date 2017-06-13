@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -81,7 +81,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(9)(content, options);
+var update = __webpack_require__(11)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -102,12 +102,19 @@ if(false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__logo_png__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__logo_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__logo_png__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__favicon_ico__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__favicon_ico___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__favicon_ico__);
 
 
 
 
 __WEBPACK_IMPORTED_MODULE_0__config__["a" /* contestantData */].forEach((c, i) => c.id = i);
+
+
+
 
 const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 	.constant('GOLFERS', __WEBPACK_IMPORTED_MODULE_0__config__["b" /* golferData */])
@@ -129,9 +136,23 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 			template: '<settings></settings>'
 		});
 	})
-	.run(($rootScope, REFRESH_TIME, TOURNEY_TITLE) => {
+	.run(($rootScope, REFRESH_TIME, TOURNEY_TITLE, $location) => {
 		$rootScope.refreshTime = `Refresh Time: ${REFRESH_TIME / 1000} seconds`;
 		$rootScope.tourneyTitle = TOURNEY_TITLE;
+		$rootScope.logoUrl = __WEBPACK_IMPORTED_MODULE_1__logo_png___default.a;
+		$rootScope.faviconUrl = __WEBPACK_IMPORTED_MODULE_2__favicon_ico___default.a;
+
+		$rootScope.currentRoute = () => {
+			if ($location.path() === '/') {
+				return 'pool';
+			} else if ($location.path() === '/golfers') {
+				return 'golfers';
+			} else if ($location.path() === '/settings') {
+				return 'settings';
+			}
+
+			return '';
+		};
 	});
 
 /* harmony default export */ __webpack_exports__["a"] = (app);	
@@ -500,12 +521,14 @@ const controller = function(dataService, $interval, REFRESH_TIME, $filter, $loca
 
 
 const template = `
-<div class="settings">
-<span class="lbl">Selected Contestant: </span>
-<select ng-model="$ctrl.selectedContestantId" ng-change="$ctrl.contestantSelected()">
-	<option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
-</select>
-</div>`;
+<form class="settings">
+  <div class="form-group">
+    <label for="contestantDropdown">Selected Contestant: </label>
+    <select id="contestantDropdown" class="form-control" ng-model="$ctrl.selectedContestantId" ng-change="$ctrl.contestantSelected()">
+		<option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
+	</select>
+  </div>
+</form>`;
 
 const controller = function(CONTESTANTS, settingsService) {
 	this.contestantSelected = () => {
@@ -556,7 +579,7 @@ exports = module.exports = __webpack_require__(8)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n    font-size: 12px;\n}\n\na {\n    font-size: 16px;\n}\n\n.logo {\n    display: inline;\n    margin-right: 5px;\n}\n\n.logo img {\n    bottom: 8px;\n    position: relative;\n    width: 20px;\n    margin-bottom: -14px;\n}\n\ntable th.movement:before {\n    content: \"\\2191\";/*\"\\2B06\";*/\n}\ntable th.movement:after {\n    content: \"\\2193\";\n}\ntable td.negative {\n    color: #d00;\n}\ntable td.negative:before {\n    content: \"\\2193\";\n    position: relative;\n    top: -1px;\n    margin-right: 2px;\n}\ntable td.positive {\n    color: #094;\n}\ntable td.positive:before {\n    content: \"\\2191\";\n    position: relative;\n    top: -1px;\n    margin-right: 2px;\n}\ntable tr.selected {\n    border: 2px solid black;\n}\ntable tr.selected:first-child {\n    border-top-width: 3px;\n}\n.golfer-score {\n    cursor: pointer;;\n}\n.settings {\n    margin: 20px 0;\n}\n\n.settings .lbl {\n    font-size: 15px;\n}\n", ""]);
+exports.push([module.i, "body {\n    font-size: 12px;\n}\n\n.logo {\n    display: inline;\n    margin-right: 5px;\n}\n\n.logo img {\n    bottom: 8px;\n    position: relative;\n    width: 20px;\n    margin-bottom: -14px;\n}\n\ntable th.movement:before {\n    content: \"\\2191\";/*\"\\2B06\";*/\n}\ntable th.movement:after {\n    content: \"\\2193\";\n}\ntable td.negative {\n    color: #d00;\n}\ntable td.negative:before {\n    content: \"\\2193\";\n    position: relative;\n    top: -1px;\n    margin-right: 2px;\n}\ntable td.positive {\n    color: #094;\n}\ntable td.positive:before {\n    content: \"\\2191\";\n    position: relative;\n    top: -1px;\n    margin-right: 2px;\n}\ntable tr.selected {\n    border: 2px solid black;\n}\ntable tr.selected:first-child {\n    border-top-width: 3px;\n}\n.golfer-score {\n    cursor: pointer;;\n}\n.settings {\n    margin: 20px 0;\n}\n.navbar .navbar-brand img {\n    height: 25px;\n}", ""]);
 
 // exports
 
@@ -647,6 +670,18 @@ function toComment(sourceMap) {
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__.p + "favicon.ico";
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "logo.png";
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /*
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
@@ -690,7 +725,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(10);
+var	fixUrls = __webpack_require__(12);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -1003,7 +1038,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports) {
 
 
@@ -1098,7 +1133,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1246,7 +1281,7 @@ const contestantData = [
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1292,4 +1327,4 @@ __WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('settings', _
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=golf.js.map

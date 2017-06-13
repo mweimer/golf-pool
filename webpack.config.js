@@ -1,14 +1,21 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+
+const PATHS = {
+    app: path.join(__dirname, 'src'),
+    build: path.join(__dirname, './docs')
+};
 
 module.exports = {
-    entry: "./src/index.js",
+    entry:  PATHS.app + "/index.js",
     output: {
-        path: __dirname + '/docs',
-        filename: "app.js",
+        path: PATHS.build,
+        filename: "golf.js"
     },
     module: {
         loaders: [
-            { test: /\.css$/, loader: "style-loader!css-loader" }
+            { test: /\.css$/, loader: "style-loader!css-loader" },
+            {test: /\.(png|ico)$/, loader: "file-loader?name=[name].[ext]"}
         ]
     },
     plugins: [
