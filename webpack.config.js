@@ -10,7 +10,8 @@ module.exports = {
     entry:  PATHS.app + "/index.js",
     output: {
         path: PATHS.build,
-        filename: "golf.js"
+        filename: "golf.js",
+        publicPath: "/golf-pool"
     },
     module: {
         loaders: [
