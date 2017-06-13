@@ -6,18 +6,24 @@ import app from './app.js';
 
 
 import dataService from './data.service.js';
+import gotoService from './goto.service.js';
 import settingsService from './settings.service.js';
 
 app.service('dataService', dataService);
+app.service('gotoService', gotoService);
 app.service('settingsService', settingsService);
 
 
-import golferLeaderboard from './golfer-leaderboard.component.js';
-import poolLeaderboard from './pool-leaderboard.component.js';
+import golfers from './golfers.component.js';
+import footer from './footer.component.js';
+import header from './header.component.js';
+import pool from './pool.component.js';
 import settings from './settings.component.js';
 
-app.component('golferLeaderboard', golferLeaderboard);
-app.component('poolLeaderboard', poolLeaderboard);
+app.component('golfers', golfers);
+app.component('gpFooter', footer);
+app.component('gpHeader', header);
+app.component('pool', pool);
 app.component('settings', settings);
 
 

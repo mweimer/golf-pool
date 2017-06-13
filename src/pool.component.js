@@ -20,7 +20,7 @@ const template = `
 </table>
 </div>`;
 
-const controller = function(dataService, $interval, REFRESH_TIME, $filter, $location, settingsService) {
+const controller = function(dataService, $interval, REFRESH_TIME, $filter, settingsService, gotoService) {
 	const dateFilter = $filter('date');
 
 	const entries = dataService.getEntries();
@@ -109,8 +109,7 @@ const controller = function(dataService, $interval, REFRESH_TIME, $filter, $loca
 	};
 
 	this.gotoGolfer = golfer => {
-		dataService.setGotoGolferId(golfer.id);
-		$location.url('/golfers');
+		gotoService.gotoGolfer(golfer.id);
 	};
 };
 

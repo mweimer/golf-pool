@@ -1,6 +1,6 @@
 'use strict';
 
-const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL, settingsService) {
+const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL, settingsService) {
 
 	const entries = CONTESTANTS
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
@@ -47,14 +47,6 @@ const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL,
 		});
 	};
 
-	let gotoGolferId = null;
-
-	this.setGotoGolferId = (id) => {
-		gotoGolferId = id;
-	};
-
-	this.getGotoGolferId = () => gotoGolferId;
-
 	const emptyScore = (golfer) => {
 		return {
 			index: Number.MAX_SAFE_INTEGER,
@@ -74,7 +66,7 @@ const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL,
 			shortName: `${golfer.firstName[0]}. ${golfer.lastName}`,
 			logoImage: '',
 			startTime: null,
-			movement:  { text: '-', direction: movementDirection.none }
+			movement:  { text: '-', direction: MOVEMENT.none }
 		}
 	}
 
@@ -118,11 +110,11 @@ const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL,
 		const movementText = movementElement.text();
 		let movementDirection;
 		if (movementElement.hasClass('positive')) {
-			movementDirection = movement.positive;
+			movementDirection = MOVEMENT.positive;
 		} else if (movementElement.hasClass('negative')) {
-			movementDirection = movement.negative;
+			movementDirection = MOVEMENT.negative;
 		} else {
-			movementDirection = movement.none;
+			movementDirection = MOVEMENT.none;
 		}
 
 		return {

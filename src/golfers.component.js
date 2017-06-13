@@ -28,7 +28,7 @@ const template = `
 </table>
 </div>`;
 
-const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout) {
+const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout, gotoService) {
 	const refreshData = () => {
 		return dataService.get().then(golfersWithScores => {
 			this.golfers = _.sortBy(golfersWithScores, g => g.score.index)
@@ -36,9 +36,8 @@ const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll,
 	};
 
 	const scrollHighlightGolfer = () => {
-		const golferId = dataService.getGotoGolferId();
+		const golferId = gotoService.getGotoGolferId();
 		if (golferId) {
-			dataService.setGotoGolferId(null);
 			$timeout(() => $anchorScroll('golfer-' + golferId), 10);
 			const golfer = this.golfers.find(g => g.id === golferId);
 			if (golfer) {

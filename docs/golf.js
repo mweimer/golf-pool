@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,7 +73,7 @@
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(7);
+var content = __webpack_require__(10);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -81,7 +81,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(11)(content, options);
+var update = __webpack_require__(14)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -102,19 +102,15 @@ if(false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__logo_png__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__logo_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__logo_png__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__favicon_ico__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__favicon_ico___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__favicon_ico__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__favicon_ico__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__favicon_ico___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__favicon_ico__);
+
 
 
 
 
 __WEBPACK_IMPORTED_MODULE_0__config__["a" /* contestantData */].forEach((c, i) => c.id = i);
-
-
-
 
 const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 	.constant('GOLFERS', __WEBPACK_IMPORTED_MODULE_0__config__["b" /* golferData */])
@@ -122,37 +118,23 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 	.constant('REFRESH_TIME', 60000)
 	.constant('LEADERBOARD_URL', __WEBPACK_IMPORTED_MODULE_0__config__["c" /* leaderboardUrl */])
 	.constant('TOURNEY_TITLE', __WEBPACK_IMPORTED_MODULE_0__config__["d" /* tourneyTitle */])
-	.constant('movement', {
+	.constant('MOVEMENT', {
 		positive: 'positive',
 		negative: 'negative',
 		none: 'none'
 	})
 	.config(($routeProvider) => {
 		$routeProvider.when('/', { 
-			template: '<pool-leaderboard></pool-leaderboard>'
+			template: '<pool></pool>'
 		}).when('/golfers', { 
-			template: '<golfer-leaderboard></golfer-leaderboard>'
+			template: '<golfers></golfers>'
 		}).when('/settings', { 
 			template: '<settings></settings>'
 		});
 	})
-	.run(($rootScope, REFRESH_TIME, TOURNEY_TITLE, $location) => {
-		$rootScope.refreshTime = `Refresh Time: ${REFRESH_TIME / 1000} seconds`;
+	.run(($rootScope, TOURNEY_TITLE) => {
 		$rootScope.tourneyTitle = TOURNEY_TITLE;
-		$rootScope.logoUrl = __WEBPACK_IMPORTED_MODULE_1__logo_png___default.a;
-		$rootScope.faviconUrl = __WEBPACK_IMPORTED_MODULE_2__favicon_ico___default.a;
-
-		$rootScope.currentRoute = () => {
-			if ($location.path() === '/') {
-				return 'pool';
-			} else if ($location.path() === '/golfers') {
-				return 'golfers';
-			} else if ($location.path() === '/settings') {
-				return 'settings';
-			}
-
-			return '';
-		};
+		$rootScope.faviconUrl = __WEBPACK_IMPORTED_MODULE_1__favicon_ico___default.a;
 	});
 
 /* harmony default export */ __webpack_exports__["a"] = (app);	
@@ -164,7 +146,7 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 "use strict";
 
 
-const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL, settingsService) {
+const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL, settingsService) {
 
 	const entries = CONTESTANTS
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
@@ -211,14 +193,6 @@ const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL,
 		});
 	};
 
-	let gotoGolferId = null;
-
-	this.setGotoGolferId = (id) => {
-		gotoGolferId = id;
-	};
-
-	this.getGotoGolferId = () => gotoGolferId;
-
 	const emptyScore = (golfer) => {
 		return {
 			index: Number.MAX_SAFE_INTEGER,
@@ -238,7 +212,7 @@ const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL,
 			shortName: `${golfer.firstName[0]}. ${golfer.lastName}`,
 			logoImage: '',
 			startTime: null,
-			movement:  { text: '-', direction: movementDirection.none }
+			movement:  { text: '-', direction: MOVEMENT.none }
 		}
 	}
 
@@ -282,11 +256,11 @@ const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL,
 		const movementText = movementElement.text();
 		let movementDirection;
 		if (movementElement.hasClass('positive')) {
-			movementDirection = movement.positive;
+			movementDirection = MOVEMENT.positive;
 		} else if (movementElement.hasClass('negative')) {
-			movementDirection = movement.negative;
+			movementDirection = MOVEMENT.negative;
 		} else {
-			movementDirection = movement.none;
+			movementDirection = MOVEMENT.none;
 		}
 
 		return {
@@ -326,6 +300,27 @@ const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL,
 
 
 const template = `
+<footer>
+  <span ng-bind="::$ctrl.refreshTime">
+</footer>`;
+
+
+const controller = function(REFRESH_TIME) {
+    this.$onInit = () => {
+        this.refreshTime = `Refresh Time: ${REFRESH_TIME / 1000} seconds`;
+    };
+};
+
+/* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+
+const template = `
 <div class="golfer-leaderboard">
 <table class="table table-striped table-responsive table-condensed">
 	<thead>
@@ -353,7 +348,7 @@ const template = `
 </table>
 </div>`;
 
-const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout) {
+const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout, gotoService) {
 	const refreshData = () => {
 		return dataService.get().then(golfersWithScores => {
 			this.golfers = _.sortBy(golfersWithScores, g => g.score.index)
@@ -361,9 +356,8 @@ const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll,
 	};
 
 	const scrollHighlightGolfer = () => {
-		const golferId = dataService.getGotoGolferId();
+		const golferId = gotoService.getGotoGolferId();
 		if (golferId) {
-			dataService.setGotoGolferId(null);
 			$timeout(() => $anchorScroll('golfer-' + golferId), 10);
 			const golfer = this.golfers.find(g => g.id === golferId);
 			if (golfer) {
@@ -394,7 +388,88 @@ const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll,
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
 
 /***/ }),
-/* 4 */
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+
+const service = function($location) {
+    let gotoGolferId = null;
+
+    this.gotoGolfer = (id) => {
+        gotoGolferId = id;
+        $location.url('/golfers');
+    };
+
+    this.getGotoGolferId = () => {
+        const id = gotoGolferId;
+        gotoGolferId = null;
+        return id;
+    };
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (service);
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__logo_png__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__logo_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__logo_png__);
+
+
+
+
+const template = `
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">
+         <img alt="Golf Pool" ng-src="{{::$ctrl.logoUrl}}">
+      </a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li ng-class="{'active': $ctrl.currentRoute() === 'pool'}"><a href="/">Pool</a></li>
+        <li ng-class="{'active': $ctrl.currentRoute() === 'golfers'}"><a href="#!/golfers">Golfers</a></li>
+        <li ng-class="{'active': $ctrl.currentRoute() === 'settings'}"><a href="#!/settings">Settings</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>`;
+
+
+const controller = function($location) {
+    this.currentRoute = () => {
+        if ($location.path() === '/') {
+            return 'pool';
+        } else if ($location.path() === '/golfers') {
+            return 'golfers';
+        } else if ($location.path() === '/settings') {
+            return 'settings';
+        }
+
+        return '';
+    };
+
+    this.$onInit = () => {
+        this.logoUrl = __WEBPACK_IMPORTED_MODULE_0__logo_png___default.a;
+    };
+};
+
+/* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
+
+/***/ }),
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -420,7 +495,7 @@ const template = `
 </table>
 </div>`;
 
-const controller = function(dataService, $interval, REFRESH_TIME, $filter, $location, settingsService) {
+const controller = function(dataService, $interval, REFRESH_TIME, $filter, settingsService, gotoService) {
 	const dateFilter = $filter('date');
 
 	const entries = dataService.getEntries();
@@ -509,15 +584,14 @@ const controller = function(dataService, $interval, REFRESH_TIME, $filter, $loca
 	};
 
 	this.gotoGolfer = golfer => {
-		dataService.setGotoGolferId(golfer.id);
-		$location.url('/golfers');
+		gotoService.gotoGolfer(golfer.id);
 	};
 };
 
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller});
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -547,7 +621,7 @@ const controller = function(CONTESTANTS, settingsService) {
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
 
 /***/ }),
-/* 6 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -574,10 +648,10 @@ const service = function(TOURNEY_TITLE) {
 /* harmony default export */ __webpack_exports__["a"] = (service);
 
 /***/ }),
-/* 7 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(8)(undefined);
+exports = module.exports = __webpack_require__(11)(undefined);
 // imports
 
 
@@ -588,7 +662,7 @@ exports.push([module.i, "body {\n    font-size: 12px;\n}\n\n.logo {\n    display
 
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, exports) {
 
 /*
@@ -670,19 +744,19 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 9 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "favicon.ico";
 
 /***/ }),
-/* 10 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "logo.png";
 
 /***/ }),
-/* 11 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -728,7 +802,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(12);
+var	fixUrls = __webpack_require__(15);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -1041,7 +1115,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, exports) {
 
 
@@ -1136,7 +1210,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 13 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1284,7 +1358,7 @@ const contestantData = [
 
 
 /***/ }),
-/* 14 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1293,10 +1367,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__style_css__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_js__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data_service_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__settings_service_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__golfer_leaderboard_component_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pool_leaderboard_component_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__settings_component_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__goto_service_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__settings_service_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__golfers_component_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__footer_component_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__header_component_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pool_component_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__settings_component_js__ = __webpack_require__(8);
+
 
 
 
@@ -1308,16 +1386,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 __WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('dataService', __WEBPACK_IMPORTED_MODULE_2__data_service_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('settingsService', __WEBPACK_IMPORTED_MODULE_3__settings_service_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('gotoService', __WEBPACK_IMPORTED_MODULE_3__goto_service_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('settingsService', __WEBPACK_IMPORTED_MODULE_4__settings_service_js__["a" /* default */]);
 
 
 
 
 
 
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('golferLeaderboard', __WEBPACK_IMPORTED_MODULE_4__golfer_leaderboard_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('poolLeaderboard', __WEBPACK_IMPORTED_MODULE_5__pool_leaderboard_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('settings', __WEBPACK_IMPORTED_MODULE_6__settings_component_js__["a" /* default */]);
+
+
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('golfers', __WEBPACK_IMPORTED_MODULE_5__golfers_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('gpFooter', __WEBPACK_IMPORTED_MODULE_6__footer_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('gpHeader', __WEBPACK_IMPORTED_MODULE_7__header_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('pool', __WEBPACK_IMPORTED_MODULE_8__pool_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('settings', __WEBPACK_IMPORTED_MODULE_9__settings_component_js__["a" /* default */]);
 
 
 
