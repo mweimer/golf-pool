@@ -44,6 +44,22 @@ table tr.selected {
 table tr.selected:first-child {
     border-top-width: 3px;
 }
+
+@media only screen and (max-width: 768px) {
+    .pool-leaderboard table td, .pool-leaderboard table th {
+        max-width: 50px;
+        word-wrap: break-word;
+        font-size: 10px;
+    }
+
+    .golfer-leaderboard table td, .golfer-leaderboard table th {
+        max-width: 40px;
+        word-wrap: break-word;
+        font-size: 8px;
+    }
+}
+
+
 .golfer-score {
     cursor: pointer;;
 }

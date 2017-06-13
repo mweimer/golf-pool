@@ -1,7 +1,8 @@
 'use strict';
 
 const template = `
-<table class="table table-striped">
+<div class="golfer-leaderboard">
+<table class="table table-striped table-responsive table-condensed">
 	<thead>
 	<tr>
 		<th>Pos</th><th class="movement"></th><th>Player</th><th>Entries</th><th>To Par</th><th>Today</th><th>Thru</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Tot</th>
@@ -24,7 +25,8 @@ const template = `
 			<td ng-bind="golfer.score.total"></td>
 		</tr>
 	</tbody>
-</table>`;
+</table>
+</div>`;
 
 const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout) {
 	const refreshData = () => {

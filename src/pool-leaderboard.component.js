@@ -1,9 +1,10 @@
 'use strict';
 
 const template = `
-<table class="table">
+<div class="pool-leaderboard">
+<table class="table table-responsive table-condensed">
 	<thead><tr>
-		<th>Pos</th><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>Total Score</th><th>To Par</th>
+		<th>Pos</th><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>To Par</th>
 	</tr></thead>
 	<tbody>
 		<tr ng-repeat="entry in $ctrl.entries track by $index" ng-class="{danger: entry.isDQ, selected: entry.isSelected}">
@@ -13,11 +14,11 @@ const template = `
 			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[1])" ng-class="entry.golfers[1].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 1)"></td>
 			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[2])" ng-class="entry.golfers[2].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 2)"></td>
 			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[3])" ng-class="entry.golfers[3].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 3)"></td>
-			<td ng-bind="entry.overallTotalScore"></td>
 			<th ng-bind="entry.overallToPar"></th>
 		</tr>
 	</tbody>
-</table>`;
+</table>
+</div>`;
 
 const controller = function(dataService, $interval, REFRESH_TIME, $filter, $location, settingsService) {
 	const dateFilter = $filter('date');

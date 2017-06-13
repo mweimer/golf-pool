@@ -326,7 +326,8 @@ const service = function($http, GOLFERS, CONTESTANTS, movement, LEADERBOARD_URL,
 
 
 const template = `
-<table class="table table-striped">
+<div class="golfer-leaderboard">
+<table class="table table-striped table-responsive table-condensed">
 	<thead>
 	<tr>
 		<th>Pos</th><th class="movement"></th><th>Player</th><th>Entries</th><th>To Par</th><th>Today</th><th>Thru</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Tot</th>
@@ -349,7 +350,8 @@ const template = `
 			<td ng-bind="golfer.score.total"></td>
 		</tr>
 	</tbody>
-</table>`;
+</table>
+</div>`;
 
 const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout) {
 	const refreshData = () => {
@@ -399,9 +401,10 @@ const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll,
 
 
 const template = `
-<table class="table">
+<div class="pool-leaderboard">
+<table class="table table-responsive table-condensed">
 	<thead><tr>
-		<th>Pos</th><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>Total Score</th><th>To Par</th>
+		<th>Pos</th><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>To Par</th>
 	</tr></thead>
 	<tbody>
 		<tr ng-repeat="entry in $ctrl.entries track by $index" ng-class="{danger: entry.isDQ, selected: entry.isSelected}">
@@ -411,11 +414,11 @@ const template = `
 			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[1])" ng-class="entry.golfers[1].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 1)"></td>
 			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[2])" ng-class="entry.golfers[2].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 2)"></td>
 			<td class="golfer-score" ng-click="$ctrl.gotoGolfer(entry.golfers[3])" ng-class="entry.golfers[3].throwaway ? 'warning' : 'success'" ng-bind-html="$ctrl.getGolferInfo(entry, 3)"></td>
-			<td ng-bind="entry.overallTotalScore"></td>
 			<th ng-bind="entry.overallToPar"></th>
 		</tr>
 	</tbody>
-</table>`;
+</table>
+</div>`;
 
 const controller = function(dataService, $interval, REFRESH_TIME, $filter, $location, settingsService) {
 	const dateFilter = $filter('date');
@@ -579,7 +582,7 @@ exports = module.exports = __webpack_require__(8)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n    font-size: 12px;\n}\n\n.logo {\n    display: inline;\n    margin-right: 5px;\n}\n\n.logo img {\n    bottom: 8px;\n    position: relative;\n    width: 20px;\n    margin-bottom: -14px;\n}\n\ntable th.movement:before {\n    content: \"\\2191\";/*\"\\2B06\";*/\n}\ntable th.movement:after {\n    content: \"\\2193\";\n}\ntable td.negative {\n    color: #d00;\n}\ntable td.negative:before {\n    content: \"\\2193\";\n    position: relative;\n    top: -1px;\n    margin-right: 2px;\n}\ntable td.positive {\n    color: #094;\n}\ntable td.positive:before {\n    content: \"\\2191\";\n    position: relative;\n    top: -1px;\n    margin-right: 2px;\n}\ntable tr.selected {\n    border: 2px solid black;\n}\ntable tr.selected:first-child {\n    border-top-width: 3px;\n}\n.golfer-score {\n    cursor: pointer;;\n}\n.settings {\n    margin: 20px 0;\n}\n.navbar .navbar-brand img {\n    height: 25px;\n}", ""]);
+exports.push([module.i, "body {\n    font-size: 12px;\n}\n\n.logo {\n    display: inline;\n    margin-right: 5px;\n}\n\n.logo img {\n    bottom: 8px;\n    position: relative;\n    width: 20px;\n    margin-bottom: -14px;\n}\n\ntable th.movement:before {\n    content: \"\\2191\";/*\"\\2B06\";*/\n}\ntable th.movement:after {\n    content: \"\\2193\";\n}\ntable td.negative {\n    color: #d00;\n}\ntable td.negative:before {\n    content: \"\\2193\";\n    position: relative;\n    top: -1px;\n    margin-right: 2px;\n}\ntable td.positive {\n    color: #094;\n}\ntable td.positive:before {\n    content: \"\\2191\";\n    position: relative;\n    top: -1px;\n    margin-right: 2px;\n}\ntable tr.selected {\n    border: 2px solid black;\n}\ntable tr.selected:first-child {\n    border-top-width: 3px;\n}\n\n@media only screen and (max-width: 768px) {\n    .pool-leaderboard table td, .pool-leaderboard table th {\n        max-width: 50px;\n        word-wrap: break-word;\n        font-size: 10px;\n    }\n\n    .golfer-leaderboard table td, .golfer-leaderboard table th {\n        max-width: 40px;\n        word-wrap: break-word;\n        font-size: 8px;\n    }\n}\n\n\n.golfer-score {\n    cursor: pointer;;\n}\n.settings {\n    margin: 20px 0;\n}\n.navbar .navbar-brand img {\n    height: 25px;\n}", ""]);
 
 // exports
 
