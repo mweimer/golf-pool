@@ -30,7 +30,7 @@ const template = `
 
 const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout, gotoService) {
 	const refreshData = () => {
-		return dataService.get().then(golfersWithScores => {
+		return dataService.getGolferScores().then(golfersWithScores => {
 			this.golfers = _.sortBy(golfersWithScores, g => g.score.index)
 		});
 	};

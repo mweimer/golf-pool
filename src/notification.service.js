@@ -32,7 +32,6 @@ const service = function(settingsService) {
 			if (result === 'granted') {
 				const title = inTopTwo ? 'You\'ve moved into the top 2!' : 'You\'ve dropped out of the top 2.';
 				const options = { 
-					vibrate: [200, 100, 200],
 					icon: logoUrl
 				};
 				const notification = new Notification(title, options);

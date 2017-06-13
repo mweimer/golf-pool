@@ -420,7 +420,7 @@ const template = `
 
 const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout, gotoService) {
 	const refreshData = () => {
-		return dataService.get().then(golfersWithScores => {
+		return dataService.getGolferScores().then(golfersWithScores => {
 			this.golfers = _.sortBy(golfersWithScores, g => g.score.index)
 		});
 	};
@@ -579,7 +579,6 @@ const service = function(settingsService) {
 			if (result === 'granted') {
 				const title = inTopTwo ? 'You\'ve moved into the top 2!' : 'You\'ve dropped out of the top 2.';
 				const options = { 
-					vibrate: [200, 100, 200],
 					icon: __WEBPACK_IMPORTED_MODULE_0__logo_png___default.a
 				};
 				const notification = new Notification(title, options);
