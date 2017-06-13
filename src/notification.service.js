@@ -9,7 +9,7 @@ const service = function(settingsService) {
 		Notification.requestPermission();
 	}
 
-
+	this.hasNotifications = () => hasNotifications;
 
 	this.update = (previousEntries, currentEntries) => {
 		const selectedContestantId = settingsService.getSelectedContestantId();

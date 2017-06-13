@@ -10,12 +10,12 @@ const template = `
   </div>
   <div class="checkbox">
     <label>
-      <input type="checkbox" ng-model="$ctrl.enableNotifications" ng-change="$ctrl.enableNotificationsSelected()"> Enable Notifications
+      <input ng-enabled="$ctrl.hasNotifications" type="checkbox" ng-model="$ctrl.enableNotifications" ng-change="$ctrl.enableNotificationsSelected()"> Enable Notifications
     </label>
   </div>
 </form>`;
 
-const controller = function(CONTESTANTS, settingsService) {
+const controller = function(CONTESTANTS, settingsService, notificationService) {
 	this.contestantSelected = () => {
 		settingsService.setSelectedContestantId(this.selectedContestantId);
 	};
@@ -27,7 +27,8 @@ const controller = function(CONTESTANTS, settingsService) {
 	this.$onInit = () => {
 		this.contestants = _.concat([{name: 'none', id: -1}], CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
 		this.selectedContestantId = settingsService.getSelectedContestantId().toString();
-        this.enableNotifications = settingsService.getEnableNotifications();
+        this.enableNotifications = notificationService.hasNotifications() && settingsService.getEnableNotifications();
+        this.hasNotifications = notificationService.hasNotifications();
 	}
 };
 
