@@ -1,6 +1,6 @@
 'use strict';
 
-import { tourneyTitle, leaderboardUrl, golferData, contestantData } from './config';
+import { tourneyTitle, leaderboardUrl, golferData, contestantData } from './config-2017-memorial';
 import faviconUrl from './favicon.ico';
 
 contestantData.forEach((c, i) => c.id = i);

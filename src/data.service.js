@@ -6,9 +6,13 @@ const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL,
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
 		.reduce((prev, curr) => prev.concat(curr));
 
-	this.getEntries = () => entries;	
+	this.getPoolEntries = () => {
+		return this.getGolferScores().then(golferScores => {
+			return addGolferScoresToEntries(golferScores);
+		});
+	}
 
-	this.get = () => {
+	this.getGolferScores = () => {
 		return $http({
 			method: 'GET',
 			url: LEADERBOARD_URL
@@ -141,6 +145,66 @@ const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL,
 			}
 		};
 	};
+
+	const addGolferScoresToEntries = (golferScores) => {
+		const entriesWithScores= entries.map(entry => {
+			const entryGolfers = entry.golferIds.map(gid => angular.copy(golferScores.find(golfer => golfer.id === gid)));
+			let overallRelativeScore, overallTotalScore, overallToPar;
+			const isDQ = entryGolfers.filter(golfer => golfer.score.isDNF).length > 1;
+			const selectedContestantId = settingsService.getSelectedContestantId();
+			const isSelected = entry.contestantId === selectedContestantId;
+
+			if (!isDQ) {
+				const worstGolfers = _.orderBy(entryGolfers, ['score.relativeScore', 'score.totalScore', 'id'], ['desc', 'desc', 'desc']);
+				worstGolfers[0].throwaway = true;
+
+				overallRelativeScore = entryGolfers
+					.filter(golfer => golfer.throwaway !== true)
+					.reduce((prev, curr) => prev + curr.score.relativeScore, 0);
+
+				overallTotalScore = entryGolfers
+					.filter(golfer => golfer.throwaway !== true)
+					.reduce((prev, curr) => prev + curr.score.totalScore, 0).toString();
+
+				overallToPar = overallRelativeScore === 0 ? 'E' : overallRelativeScore.toString();
+			} else {
+				overallRelativeScore = Number.MAX_SAFE_INTEGER;
+				overallTotalScore = '--';
+				overallToPar = '--';
+			}
+			
+			return {
+				name: entry.name,
+				golfers: entryGolfers,
+				overallRelativeScore,
+				overallTotalScore,
+				overallToPar,
+				isDQ,
+				isSelected,
+				contestantId: entry.contestantId
+			};
+		});
+
+		return addPositions(entriesWithScores);
+	};
+
+	const addPositions = entriesWithScores => {
+		const sortedEntries = _.sortBy(entriesWithScores, ['overallRelativeScore', 'overallTotalScore']);
+
+		let position = 1;
+		let lastScore = 0;
+		sortedEntries.forEach((entry, index) => {
+			const isTied = sortedEntries.filter(e => e.overallRelativeScore === entry.overallRelativeScore).length > 1;
+			if (entry.overallRelativeScore > lastScore) {
+				position = index + 1;
+			} 
+ 			entry.position = isTied ? 'T' + position : position.toString() ;
+ 			entry.positionNumber = position;
+ 			lastScore = entry.overallRelativeScore;
+		})
+
+		return sortedEntries;
+	}
 
 };
 

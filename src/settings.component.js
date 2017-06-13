@@ -8,6 +8,11 @@ const template = `
 		<option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
 	</select>
   </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" ng-model="$ctrl.enableNotifications" ng-change="$ctrl.enableNotificationsSelected()"> Enable Notifications
+    </label>
+  </div>
 </form>`;
 
 const controller = function(CONTESTANTS, settingsService) {
@@ -15,9 +20,14 @@ const controller = function(CONTESTANTS, settingsService) {
 		settingsService.setSelectedContestantId(this.selectedContestantId);
 	};
 
+    this.enableNotificationsSelected = () => {
+        settingsService.setEnableNotifications(this.enableNotifications);
+    };
+
 	this.$onInit = () => {
 		this.contestants = _.concat([{name: 'none', id: -1}], CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
 		this.selectedContestantId = settingsService.getSelectedContestantId().toString();
+        this.enableNotifications = settingsService.getEnableNotifications();
 	}
 };
 

@@ -7,10 +7,12 @@ import app from './app.js';
 
 import dataService from './data.service.js';
 import gotoService from './goto.service.js';
+import notificationService from './notification.service.js';
 import settingsService from './settings.service.js';
 
 app.service('dataService', dataService);
 app.service('gotoService', gotoService);
+app.service('notificationService', notificationService);
 app.service('settingsService', settingsService);
 
 

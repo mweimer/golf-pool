@@ -63,17 +63,23 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__.p + "logo.png";
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(10);
+var content = __webpack_require__(12);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -81,7 +87,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(14)(content, options);
+var update = __webpack_require__(15)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -98,26 +104,26 @@ if(false) {
 }
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__favicon_ico__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config_2017_memorial__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__favicon_ico__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__favicon_ico___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__favicon_ico__);
 
 
 
 
 
-__WEBPACK_IMPORTED_MODULE_0__config__["a" /* contestantData */].forEach((c, i) => c.id = i);
+__WEBPACK_IMPORTED_MODULE_0__config_2017_memorial__["a" /* contestantData */].forEach((c, i) => c.id = i);
 
 const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
-	.constant('GOLFERS', __WEBPACK_IMPORTED_MODULE_0__config__["b" /* golferData */])
-	.constant('CONTESTANTS', __WEBPACK_IMPORTED_MODULE_0__config__["a" /* contestantData */])
+	.constant('GOLFERS', __WEBPACK_IMPORTED_MODULE_0__config_2017_memorial__["b" /* golferData */])
+	.constant('CONTESTANTS', __WEBPACK_IMPORTED_MODULE_0__config_2017_memorial__["a" /* contestantData */])
 	.constant('REFRESH_TIME', 60000)
-	.constant('LEADERBOARD_URL', __WEBPACK_IMPORTED_MODULE_0__config__["c" /* leaderboardUrl */])
-	.constant('TOURNEY_TITLE', __WEBPACK_IMPORTED_MODULE_0__config__["d" /* tourneyTitle */])
+	.constant('LEADERBOARD_URL', __WEBPACK_IMPORTED_MODULE_0__config_2017_memorial__["c" /* leaderboardUrl */])
+	.constant('TOURNEY_TITLE', __WEBPACK_IMPORTED_MODULE_0__config_2017_memorial__["d" /* tourneyTitle */])
 	.constant('MOVEMENT', {
 		positive: 'positive',
 		negative: 'negative',
@@ -140,7 +146,7 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 /* harmony default export */ __webpack_exports__["a"] = (app);	
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -152,9 +158,13 @@ const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL,
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
 		.reduce((prev, curr) => prev.concat(curr));
 
-	this.getEntries = () => entries;	
+	this.getPoolEntries = () => {
+		return this.getGolferScores().then(golferScores => {
+			return addGolferScoresToEntries(golferScores);
+		});
+	}
 
-	this.get = () => {
+	this.getGolferScores = () => {
 		return $http({
 			method: 'GET',
 			url: LEADERBOARD_URL
@@ -288,12 +298,72 @@ const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL,
 		};
 	};
 
+	const addGolferScoresToEntries = (golferScores) => {
+		const entriesWithScores= entries.map(entry => {
+			const entryGolfers = entry.golferIds.map(gid => angular.copy(golferScores.find(golfer => golfer.id === gid)));
+			let overallRelativeScore, overallTotalScore, overallToPar;
+			const isDQ = entryGolfers.filter(golfer => golfer.score.isDNF).length > 1;
+			const selectedContestantId = settingsService.getSelectedContestantId();
+			const isSelected = entry.contestantId === selectedContestantId;
+
+			if (!isDQ) {
+				const worstGolfers = _.orderBy(entryGolfers, ['score.relativeScore', 'score.totalScore', 'id'], ['desc', 'desc', 'desc']);
+				worstGolfers[0].throwaway = true;
+
+				overallRelativeScore = entryGolfers
+					.filter(golfer => golfer.throwaway !== true)
+					.reduce((prev, curr) => prev + curr.score.relativeScore, 0);
+
+				overallTotalScore = entryGolfers
+					.filter(golfer => golfer.throwaway !== true)
+					.reduce((prev, curr) => prev + curr.score.totalScore, 0).toString();
+
+				overallToPar = overallRelativeScore === 0 ? 'E' : overallRelativeScore.toString();
+			} else {
+				overallRelativeScore = Number.MAX_SAFE_INTEGER;
+				overallTotalScore = '--';
+				overallToPar = '--';
+			}
+			
+			return {
+				name: entry.name,
+				golfers: entryGolfers,
+				overallRelativeScore,
+				overallTotalScore,
+				overallToPar,
+				isDQ,
+				isSelected,
+				contestantId: entry.contestantId
+			};
+		});
+
+		return addPositions(entriesWithScores);
+	};
+
+	const addPositions = entriesWithScores => {
+		const sortedEntries = _.sortBy(entriesWithScores, ['overallRelativeScore', 'overallTotalScore']);
+
+		let position = 1;
+		let lastScore = 0;
+		sortedEntries.forEach((entry, index) => {
+			const isTied = sortedEntries.filter(e => e.overallRelativeScore === entry.overallRelativeScore).length > 1;
+			if (entry.overallRelativeScore > lastScore) {
+				position = index + 1;
+			} 
+ 			entry.position = isTied ? 'T' + position : position.toString() ;
+ 			entry.positionNumber = position;
+ 			lastScore = entry.overallRelativeScore;
+		})
+
+		return sortedEntries;
+	}
+
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (service);
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -314,7 +384,7 @@ const controller = function(REFRESH_TIME) {
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -388,7 +458,7 @@ const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll,
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -412,11 +482,11 @@ const service = function($location) {
 /* harmony default export */ __webpack_exports__["a"] = (service);
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__logo_png__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__logo_png__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__logo_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__logo_png__);
 
 
@@ -469,7 +539,59 @@ const controller = function($location) {
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
 
 /***/ }),
-/* 7 */
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__logo_png__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__logo_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__logo_png__);
+
+
+
+
+const service = function(settingsService) {
+	const hasNotifications = Boolean('Notification' in window);
+
+	if (hasNotifications) {
+		Notification.requestPermission();
+	}
+
+
+
+	this.update = (previousEntries, currentEntries) => {
+		const selectedContestantId = settingsService.getSelectedContestantId();
+		if (!hasNotifications || selectedContestantId < 0 || !previousEntries) {
+			return;
+		}
+
+		const previousPositions = previousEntries.filter(e => e.contestantId === selectedContestantId).map(e => e.positionNumber);
+		const currentPositions = currentEntries.filter(e => e.contestantId === selectedContestantId).map(e => e.positionNumber);
+
+		if (previousPositions.some(p => p === 1 || p === 2) && !currentPositions.some(p => p === 1 || p === 2)) {
+			showNotification(false);
+		} else if (!previousPositions.some(p => p === 1 || p === 2) && currentPositions.some(p => p === 1 || p === 2)) {
+			showNotification(true);
+		}
+	};
+
+	const showNotification = (inTopTwo) => {
+		Notification.requestPermission().then(result => {
+			if (result === 'granted') {
+				const title = inTopTwo ? 'You\'ve moved into the top 2!' : 'You\'ve dropped out of the top 2.';
+				const options = { 
+					vibrate: [200, 100, 200],
+					icon: __WEBPACK_IMPORTED_MODULE_0__logo_png___default.a
+				};
+				const notification = new Notification(title, options);
+			}
+		});
+	};
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (service);
+
+/***/ }),
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -495,72 +617,14 @@ const template = `
 </table>
 </div>`;
 
-const controller = function(dataService, $interval, REFRESH_TIME, $filter, settingsService, gotoService) {
+const controller = function(dataService, $interval, REFRESH_TIME, $filter, gotoService, notificationService) {
 	const dateFilter = $filter('date');
 
-	const entries = dataService.getEntries();
-
-	const addDataToEntries = (golfersWithScores) => {
-		const entriesWithData = entries.map(entry => {
-			const entryGolfers = entry.golferIds.map(gid => angular.copy(golfersWithScores.find(golfer => golfer.id === gid)));
-			let overallRelativeScore, overallTotalScore, overallToPar;
-			const isDQ = entryGolfers.filter(golfer => golfer.score.isDNF).length > 1;
-			const selectedContestantId = settingsService.getSelectedContestantId();
-			const isSelected = entry.contestantId === selectedContestantId;
-
-			if (!isDQ) {
-				const worstGolfers = _.orderBy(entryGolfers, ['score.relativeScore', 'score.totalScore', 'id'], ['desc', 'desc', 'desc']);
-				worstGolfers[0].throwaway = true;
-
-				overallRelativeScore = entryGolfers
-					.filter(golfer => golfer.throwaway !== true)
-					.reduce((prev, curr) => prev + curr.score.relativeScore, 0);
-
-				overallTotalScore = entryGolfers
-					.filter(golfer => golfer.throwaway !== true)
-					.reduce((prev, curr) => prev + curr.score.totalScore, 0).toString();
-
-				overallToPar = overallRelativeScore === 0 ? 'E' : overallRelativeScore.toString();
-			} else {
-				overallRelativeScore = Number.MAX_SAFE_INTEGER;
-				overallTotalScore = '--';
-				overallToPar = '--';
-			}
-			
-			return {
-				name: entry.name,
-				golfers: entryGolfers,
-				overallRelativeScore,
-				overallTotalScore,
-				overallToPar,
-				isDQ,
-				isSelected
-			};
-		});
-
-		return addPositions(entriesWithData);
-	};
-
-	const addPositions = entriesWithData => {
-		const sortedEntries = _.sortBy(entriesWithData, ['overallRelativeScore', 'overallTotalScore']);
-
-		let position = 1;
-		let lastScore = 0;
-		sortedEntries.forEach((entry, index) => {
-			const isTied = sortedEntries.filter(e => e.overallRelativeScore === entry.overallRelativeScore).length > 1;
-			if (entry.overallRelativeScore > lastScore) {
-				position = index + 1;
-			} 
- 			entry.position = isTied ? 'T' + position : position.toString() ;
- 			lastScore = entry.overallRelativeScore;
-		})
-
-		return sortedEntries;
-	}
-
 	const refreshData = () => {
-		dataService.get().then(golfersWithScores => {
-			this.entries = addDataToEntries(golfersWithScores);
+		const previousEntries = this.entries;
+		dataService.getPoolEntries().then(entries => {
+			this.entries = entries;
+			notificationService.update(previousEntries, entries)
 		});
 	};
 
@@ -591,7 +655,7 @@ const controller = function(dataService, $interval, REFRESH_TIME, $filter, setti
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller});
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -605,6 +669,11 @@ const template = `
 		<option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
 	</select>
   </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" ng-model="$ctrl.enableNotifications" ng-change="$ctrl.enableNotificationsSelected()"> Enable Notifications
+    </label>
+  </div>
 </form>`;
 
 const controller = function(CONTESTANTS, settingsService) {
@@ -612,16 +681,21 @@ const controller = function(CONTESTANTS, settingsService) {
 		settingsService.setSelectedContestantId(this.selectedContestantId);
 	};
 
+    this.enableNotificationsSelected = () => {
+        settingsService.setEnableNotifications(this.enableNotifications);
+    };
+
 	this.$onInit = () => {
 		this.contestants = _.concat([{name: 'none', id: -1}], CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
 		this.selectedContestantId = settingsService.getSelectedContestantId().toString();
+        this.enableNotifications = settingsService.getEnableNotifications();
 	}
 };
 
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -629,18 +703,31 @@ const controller = function(CONTESTANTS, settingsService) {
 
 const service = function(TOURNEY_TITLE) {
 	const hasLocalStorage = typeof(Storage) !== 'undefined';
-	const key = TOURNEY_TITLE + '-selectedContestantId';
+	const selectedContestantKey = TOURNEY_TITLE + '-selectedContestantId';
+	const enableNotifactionsKey = 'enableNotifactions';
 
 	this.getSelectedContestantId = () => {
-		if (!hasLocalStorage || !localStorage.getItem(key)) {
+		if (!hasLocalStorage || !localStorage.getItem(selectedContestantKey)) {
 			return -1;
 		}
 
-		return parseInt(localStorage.getItem(key));
+		return parseInt(localStorage.getItem(selectedContestantKey));
 	};
 
 	this.setSelectedContestantId = value => {
-		localStorage.setItem(key, value)
+		localStorage.setItem(selectedContestantKey, value)
+	};
+
+	this.getEnableNotifications = () => {
+		if (!hasLocalStorage || !localStorage.getItem(enableNotifactionsKey)) {
+			return true;
+		}
+
+		return localStorage.getItem(enableNotifactionsKey) === "true";
+	};
+
+	this.setEnableNotifications = value => {
+		localStorage.setItem(enableNotifactionsKey, value)
 	};
 
 };
@@ -648,10 +735,10 @@ const service = function(TOURNEY_TITLE) {
 /* harmony default export */ __webpack_exports__["a"] = (service);
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(11)(undefined);
+exports = module.exports = __webpack_require__(13)(undefined);
 // imports
 
 
@@ -662,7 +749,7 @@ exports.push([module.i, "body {\n    font-size: 12px;\n}\n\n.logo {\n    display
 
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports) {
 
 /*
@@ -744,19 +831,13 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "favicon.ico";
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "logo.png";
-
-/***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -802,7 +883,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(15);
+var	fixUrls = __webpack_require__(16);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -1115,7 +1196,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 
@@ -1210,7 +1291,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1218,195 +1299,164 @@ module.exports = function (css) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return leaderboardUrl; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return golferData; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return contestantData; });
-const tourneyTitle = '2017 US Open';
+const tourneyTitle = '2017 Memorial';
 
-const leaderboardUrl = 'http://www.espn.com/golf/leaderboard?tournamentId=3066';
+const leaderboardUrl = 'http://www.espn.com/golf/leaderboard?tournamentId=2706';
 
 const golferData = [
     { id: 1, firstName: 'Dustin', lastName: 'Johnson', tier: 'A' },
-    { id: 2, firstName: 'Jordan', lastName: 'Spieth', tier: 'A' },
-    { id: 3, firstName: 'Rory', lastName: 'McIlroy', tier: 'A' },
+    { id: 2, firstName: 'Jon', lastName: 'Rahm', tier: 'A' },
+    { id: 3, firstName: 'Jordan', lastName: 'Spieth', tier: 'A' },
     { id: 4, firstName: 'Jason', lastName: 'Day', tier: 'A' },
-    { id: 5, firstName: 'Jon', lastName: 'Rahm', tier: 'A' },
-    { id: 6, firstName: 'Rickie', lastName: 'Fowler', tier: 'A' },
-    { id: 7, firstName: 'Justin', lastName: 'Rose', tier: 'A' },
-    { id: 8, firstName: 'Sergio', lastName: 'Garcia', tier: 'A' },
-    { id: 9, firstName: 'Hideki', lastName: 'Matsuyama', tier: 'A' },
-    { id: 10, firstName: 'Henrik', lastName: 'Stenson', tier: 'A' },
+    { id: 5, firstName: 'Hideki', lastName: 'Matsuyama', tier: 'A' },
+    { id: 6, firstName: 'Adam', lastName: 'Scott', tier: 'A' },
+    { id: 7, firstName: 'Rickie', lastName: 'Fowler', tier: 'A' },
+    { id: 8, firstName: 'Matt', lastName: 'Kuchar', tier: 'A' },
+    { id: 9, firstName: 'Brooks', lastName: 'Koepka', tier: 'A' },
+    { id: 10, firstName: 'Justin', lastName: 'Thomas', tier: 'A' },
 
-    { id: 11, firstName: 'Adam', lastName: 'Scott', tier: 'B' },
-    { id: 12, firstName: 'Justin', lastName: 'Thomas', tier: 'B' },
-    { id: 13, firstName: 'Brooks', lastName: 'Koepka', tier: 'B' },
-    { id: 14, firstName: 'Branden', lastName: 'Grace', tier: 'B' },
-    { id: 15, firstName: 'Thomas', lastName: 'Pieters', tier: 'B' },
-    { id: 16, firstName: 'Paul', lastName: 'Casey', tier: 'B' },
-    { id: 17, firstName: 'Alex', lastName: 'Noren', tier: 'B' },
-    { id: 18, firstName: 'Charl', lastName: 'Schwartzel', tier: 'B' },
-    { id: 19, firstName: 'Louis', lastName: 'Oosthuizen', tier: 'B' },
-    { id: 20, firstName: 'Jason', lastName: 'Dufner', tier: 'B' },
-    { id: 21, firstName: 'Matt', lastName: 'Kuchar', tier: 'B' },
-    { id: 22, firstName: 'Bubba', lastName: 'Watson', tier: 'B' },
-    { id: 23, firstName: 'Daniel', lastName: 'Berger', tier: 'B' },
-    { id: 24, firstName: 'Kevin', lastName: 'Chappell', tier: 'B' },
-    { id: 25, firstName: 'Kevin', lastName: 'Kisner', tier: 'B' },
-    { id: 26, firstName: 'Martin', lastName: 'Kaymer', tier: 'B' },
-    { id: 27, firstName: 'Shane', lastName: 'Lowry', tier: 'B' },
-    { id: 28, firstName: 'Patrick', lastName: 'Reed', tier: 'B' },
-    { id: 29, firstName: 'Billy', lastName: 'Horschel', tier: 'B' },
-    { id: 30, firstName: 'Francesco', lastName: 'Molinari', tier: 'B' },
-    { id: 31, firstName: 'Marc', lastName: 'Leishman', tier: 'B' },
+    { id: 11, firstName: 'Patrick', lastName: 'Reed', tier: 'B' },
+    { id: 12, firstName: 'Tony', lastName: 'Finau', tier: 'B' },
+    { id: 13, firstName: 'Kevin', lastName: 'Kisner', tier: 'B' },
+    { id: 14, firstName: 'Patrick', lastName: 'Cantlay', tier: 'B' },
+    { id: 15, firstName: 'Kevin', lastName: 'Chappell', tier: 'B' },
+    { id: 16, firstName: 'Byeong Hun', lastName: 'An', tier: 'B' },
+    { id: 17, firstName: 'Emiliano', lastName: 'Grillo', tier: 'B' },
+    { id: 18, firstName: 'Phil', lastName: 'Mickelson', tier: 'B' },
+    { id: 19, firstName: 'Billy', lastName: 'Horschel', tier: 'B' },
+    { id: 20, firstName: 'Bud', lastName: 'Cauley', tier: 'B' },
+    { id: 21, firstName: 'Jason', lastName: 'Dufner', tier: 'B' },
+    { id: 22, firstName: 'Marc', lastName: 'Leishman', tier: 'B' },
+    { id: 23, firstName: 'Webb', lastName: 'Simpson', tier: 'B' },
+    { id: 24, firstName: 'Charl', lastName: 'Schwartzel', tier: 'B' },
+    { id: 25, firstName: 'Bill', lastName: 'Haas', tier: 'B' },
+    { id: 26, firstName: 'Brendan', lastName: 'Steele', tier: 'B' },
+    { id: 27, firstName: 'Keegan', lastName: 'Bradley', tier: 'B' },
+    { id: 28, firstName: 'Kevin', lastName: 'Tway', tier: 'B' },
+    { id: 29, firstName: 'Kyle', lastName: 'Stanley', tier: 'B' },
+    { id: 30, firstName: 'Shane', lastName: 'Lowry', tier: 'B' },
+    { id: 31, firstName: 'Steve', lastName: 'Stricker', tier: 'B' },
+    { id: 32, firstName: 'William', lastName: 'McGirt', tier: 'B' },
 
-    { id: 32, firstName: 'Lee', lastName: 'Westwood', tier: 'C' },
-    { id: 33, firstName: 'Brandt', lastName: 'Snedeker', tier: 'C' },
-    { id: 34, firstName: 'Bud', lastName: 'Cauley', tier: 'C' },
-    { id: 35, firstName: 'Byeong Hun', lastName: 'An', tier: 'C' },
-    { id: 36, firstName: 'Jimmy', lastName: 'Walker', tier: 'C' },
-    { id: 37, firstName: 'Matthew', lastName: 'Fitzpatrick', tier: 'C' },
-    { id: 38, firstName: 'Rafael Cabrera', lastName: 'Bello', tier: 'C' },
-    { id: 39, firstName: 'Russell', lastName: 'Henley', tier: 'C' },
-    { id: 40, firstName: 'Tyrrell', lastName: 'Hatton', tier: 'C' },
-    { id: 41, firstName: 'Adam', lastName: 'Hadwin', tier: 'C' },
-    { id: 42, firstName: 'Bernd', lastName: 'Wiesberger', tier: 'C' },
-    { id: 43, firstName: 'Brendan', lastName: 'Steele', tier: 'C' },
-    { id: 44, firstName: 'Emiliano', lastName: 'Grillo', tier: 'C' },
-    { id: 45, firstName: 'Gary', lastName: 'Woodland', tier: 'C' },
-    { id: 46, firstName: 'J.B.', lastName: 'Holmes', tier: 'C' },
-    { id: 47, firstName: 'Si Woo', lastName: 'Kim', tier: 'C' },
-    { id: 48, firstName: 'Steve', lastName: 'Stricker', tier: 'C' },
-    { id: 49, firstName: 'Tommy', lastName: 'Fleetwood', tier: 'C' },
-    { id: 50, firstName: 'Bill', lastName: 'Haas', tier: 'C' },
-    { id: 51, firstName: 'Brian', lastName: 'Harman', tier: 'C' },
-    { id: 52, firstName: 'Charley', lastName: 'Hoffman', tier: 'C' },
-    { id: 53, firstName: 'Graeme', lastName: 'McDowell', tier: 'C' },
-    { id: 54, firstName: 'Lucas', lastName: 'Glover', tier: 'C' },
-    { id: 55, firstName: 'Ross', lastName: 'Fisher', tier: 'C' },
-    { id: 56, firstName: 'Russell', lastName: 'Knox', tier: 'C' },
-    { id: 57, firstName: 'Stewart', lastName: 'Cink', tier: 'C' },
-    { id: 58, firstName: 'Webb', lastName: 'Simpson', tier: 'C' },
-    { id: 59, firstName: 'Zach', lastName: 'Johnson', tier: 'C' },
+    { id: 33, firstName: 'Adam', lastName: 'Hadwin', tier: 'C' },
+    { id: 34, firstName: 'Danny', lastName: 'Lee', tier: 'C' },
+    { id: 35, firstName: 'Gary', lastName: 'Woodland', tier: 'C' },
+    { id: 36, firstName: 'J.B.', lastName: 'Holmes', tier: 'C' },
+    { id: 37, firstName: 'Pat', lastName: 'Perez', tier: 'C' },
+    { id: 38, firstName: 'Rafael', lastName: 'Cabrera Bello', tier: 'C' },
+    { id: 39, firstName: 'Ryan', lastName: 'Moore', tier: 'C' },
+    { id: 40, firstName: 'Scott', lastName: 'Piercy', tier: 'C' },
+    { id: 41, firstName: 'Sean', lastName: 'O\'Hair', tier: 'C' },
+    { id: 42, firstName: 'Tommy', lastName: 'Fleetwood', tier: 'C' },
+    { id: 43, firstName: 'Brian', lastName: 'Harman', tier: 'C' },
+    { id: 44, firstName: 'Bubba', lastName: 'Watson', tier: 'C' },
+    { id: 45, firstName: 'Charley', lastName: 'Hoffman', tier: 'C' },
+    { id: 46, firstName: 'David', lastName: 'Lingmerth', tier: 'C' },
+    { id: 47, firstName: 'Ollie', lastName: 'Schniederjans', tier: 'C' },
+    { id: 48, firstName: 'Ross', lastName: 'Fisher', tier: 'C' },
+    { id: 49, firstName: 'Graham', lastName: 'Delaet', tier: 'C' },
+    { id: 50, firstName: 'Lucas', lastName: 'Glover', tier: 'C' },
+    { id: 51, firstName: 'Si Woo', lastName: 'Kim', tier: 'C' },
+    { id: 52, firstName: 'Smylie', lastName: 'Kaufman', tier: 'C' },
+    { id: 53, firstName: 'Zach', lastName: 'Johnson', tier: 'C' },
+    { id: 54, firstName: 'Cameron', lastName: 'Smith', tier: 'C' },
+    { id: 55, firstName: 'Chris', lastName: 'Kirk', tier: 'C' },
+    { id: 56, firstName: 'Morgan', lastName: 'Hoffmann', tier: 'C' },
+    { id: 57, firstName: 'Nick', lastName: 'Taylor', tier: 'C' },
+    { id: 58, firstName: 'Peter', lastName: 'Uihlein', tier: 'C' },
+    { id: 59, firstName: 'Russell', lastName: 'Knox', tier: 'C' },
+    { id: 60, firstName: 'Scott', lastName: 'Brown', tier: 'C' },
+    { id: 61, firstName: 'Stewart', lastName: 'Cink', tier: 'C' },
+    { id: 62, firstName: 'Sung', lastName: 'Kang', tier: 'C' },
+    { id: 63, firstName: 'Jim', lastName: 'Furyk', tier: 'C' },
+    { id: 64, firstName: 'Kevin', lastName: 'Streelman', tier: 'C' },
+    { id: 65, firstName: 'Soren', lastName: 'Kjeldsen', tier: 'C' },
 
-    { id: 60, firstName: 'Pat', lastName: 'Perez', tier: 'D' },
-    { id: 61, firstName: 'Alexander', lastName: 'Levy', tier: 'D' },
-    { id: 62, firstName: 'Daniel', lastName: 'Summerhays', tier: 'D' },
-    { id: 63, firstName: 'Danny', lastName: 'Willett', tier: 'D' },
-    { id: 64, firstName: 'David', lastName: 'Lingmerth', tier: 'D' },
-    { id: 65, firstName: 'Hao-tong', lastName: 'Li', tier: 'D' },
-    { id: 66, firstName: 'Hideto', lastName: 'Tanihara', tier: 'D' },
-    { id: 67, firstName: 'Jhonattan', lastName: 'Vegas', tier: 'D' },
-    { id: 68, firstName: 'Keegan', lastName: 'Bradley', tier: 'D' },
-    { id: 69, firstName: 'Kevin', lastName: 'Na', tier: 'D' },
-    { id: 70, firstName: 'Martin', lastName: 'Laird', tier: 'D' },
-    { id: 71, firstName: 'Peter', lastName: 'Uihlein', tier: 'D' },
-    { id: 72, firstName: 'Scott', lastName: 'Piercy', tier: 'D' },
-    { id: 73, firstName: 'Sean', lastName: 'O\'Hair', tier: 'D' },
-    { id: 74, firstName: 'Wesley', lastName: 'Bryan', tier: 'D' },
-    { id: 75, firstName: 'William', lastName: 'McGirt', tier: 'D' },
-    { id: 76, firstName: 'Andrew', lastName: 'Johnston', tier: 'D' },
-    { id: 77, firstName: 'Jamie', lastName: 'Donaldson', tier: 'D' },
-    { id: 78, firstName: 'Bryson', lastName: 'DeChambeau', tier: 'D' },
-    { id: 79, firstName: 'Cheng Tsung', lastName: 'Pan', tier: 'D' },
-    { id: 80, firstName: 'George', lastName: 'Coetzee', tier: 'D' },
-    { id: 81, firstName: 'Harris', lastName: 'English', tier: 'D' },
-    { id: 82, firstName: 'Jamie', lastName: 'Lovemark', tier: 'D' },
-    { id: 83, firstName: 'Jason', lastName: 'Kokrak', tier: 'D' },
-    { id: 84, firstName: 'Jeunghun', lastName: 'Wang', tier: 'D' },
-    { id: 85, firstName: 'Jim', lastName: 'Furyk', tier: 'D' },
-    { id: 86, firstName: 'Paul', lastName: 'Dunne', tier: 'D' },
-    { id: 87, firstName: 'Bradley', lastName: 'Dredge', tier: 'D' },
-    { id: 88, firstName: 'Brandon', lastName: 'Stone', tier: 'D' },
-    { id: 89, firstName: 'Chan', lastName: 'Kim', tier: 'D' },
-    { id: 90, firstName: 'Chez', lastName: 'Reavie', tier: 'D' },
-    { id: 91, firstName: 'Eddie', lastName: 'Pepperell', tier: 'D' },
-    { id: 92, firstName: 'Ernie', lastName: 'Els', tier: 'D' },
-    { id: 93, firstName: 'JT', lastName: 'Poston', tier: 'D' },
-    { id: 94, firstName: 'Joaquin', lastName: 'Niemann', tier: 'D', isAmateur: true },
-    { id: 95, firstName: 'Jordan', lastName: 'Niebrugge', tier: 'D' },
-    { id: 96, firstName: 'Maverick', lastName: 'McNealy', tier: 'D', isAmateur: true },
-    { id: 97, firstName: 'Richie', lastName: 'Ramsay', tier: 'D' },
-    { id: 98, firstName: 'Roberto', lastName: 'Castro', tier: 'D' },
-    { id: 99, firstName: 'Ted Potter', lastName: 'Jr.', tier: 'D' },
-    { id: 100, firstName: 'Yuta', lastName: 'Ikeda', tier: 'D' },
-    { id: 101, firstName: 'Aaron', lastName: 'Rai', tier: 'D' },
-    { id: 102, firstName: 'Angel', lastName: 'Cabrera', tier: 'D' },
-    { id: 103, firstName: 'Jonathan', lastName: 'Randolph', tier: 'D' },
-    { id: 104, firstName: 'Meen Whee', lastName: 'Kim', tier: 'D' },
-    { id: 105, firstName: 'Kyle', lastName: 'Thompson', tier: 'D' },
-    { id: 106, firstName: 'Matt', lastName: 'Wallace', tier: 'D' },
-    { id: 107, firstName: 'Satoshi', lastName: 'Kodaira', tier: 'D' },
-    { id: 108, firstName: 'Shugo', lastName: 'Imahira', tier: 'D' },
-    { id: 109, firstName: 'Thomas', lastName: 'Aiken', tier: 'D' },
-    { id: 110, firstName: 'Stephan', lastName: 'Jaeger', tier: 'D' },
-    { id: 111, firstName: 'Andres', lastName: 'Romero', tier: 'D' },
-    { id: 112, firstName: 'Brad', lastName: 'Dalke', tier: 'D' },
-    { id: 113, firstName: 'Brian', lastName: 'Stuard', tier: 'D' },
-    { id: 114, firstName: 'Corey', lastName: 'Conners', tier: 'D' },
-    { id: 115, firstName: 'Gene', lastName: 'Sauers', tier: 'D' },
-    { id: 116, firstName: 'Jack', lastName: 'Maguire', tier: 'D' },
-    { id: 117, firstName: 'Michael', lastName: 'Putnam', tier: 'D' },
-    { id: 118, firstName: 'Oliver', lastName: 'Bekker', tier: 'D' },
-    { id: 119, firstName: 'Sam', lastName: 'Ryder', tier: 'D' },
-    { id: 120, firstName: 'Scottie', lastName: 'Scheffler', tier: 'D', isAmateur: true },
-    { id: 121, firstName: 'Talor', lastName: 'Gooch', tier: 'D' },
-    { id: 122, firstName: 'Wade', lastName: 'Ormsby', tier: 'D' },
-    { id: 123, firstName: 'Xander', lastName: 'Schauffele', tier: 'D' },
-    { id: 124, firstName: 'Yusaku', lastName: 'Miyazato', tier: 'D' },
-    { id: 125, firstName: 'Daniel', lastName: 'Chopra', tier: 'D' },
-    { id: 126, firstName: 'Joel', lastName: 'Stalter', tier: 'D' },
-    { id: 127, firstName: 'Ben', lastName: 'Kohles', tier: 'D' },
-    { id: 128, firstName: 'Brice', lastName: 'Garnett', tier: 'D' },
-    { id: 129, firstName: 'Derek', lastName: 'Barron', tier: 'D' },
-    { id: 130, firstName: 'John', lastName: 'Oda', tier: 'D' },
-    { id: 131, firstName: 'Ryan', lastName: 'Brehm', tier: 'D' },
-    { id: 132, firstName: 'Scott', lastName: 'Gregory', tier: 'D', isAmateur: true },
-    { id: 133, firstName: 'Stewart', lastName: 'Hagestad', tier: 'D', isAmateur: true },
-    { id: 134, firstName: 'Troy', lastName: 'Merritt', tier: 'D' },
-    { id: 135, firstName: 'Andy', lastName: 'Pope', tier: 'D' },
-    { id: 136, firstName: 'Trey', lastName: 'Mullinax', tier: 'D' },
-    { id: 137, firstName: 'Alex', lastName: 'Smalley', tier: 'D', isAmateur: true },
-    { id: 138, firstName: 'Chris', lastName: 'Crawford', tier: 'D', isAmateur: true },
-    { id: 139, firstName: 'Daniel', lastName: 'Miernicki', tier: 'D' },
-    { id: 140, firstName: 'Garrett', lastName: 'Osborn', tier: 'D' },
-    { id: 141, firstName: 'Sahith', lastName: 'Theegala', tier: 'D', isAmateur: true },
-    { id: 142, firstName: 'Scott', lastName: 'Harvey', tier: 'D', isAmateur: true },
-    { id: 143, firstName: 'Matt', lastName: 'Campbell', tier: 'D' },
-    { id: 144, firstName: 'Tyson', lastName: 'Alexander', tier: 'D' },
-    { id: 145, firstName: 'Walker', lastName: 'Lee', tier: 'D', isAmateur: true },
-    { id: 146, firstName: 'Cameron', lastName: 'Champ', tier: 'D', isAmateur: true },
-    { id: 147, firstName: 'Kevin', lastName: 'Dougherty', tier: 'D' },
-    { id: 148, firstName: 'Mason', lastName: 'Andersen', tier: 'D', isAmateur: true },
-    { id: 149, firstName: 'Max', lastName: 'Greyserman', tier: 'D' },
-    { id: 150, firstName: 'Nick', lastName: 'Flanagan', tier: 'D' },
-    { id: 151, firstName: 'Roman', lastName: 'Robledo', tier: 'D' }
+    { id: 66, firstName: 'Ben', lastName: 'Martin', tier: 'D' },
+    { id: 67, firstName: 'Hudson', lastName: 'Swafford', tier: 'D' },
+    { id: 68, firstName: 'James', lastName: 'Hahn', tier: 'D' },
+    { id: 69, firstName: 'Jamie', lastName: 'Lovemark', tier: 'D' },
+    { id: 70, firstName: 'Jason', lastName: 'Kokrak', tier: 'D' },
+    { id: 71, firstName: 'Jonas', lastName: 'Blixt', tier: 'D' },
+    { id: 72, firstName: 'Martin', lastName: 'Laird', tier: 'D' },
+    { id: 73, firstName: 'Patrick', lastName: 'Rodgers', tier: 'D' },
+    { id: 74, firstName: 'Vaughn', lastName: 'Taylor', tier: 'D' },
+    { id: 75, firstName: 'Aaron', lastName: 'Baddeley', tier: 'D' },
+    { id: 76, firstName: 'Billy', lastName: 'Hurley III', tier: 'D' },
+    { id: 77, firstName: 'Daniel', lastName: 'Summerhays', tier: 'D' },
+    { id: 78, firstName: 'Jim', lastName: 'Herman', tier: 'D' },
+    { id: 79, firstName: 'Kelly', lastName: 'Kraft', tier: 'D' },
+    { id: 80, firstName: 'Kyle', lastName: 'Reifers', tier: 'D' },
+    { id: 81, firstName: 'Luke', lastName: 'Donald', tier: 'D' },
+    { id: 82, firstName: 'Luke', lastName: 'List', tier: 'D' },
+    { id: 83, firstName: 'Michael', lastName: 'Kim', tier: 'D' },
+    { id: 84, firstName: 'Ryan', lastName: 'Ruffels', tier: 'D' },
+    { id: 85, firstName: 'J.J.', lastName: 'Spaun', tier: 'D' },
+    { id: 86, firstName: 'Brian', lastName: 'Stuard', tier: 'D' },
+    { id: 87, firstName: 'David', lastName: 'Hearn', tier: 'D' },
+    { id: 88, firstName: 'Harold', lastName: 'Varner, III', tier: 'D' },
+    { id: 89, firstName: 'Padraig', lastName: 'Harrington', tier: 'D' },
+    { id: 90, firstName: 'Sam', lastName: 'Saunders', tier: 'D' },
+    { id: 91, firstName: 'Zac', lastName: 'Blair', tier: 'D' },
+    { id: 92, firstName: 'Anirban', lastName: 'Lahiri', tier: 'D' },
+    { id: 93, firstName: 'Grayson', lastName: 'Murray', tier: 'D' },
+    { id: 94, firstName: 'Mackenzie', lastName: 'Hughes', tier: 'D' },
+    { id: 95, firstName: 'Ricky', lastName: 'Barnes', tier: 'D' },
+    { id: 96, firstName: 'Vijay', lastName: 'Singh', tier: 'D' },
+    { id: 97, firstName: 'Curtis', lastName: 'Luck', tier: 'D' },
+    { id: 98, firstName: 'Patton', lastName: 'Kizzire', tier: 'D' },
+    { id: 99, firstName: 'Alex', lastName: 'Cejka', tier: 'D' },
+    { id: 100, firstName: 'Cheng', lastName: 'Tsung Pan', tier: 'D' },
+    { id: 101, firstName: 'D.A.', lastName: 'Points', tier: 'D' },
+    { id: 102, firstName: 'Fabian', lastName: 'Gomez', tier: 'D' },
+    { id: 103, firstName: 'Hunter', lastName: 'Mahan', tier: 'D' },
+    { id: 104, firstName: 'Johnson', lastName: 'Wagner', tier: 'D' },
+    { id: 105, firstName: 'K.J.', lastName: 'Choi', tier: 'D' },
+    { id: 106, firstName: 'Retief', lastName: 'Goosen', tier: 'D' },
+    { id: 107, firstName: 'Roberto', lastName: 'Castro', tier: 'D' },
+    { id: 108, firstName: 'Rod', lastName: 'Pampling', tier: 'D' },
+    { id: 109, firstName: 'Ryan', lastName: 'Armour', tier: 'D' },
+    { id: 110, firstName: 'Ryo', lastName: 'Ishikawa', tier: 'D' },
+    { id: 111, firstName: 'Yuta', lastName: 'Ikeda', tier: 'D' },
+    { id: 112, firstName: 'Brendon', lastName: 'De Jonge', tier: 'D' },
+    { id: 113, firstName: 'Brett', lastName: 'Coletta', tier: 'D' },
+    { id: 114, firstName: 'Carl', lastName: 'Pettersson', tier: 'D' },
+    { id: 115, firstName: 'Greg', lastName: 'Chalmers', tier: 'D' },
+    { id: 116, firstName: 'Matthew', lastName: 'Griffin', tier: 'D' },
+    { id: 117, firstName: 'Scott', lastName: 'Gregory', tier: 'D' },
+    { id: 118, firstName: 'Matt', lastName: 'Every', tier: 'D' },
+    { id: 119, firstName: 'Steven', lastName: 'Bowditch', tier: 'D' }
 ];
-
 const contestantData = [
-	{ name: 'Kevin O\'Brien', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-	{ name: 'Matt Kilianski', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-	{ name: 'Matt Weimer', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-	{ name: 'Nate Heckmann', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-	{ name: 'Ryan Boudouris', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] }
+	{ name: 'Kevin O\'Brien', entries: [[1, 18, 36, 77], [4, 27, 44, 89], [3, 19, 53, 105]] },
+	{ name: 'Matt Kilianski', entries: [[1, 18, 44, 71], [1, 26, 53, 73], [4, 15, 36, 77]] },
+	{ name: 'Matt Weimer', entries: [[8, 32, 51, 81], [4, 32, 63, 66], [7, 11, 33, 67]] },
+	{ name: 'Nate Heckmann', entries: [[1, 12, 35, 77], [2, 16, 33, 80], [8, 12, 33, 67]] },
+	{ name: 'Ryan Boudouris', entries: [[8, 13, 35, 67], [1, 12, 39, 87], [4, 12, 37, 107]] }
 ];
 
 
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__style_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data_service_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__goto_service_js__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__settings_service_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__golfers_component_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__footer_component_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__header_component_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pool_component_js__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__settings_component_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data_service_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__goto_service_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__notification_service_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__settings_service_js__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__golfers_component_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__footer_component_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__header_component_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pool_component_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__settings_component_js__ = __webpack_require__(10);
+
 
 
 
@@ -1420,7 +1470,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 __WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('dataService', __WEBPACK_IMPORTED_MODULE_2__data_service_js__["a" /* default */]);
 __WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('gotoService', __WEBPACK_IMPORTED_MODULE_3__goto_service_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('settingsService', __WEBPACK_IMPORTED_MODULE_4__settings_service_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('notificationService', __WEBPACK_IMPORTED_MODULE_4__notification_service_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('settingsService', __WEBPACK_IMPORTED_MODULE_5__settings_service_js__["a" /* default */]);
 
 
 
@@ -1429,11 +1480,11 @@ __WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('settingsServic
 
 
 
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('golfers', __WEBPACK_IMPORTED_MODULE_5__golfers_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('gpFooter', __WEBPACK_IMPORTED_MODULE_6__footer_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('gpHeader', __WEBPACK_IMPORTED_MODULE_7__header_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('pool', __WEBPACK_IMPORTED_MODULE_8__pool_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('settings', __WEBPACK_IMPORTED_MODULE_9__settings_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('golfers', __WEBPACK_IMPORTED_MODULE_6__golfers_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('gpFooter', __WEBPACK_IMPORTED_MODULE_7__footer_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('gpHeader', __WEBPACK_IMPORTED_MODULE_8__header_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('pool', __WEBPACK_IMPORTED_MODULE_9__pool_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('settings', __WEBPACK_IMPORTED_MODULE_10__settings_component_js__["a" /* default */]);
 
 
 

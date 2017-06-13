@@ -20,72 +20,14 @@ const template = `
 </table>
 </div>`;
 
-const controller = function(dataService, $interval, REFRESH_TIME, $filter, settingsService, gotoService) {
+const controller = function(dataService, $interval, REFRESH_TIME, $filter, gotoService, notificationService) {
 	const dateFilter = $filter('date');
 
-	const entries = dataService.getEntries();
-
-	const addDataToEntries = (golfersWithScores) => {
-		const entriesWithData = entries.map(entry => {
-			const entryGolfers = entry.golferIds.map(gid => angular.copy(golfersWithScores.find(golfer => golfer.id === gid)));
-			let overallRelativeScore, overallTotalScore, overallToPar;
-			const isDQ = entryGolfers.filter(golfer => golfer.score.isDNF).length > 1;
-			const selectedContestantId = settingsService.getSelectedContestantId();
-			const isSelected = entry.contestantId === selectedContestantId;
-
-			if (!isDQ) {
-				const worstGolfers = _.orderBy(entryGolfers, ['score.relativeScore', 'score.totalScore', 'id'], ['desc', 'desc', 'desc']);
-				worstGolfers[0].throwaway = true;
-
-				overallRelativeScore = entryGolfers
-					.filter(golfer => golfer.throwaway !== true)
-					.reduce((prev, curr) => prev + curr.score.relativeScore, 0);
-
-				overallTotalScore = entryGolfers
-					.filter(golfer => golfer.throwaway !== true)
-					.reduce((prev, curr) => prev + curr.score.totalScore, 0).toString();
-
-				overallToPar = overallRelativeScore === 0 ? 'E' : overallRelativeScore.toString();
-			} else {
-				overallRelativeScore = Number.MAX_SAFE_INTEGER;
-				overallTotalScore = '--';
-				overallToPar = '--';
-			}
-			
-			return {
-				name: entry.name,
-				golfers: entryGolfers,
-				overallRelativeScore,
-				overallTotalScore,
-				overallToPar,
-				isDQ,
-				isSelected
-			};
-		});
-
-		return addPositions(entriesWithData);
-	};
-
-	const addPositions = entriesWithData => {
-		const sortedEntries = _.sortBy(entriesWithData, ['overallRelativeScore', 'overallTotalScore']);
-
-		let position = 1;
-		let lastScore = 0;
-		sortedEntries.forEach((entry, index) => {
-			const isTied = sortedEntries.filter(e => e.overallRelativeScore === entry.overallRelativeScore).length > 1;
-			if (entry.overallRelativeScore > lastScore) {
-				position = index + 1;
-			} 
- 			entry.position = isTied ? 'T' + position : position.toString() ;
- 			lastScore = entry.overallRelativeScore;
-		})
-
-		return sortedEntries;
-	}
-
 	const refreshData = () => {
-		dataService.get().then(golfersWithScores => {
-			this.entries = addDataToEntries(golfersWithScores);
+		const previousEntries = this.entries;
+		dataService.getPoolEntries().then(entries => {
+			this.entries = entries;
+			notificationService.update(previousEntries, entries)
 		});
 	};
 
