@@ -20,14 +20,12 @@ const template = `
 </table>
 </div>`;
 
-const controller = function(dataService, $interval, REFRESH_TIME, $filter, gotoService, notificationService) {
+const controller = function(dataService, $interval, REFRESH_TIME, $filter, gotoService) {
 	const dateFilter = $filter('date');
 
 	const refreshData = () => {
-		const previousEntries = this.entries;
-		dataService.getPoolEntries().then(entries => {
-			this.entries = entries;
-			notificationService.update(previousEntries, entries)
+		dataService.get().then(data => {
+			this.entries = data.entries;
 		});
 	};
 

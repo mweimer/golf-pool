@@ -1,18 +1,23 @@
 'use strict';
 
-const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL, settingsService) {
+const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL, settingsService, notificationService) {
 
 	const entries = CONTESTANTS
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
 		.reduce((prev, curr) => prev.concat(curr));
 
-	this.getPoolEntries = () => {
-		return this.getGolferScores().then(golferScores => {
-			return addGolferScoresToEntries(golferScores);
-		});
-	}
+	let previousEntries = null
 
-	this.getGolferScores = () => {
+	this.get = () => {
+		return getGolferScores().then(golferScores => {
+			const newEntries = createEntriesWithScores(golferScores);
+            notificationService.update(previousEntries, newEntries);
+            previousEntries = newEntries;
+			return { entries: newEntries, golfers: golferScores };
+		});
+	};
+
+	const getGolferScores = () => {
 		return $http({
 			method: 'GET',
 			url: LEADERBOARD_URL
@@ -146,7 +151,7 @@ const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL,
 		};
 	};
 
-	const addGolferScoresToEntries = (golferScores) => {
+	const createEntriesWithScores = (golferScores) => {
 		const entriesWithScores= entries.map(entry => {
 			const entryGolfers = entry.golferIds.map(gid => angular.copy(golferScores.find(golfer => golfer.id === gid)));
 			let overallRelativeScore, overallTotalScore, overallToPar;
