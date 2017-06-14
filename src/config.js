@@ -160,11 +160,24 @@ const golferData = [
 ];
 
 const contestantData = [
-	{ name: 'Kevin O\'Brien', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-	{ name: 'Matt Kilianski', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-	{ name: 'Matt Weimer', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-	{ name: 'Nate Heckmann', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-	{ name: 'Ryan Boudouris', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] }
+    { name: 'Alex Duff', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Alex Prevo', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Bob Kelly', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Cameron Weimer', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Drew Serruto', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Ian Horwich', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Joey Graham', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Kevin Donoher', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Kevin O\'Brien', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Matt Dorow', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Matt Kilianski', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Matt Walker', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Matt Weimer', entries: [[2, 12, 32, 95], [6, 13, 40, 62], [1, 20, 33, 75]] },
+    { name: 'Nick Royer', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Rob Stoecklein', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Ryan Boudouris', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Ryan Buckle', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Tony Drake', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] }
 ];
 
 export { tourneyTitle, leaderboardUrl, golferData, contestantData };
