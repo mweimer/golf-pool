@@ -1,12 +1,8 @@
 'use strict';
 
-import 'angulartics';
-import 'angulartics-google-analytics';
-
 import './style.css';
 
 import app from './app.js';
-
 
 import dataService from './data.service.js';
 import gotoService from './goto.service.js';

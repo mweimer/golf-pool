@@ -3,9 +3,9 @@
 import { tourneyTitle, leaderboardUrl, golferData, contestantData } from './config';
 import faviconUrl from './favicon.ico';
 
-contestantData.forEach((c, i) => c.id = i);
+contestantData.forEach((c, i) => { c.id = i; });
 
-const app = angular.module('golfPool', ['ngSanitize', 'ngRoute', 'angulartics', 'angulartics.google.analytics'])
+const app = angular.module('golfPool', ['ngSanitize', 'ngRoute', 'angular-google-analytics'])
 	.constant('GOLFERS', golferData)
 	.constant('CONTESTANTS', contestantData)
 	.constant('REFRESH_TIME', 60000)
@@ -16,7 +16,7 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute', 'angulartics', 
 		negative: 'negative',
 		none: 'none'
 	})
-	.config(($routeProvider) => {
+	.config(($routeProvider, AnalyticsProvider) => {
 		$routeProvider.when('/', { 
 			template: '<pool></pool>'
 		}).when('/golfers', { 
@@ -24,8 +24,10 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute', 'angulartics', 
 		}).when('/settings', { 
 			template: '<settings></settings>'
 		});
+
+		AnalyticsProvider.setAccount('UA-8634967-4');
 	})
-	.run(($rootScope, TOURNEY_TITLE) => {
+	.run(($rootScope, TOURNEY_TITLE, Analytics) => {
 		$rootScope.getTitle = () => $rootScope.positions ? $rootScope.positions + ' - ' + TOURNEY_TITLE + ' Player Pool' : TOURNEY_TITLE + ' Player Pool';
 		$rootScope.faviconUrl = faviconUrl;
 	});
