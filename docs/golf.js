@@ -570,12 +570,15 @@ const controller = function($location) {
 
 const service = function(settingsService) {
 	const hasNotifications = Boolean('Notification' in window);
+	let grantedNotifications = false
 
 	if (hasNotifications) {
-		Notification.requestPermission();
+		Notification.requestPermission().then(result => grantedNotifications = result === 'granted');
 	}
 
 	this.hasNotifications = () => hasNotifications;
+
+	this.grantedNotifications = () => grantedNotifications;
 
 	this.update = (previousEntries, currentEntries) => {
 		const selectedContestantId = settingsService.getSelectedContestantId();
@@ -596,11 +599,14 @@ const service = function(settingsService) {
 	const showNotification = (inTopTwo) => {
 		Notification.requestPermission().then(result => {
 			if (result === 'granted') {
+				grantedNotifications = true;
 				const title = inTopTwo ? 'You\'ve moved into the top 2!' : 'You\'ve dropped out of the top 2.';
 				const options = { 
 					icon: __WEBPACK_IMPORTED_MODULE_0__logo_png___default.a
 				};
 				const notification = new Notification(title, options);
+			} else {
+				grantedNotifications = false;
 			}
 		});
 	};
@@ -682,30 +688,19 @@ const template = `
   <div class="form-group">
     <label for="contestantDropdown">Selected Contestant: </label>
     <select id="contestantDropdown" class="form-control" ng-model="$ctrl.selectedContestantId" ng-change="$ctrl.contestantSelected()">
-		<option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
-	</select>
-  </div>
-  <div class="checkbox">
-    <label>
-      <input ng-disabled="!$ctrl.hasNotifications" type="checkbox" ng-model="$ctrl.enableNotifications" ng-change="$ctrl.enableNotificationsSelected()"> Enable Notifications
-    </label>
+		  <option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
+	  </select>
   </div>
 </form>`;
 
-const controller = function(CONTESTANTS, settingsService, notificationService) {
+const controller = function(CONTESTANTS, settingsService) {
 	this.contestantSelected = () => {
 		settingsService.setSelectedContestantId(this.selectedContestantId);
 	};
 
-    this.enableNotificationsSelected = () => {
-        settingsService.setEnableNotifications(this.enableNotifications);
-    };
-
 	this.$onInit = () => {
 		this.contestants = _.concat([{name: 'none', id: -1}], CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
 		this.selectedContestantId = settingsService.getSelectedContestantId().toString();
-        this.enableNotifications = notificationService.hasNotifications() && settingsService.getEnableNotifications();
-        this.hasNotifications = notificationService.hasNotifications();
 	}
 };
 

@@ -4,12 +4,15 @@ import logoUrl from './logo.png';
 
 const service = function(settingsService) {
 	const hasNotifications = Boolean('Notification' in window);
+	let grantedNotifications = false
 
 	if (hasNotifications) {
-		Notification.requestPermission();
+		Notification.requestPermission().then(result => grantedNotifications = result === 'granted');
 	}
 
 	this.hasNotifications = () => hasNotifications;
+
+	this.grantedNotifications = () => grantedNotifications;
 
 	this.update = (previousEntries, currentEntries) => {
 		const selectedContestantId = settingsService.getSelectedContestantId();
@@ -30,11 +33,14 @@ const service = function(settingsService) {
 	const showNotification = (inTopTwo) => {
 		Notification.requestPermission().then(result => {
 			if (result === 'granted') {
+				grantedNotifications = true;
 				const title = inTopTwo ? 'You\'ve moved into the top 2!' : 'You\'ve dropped out of the top 2.';
 				const options = { 
 					icon: logoUrl
 				};
 				const notification = new Notification(title, options);
+			} else {
+				grantedNotifications = false;
 			}
 		});
 	};
