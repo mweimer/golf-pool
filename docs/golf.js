@@ -139,7 +139,7 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 		});
 	})
 	.run(($rootScope, TOURNEY_TITLE) => {
-		$rootScope.tourneyTitle = TOURNEY_TITLE;
+		$rootScope.getTitle = () => $rootScope.positions ? $rootScope.positions + ' - ' + TOURNEY_TITLE + ' Player Pool' : TOURNEY_TITLE + ' Player Pool';
 		$rootScope.faviconUrl = __WEBPACK_IMPORTED_MODULE_1__favicon_ico___default.a;
 	});
 
@@ -152,7 +152,7 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 "use strict";
 
 
-const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL, settingsService, notificationService) {
+const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL, settingsService, notificationService, $rootScope) {
 
 	const entries = CONTESTANTS
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
@@ -164,9 +164,23 @@ const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL,
 		return getGolferScores().then(golferScores => {
 			const newEntries = createEntriesWithScores(golferScores);
             notificationService.update(previousEntries, newEntries);
+            updateTitle(newEntries);
             previousEntries = newEntries;
 			return { entries: newEntries, golfers: golferScores };
 		});
+	};
+
+	const updateTitle = (entries) => {
+		const selectedContestantId = settingsService.getSelectedContestantId();
+		if (selectedContestantId >= 0) {
+			const positions = entries.filter(e => e.contestantId === selectedContestantId)
+				.map(e => e.position)
+				.reduce((c, n) => c + ', ' + n);
+
+			$rootScope.positions = positions;
+		} else {
+			$rootScope.positions = null;
+		}
 	};
 
 	const getGolferScores = () => {

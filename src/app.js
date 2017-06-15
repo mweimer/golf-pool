@@ -26,7 +26,7 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 		});
 	})
 	.run(($rootScope, TOURNEY_TITLE) => {
-		$rootScope.tourneyTitle = TOURNEY_TITLE;
+		$rootScope.getTitle = () => $rootScope.positions ? $rootScope.positions + ' - ' + TOURNEY_TITLE + ' Player Pool' : TOURNEY_TITLE + ' Player Pool';
 		$rootScope.faviconUrl = faviconUrl;
 	});
 
