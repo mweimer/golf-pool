@@ -10,7 +10,7 @@ const template = `
   </div>
   <div class="checkbox">
     <label>
-      <input disabled type="checkbox" ng-checked="$ctrl.notificationStatus.supported && $ctrl.notificationStatus.granted"> Enable Notifications
+      <input disabled type="checkbox" ng-checked="$ctrl.notificationStatus.supported && $ctrl.notificationStatus.granted"> Notifications Enabled
       <span ng-if="$ctrl.notificationStatus.supported && !$ctrl.notificationStatus.granted">(You have not allowed notifications for this domain, please enabled in your browser settings)</span>
       <span ng-if="!$ctrl.notificationStatus.supported">(You browser does not support notifications)</span>
     </label>
