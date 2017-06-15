@@ -1386,7 +1386,7 @@ const golferData = [
     { id: 74, firstName: 'Wesley', lastName: 'Bryan', tier: 'D' },
     { id: 75, firstName: 'William', lastName: 'McGirt', tier: 'D' },
     { id: 76, firstName: 'Andrew', lastName: 'Johnston', tier: 'D' },
-    { id: 77, firstName: 'Jamie', lastName: 'Donaldson', tier: 'D' },
+   // { id: 77, firstName: 'Jamie', lastName: 'Donaldson', tier: 'D' }, *Don't think this guy is actually in the field
     { id: 78, firstName: 'Bryson', lastName: 'DeChambeau', tier: 'D' },
     { id: 79, firstName: 'Cheng Tsung', lastName: 'Pan', tier: 'D' },
     { id: 80, firstName: 'George', lastName: 'Coetzee', tier: 'D' },
