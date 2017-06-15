@@ -160,24 +160,17 @@ const golferData = [
 ];
 
 const contestantData = [
-    { name: 'Alex Duff', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Alex Prevo', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Bob Kelly', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Cameron Weimer', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Drew Serruto', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Ian Horwich', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Joey Graham', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Kevin Donoher', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Kevin O\'Brien', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Matt Dorow', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Matt Kilianski', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Matt Walker', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
+    { name: 'Adam Weiss', entries: [[1, 11, 39, 95], [2, 15, 43, 95], [6, 13, 34, 73]] },
+    { name: 'Cameron Weimer', entries: [[2, 20, 35, 82], [1, 15, 34, 95], [6, 12, 33, 75]] },
+    { name: 'Drew Serruto', entries: [[1, 12, 46, 68], [6, 11, 32, 62], [3, 20, 50, 69]] },
+    { name: 'Jon Frantz', entries: [[2, 21, 33, 63], [6, 20, 32, 68], [1, 31, 47, 69]] },
+    { name: 'Kevin Donoher', entries: [[1, 11, 36, 60], [5, 16, 43, 61], [6, 19, 50, 71]] },
+    { name: 'Kyle Bivenour', entries: [[2, 20, 32, 68], [1, 20, 58, 68], [6, 11, 33, 69]] },
+    { name: 'Matt Kilianski', entries: [[3, 12, 40, 64], [1, 27, 33, 68], [6, 27, 48, 62]] },
     { name: 'Matt Weimer', entries: [[2, 12, 32, 95], [6, 13, 40, 62], [1, 20, 33, 75]] },
-    { name: 'Nick Royer', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Rob Stoecklein', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Ryan Boudouris', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Ryan Buckle', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] },
-    { name: 'Tony Drake', entries: [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]] }
+    { name: 'Nate Heckmann', entries: [[4, 27, 50, 75], [6, 12, 47, 69], [2, 14, 33, 69]] },
+    { name: 'Neil Thompson', entries: [[1, 13, 46, 71], [2, 12, 34, 71], [3, 17, 34, 71]] },
+    { name: 'Ryan Boudouris', entries: [[4, 11, 48, 60], [3, 13, 38, 85], [1, 15, 32, 62]] },
 ];
 
 export { tourneyTitle, leaderboardUrl, golferData, contestantData };
