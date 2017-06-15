@@ -173,7 +173,7 @@ const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL,
 	const updateTitle = (entries) => {
 		const selectedContestantId = settingsService.getSelectedContestantId();
 		if (selectedContestantId >= 0) {
-			const positions = entries.filter(e => e.contestantId === selectedContestantId)
+			const positions = entries.filter(e => e.contestantId === selectedContestantId && !e.isDQ)
 				.map(e => e.position)
 				.reduce((c, n) => c + ', ' + n);
 
