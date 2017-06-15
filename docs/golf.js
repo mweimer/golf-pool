@@ -1400,7 +1400,7 @@ const golferData = [
     { id: 74, firstName: 'Wesley', lastName: 'Bryan', tier: 'D' },
     { id: 75, firstName: 'William', lastName: 'McGirt', tier: 'D' },
     { id: 76, firstName: 'Andrew', lastName: 'Johnston', tier: 'D' },
-   // { id: 77, firstName: 'Jamie', lastName: 'Donaldson', tier: 'D' }, *Don't think this guy is actually in the field
+    { id: 77, firstName: 'Jamie', lastName: 'Donaldson', tier: 'D' },
     { id: 78, firstName: 'Bryson', lastName: 'DeChambeau', tier: 'D' },
     { id: 79, firstName: 'Cheng Tsung', lastName: 'Pan', tier: 'D' },
     { id: 80, firstName: 'George', lastName: 'Coetzee', tier: 'D' },
@@ -1492,7 +1492,8 @@ const contestantData = [
     { name: 'Nick Royer', entries: [[1, 11, 37, 62], [1, 15, 43, 74], [7, 15, 33, 62]] },
     { name: 'Ryan Romes', entries: [[4, 25, 39, 62], [6, 15, 41, 60], [7, 18, 33, 75]] },
     { name: 'Sean Buckle', entries: [[1, 12, 33, 67], [3, 11, 36, 68], [6, 12, 45, 75]] },
-    { name: 'Ian Horwich', entries: [[1, 17, 32, 71], [6, 25, 40, 61], [4, 16, 42, 94]] }
+    { name: 'Ian Horwich', entries: [[1, 17, 32, 71], [6, 25, 40, 61], [4, 16, 42, 94]] },
+    { name: 'David Prevo', entries: [[2, 20, 36, 77], [4, 22, 39, 68], [3, 13, 34, 69]] }
 ];
 
 
