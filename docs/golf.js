@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -76,10 +76,26 @@ module.exports = __webpack_require__.p + "logo.png";
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(14)
+module.exports = 'angulartics.google.analytics'
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(15);
+module.exports = 'angulartics';
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(12);
+var content = __webpack_require__(16);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -87,7 +103,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(15)(content, options);
+var update = __webpack_require__(19)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -104,12 +120,12 @@ if(false) {
 }
 
 /***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__favicon_ico__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__favicon_ico__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__favicon_ico___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__favicon_ico__);
 
 
@@ -118,7 +134,7 @@ if(false) {
 
 __WEBPACK_IMPORTED_MODULE_0__config__["a" /* contestantData */].forEach((c, i) => c.id = i);
 
-const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
+const app = angular.module('golfPool', ['ngSanitize', 'ngRoute', 'angulartics', 'angulartics.google.analytics'])
 	.constant('GOLFERS', __WEBPACK_IMPORTED_MODULE_0__config__["b" /* golferData */])
 	.constant('CONTESTANTS', __WEBPACK_IMPORTED_MODULE_0__config__["a" /* contestantData */])
 	.constant('REFRESH_TIME', 60000)
@@ -146,7 +162,7 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
 /* harmony default export */ __webpack_exports__["a"] = (app);	
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -382,7 +398,7 @@ const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL,
 /* harmony default export */ __webpack_exports__["a"] = (service);
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -403,7 +419,7 @@ const controller = function(REFRESH_TIME) {
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -477,7 +493,7 @@ const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll,
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -501,7 +517,7 @@ const service = function($location) {
 /* harmony default export */ __webpack_exports__["a"] = (service);
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -558,7 +574,7 @@ const controller = function($location) {
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -618,7 +634,7 @@ const service = function(settingsService, $rootScope) {
 /* harmony default export */ __webpack_exports__["a"] = (service);
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -680,7 +696,7 @@ const controller = function(dataService, $interval, REFRESH_TIME, $filter, gotoS
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller});
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -719,7 +735,7 @@ const controller = function(CONTESTANTS, settingsService, notificationService) {
 /* harmony default export */ __webpack_exports__["a"] = ({ template, controller });
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -759,10 +775,1100 @@ const service = function(TOURNEY_TITLE) {
 /* harmony default export */ __webpack_exports__["a"] = (service);
 
 /***/ }),
-/* 12 */
+/* 14 */
+/***/ (function(module, exports) {
+
+(function(window, angular, undefined) {'use strict';
+
+/**
+ * @ngdoc overview
+ * @name angulartics.google.analytics
+ * Enables analytics support for Google Analytics (http://google.com/analytics)
+ */
+angular.module('angulartics.google.analytics', ['angulartics'])
+.config(['$analyticsProvider', function ($analyticsProvider) {
+
+  // GA already supports buffered invocations so we don't need
+  // to wrap these inside angulartics.waitForVendorApi
+  $analyticsProvider.settings.pageTracking.trackRelativePath = true;
+  
+  // Set the default settings for this module
+  $analyticsProvider.settings.ga = {
+    additionalAccountNames: undefined,
+    // Select hits to send to all additional accounts
+    additionalAccountHitTypes: {
+      pageview: true,
+      event: true,
+      exception: false,
+      ecommerce: false,
+      userTiming: false,
+      setUserProperties: false,
+      userId: false
+    },
+    disableEventTracking: null,
+    disablePageTracking: null,
+    enhancedEcommerce: false, 
+    // GA supports transporting data via gif requests, XHRs, or sendBeacons
+    // @link https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#transport
+    transport: null,
+    userId: null
+  };
+
+  /**
+   * Track Pageview in GA
+   * @name pageTrack
+   *
+   * @param {string} path value of Page dimension stored with hit e.g. '/home'
+   * @param {object} properties Object with optional addtional Custom Dimensions/Metrics
+   *
+   * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
+   * @link https://developers.google.com/analytics/devguides/collection/gajs/
+   */
+  $analyticsProvider.registerPageTrack(function (path, properties) {
+    
+    properties = properties || {};
+
+    // Do nothing if page tracking is disabled
+    if ($analyticsProvider.settings.ga.disablePageTracking) return;
+
+    dispatchToGa('pageview', 'send', angular.extend({}, properties, {
+      hitType: 'pageview',
+      page: path
+    }));
+
+  });
+
+  /**
+   * Track Event in GA
+   * @name eventTrack
+   *
+   * @param {string} action Required 'action' (string) associated with the event
+   * @param {object} properties Comprised of the mandatory field 'category' (string) and optional  fields 'label' (string), 'value' (integer) and 'nonInteraction' (boolean)
+   *
+   * @link https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide#SettingUpEventTracking
+   *
+   * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+   */
+  $analyticsProvider.registerEventTrack(function(action, properties) {
+
+    // Do nothing if event tracking is disabled
+    if ($analyticsProvider.settings.ga.disableEventTracking) return;
+
+    if (!action && action + '' !== '0') {
+      return;
+    }
+
+    // Sets default properties
+    properties = properties || {};
+    properties.category = properties.category || 'Event';
+
+    // GA requires that eventValue be an integer, see:
+    // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#eventValue
+    // https://github.com/luisfarzati/angulartics/issues/81
+    if (properties.value) {
+      var parsed = parseInt(properties.value, 10);
+      properties.value = isNaN(parsed) ? 0 : parsed;
+    }
+
+    // GA requires that hitCallback be an function, see:
+    // https://developers.google.com/analytics/devguides/collection/analyticsjs/sending-hits#hitcallback
+    if (!angular.isFunction(properties.hitCallback)) {
+      properties.hitCallback = null;
+    }
+
+    // Making nonInteraction parameter more intuitive, includes backwards compatibilty
+    // https://github.com/angulartics/angulartics-google-analytics/issues/49
+    properties.nonInteraction = properties.nonInteraction || properties.noninteraction;
+
+    dispatchToGa('event', 'send', angular.extend({}, properties, {
+      hitType: 'event',
+      eventCategory: properties.category,
+      eventAction: action,
+      eventLabel: properties.label,
+      eventValue: properties.value,
+      nonInteraction: properties.nonInteraction,
+      page: properties.page || window.location.hash.substring(1) || window.location.pathname,
+      hitCallback: properties.hitCallback,
+    }));
+
+  });
+
+  /**
+   * Exception Track Event in GA
+   * @name exceptionTrack
+   * Sugar on top of the eventTrack method for easily handling errors
+   *
+   * @param {object} error An Error object to track: error.toString() used for event 'action', error.stack used for event 'label'.
+   * @param {object} cause The cause of the error given from $exceptionHandler, not used.
+   *
+   * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+   */
+  $analyticsProvider.registerExceptionTrack(function (error, cause) {
+    dispatchToGa('exception', 'send', {
+      hitType: 'event',
+      eventCategory: 'Exceptions',
+      eventAction: error.toString(),
+      eventLabel: error.stack,
+      nonInteraction: true,
+      page: window.location.hash.substring(1) || window.location.pathname,
+      isException: true
+    });
+  });
+
+  /**
+   * Set Username
+   * @name setUsername
+   *
+   * @param {string} userId Registers User ID of user for use with other hits
+   *
+   * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#user_id
+   */
+  $analyticsProvider.registerSetUsername(function (userId) {
+    $analyticsProvider.settings.ga.userId = userId;
+  });
+
+  /**
+   * Set User Properties
+   * @name setUserProperties
+   *
+   * @param {object} properties Sets all properties with dimensionN or metricN to their respective values
+   *
+   * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#customs
+   */
+  $analyticsProvider.registerSetUserProperties(function (properties) {
+
+    if (properties) {
+      dispatchToGa('setUserProperties', 'set', dimensionsAndMetrics(properties));
+    }
+
+  });
+
+  /**
+   * User Timings Event in GA
+   * @name userTimings
+   *
+   * @param {object} properties Comprised of the mandatory fields:
+   *     'timingCategory' (string),
+   *     'timingVar' (string),
+   *     'timingValue' (number)
+   * Properties can also have the optional fields:
+   *     'timingLabel' (string)
+   *     'optSampleRate' (number) Classic Analytics only - determines % of users to collect data from, handled serverside by UA
+   *     @link https://developers.google.com/analytics/devguides/collection/analyticsjs/user-timings#sampling_considerations
+   *
+   * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/user-timings
+   */
+  $analyticsProvider.registerUserTimings(function (properties) {
+
+    if (!angular.isObject(properties) || angular.isArray(properties)) {
+      return console.log('Required argument properties is missing or not an object');
+    }
+
+    angular.forEach(['timingCategory', 'timingVar', 'timingValue'], function(prop) {
+      if (angular.isUndefined(properties[prop])) {
+        return console.log('Argument properties missing required property ' + prop);
+      }
+    });
+
+    dispatchToGa('userTiming', 'send', {
+      hitType: 'timing',
+      timingCategory: properties.timingCategory,
+      timingVar: properties.timingVar,
+      timingValue: properties.timingValue,
+      timingLabel: properties.timingLabel,
+      optSampleRate: properties.optSampleRate,  // Classic Analytics only
+      page: properties.page || window.location.hash.substring(1) || window.location.pathname,
+    });
+
+  });
+
+  /**
+   * Ecommerce Tracking in GA
+   * @name transactionTrack
+   *
+   * @param {object} transaction comprised of following fields:
+   *     'id': 'T12345',                         // Transaction ID. Required for purchases and refunds.
+   *     'affiliation': 'Online Store',
+   *     'revenue': '35.43',                     // Total transaction value (incl. tax and shipping)
+   *     'tax':'4.90',
+   *     'shipping': '5.99',
+   *     'coupon': 'SUMMER_SALE',                // Enhanced Ecommerce Only
+   *     'dimension1': 'Card ID #1234',          // Hit, Session, or User-level Custom Dimension(s)
+   *     'metric1': 1,                           // Custom Metric(s)
+   *     'currencyCode': 'EUR',                  // Currency Code to track the transaction with. Recognized codes: https://support.google.com/analytics/answer/6205902?hl=en#supported-currencies
+   *     'billingCity': 'San Francisco',                // Classic Analytics only
+   *     'billingRegion': 'California',                 // Classic Analytics only
+   *     'billingCountry': 'USA',                       // Classic Analytics only
+   *     'products': [{                            // List of products
+   *       'name': 'Triblend Android T-Shirt',     // Name or ID is required.
+   *       'id': '12345',                          // Product SKU
+   *       'price': '15.25',
+   *       'brand': 'Google',                      // Enhanced Ecommerce only
+   *       'category': 'Apparel',                 
+   *       'variant': 'Gray',                      // Enhanced Ecommerce only
+   *       'quantity': 1,
+   *       'coupon': '',                           // Enhanced Ecommerce only.
+   *       'currencyCode': 'BRL',                  // Product-level currency code, Enhanced Ecommerce only
+   *       'dimension2': 'Clearance',              // Product-level Custom Dimension
+   *       'metric2': 1                            // Product-level Custom Metric
+   *      },
+   *      ...
+   *    ]
+   *
+   * @param {object] properties comprised of custom dimensions and metrics to
+   * send with the transaction hit
+   * Utilizes traditional ecommerce tracking by default. To used Enhanced Ecommerce,
+   * set the $analytics.settings.ga.enhancedEcommerce flag to true
+   *
+   * Docs on traditional ecommerce (UA):
+   * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/ecommerce
+   *
+   * Docs on Enhanced Ecommerce
+   * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce
+   *
+   * Docs on Classic Ecommerce (_gaq)
+   * @link https://developers.google.com/analytics/devguides/collection/gajs/gaTrackingEcommerce
+   **/
+  $analyticsProvider.registerTransactionTrack(function(transaction) {
+
+    var product;
+    var i;
+
+    // Universal Analytics splits off the ecommerce code into a separate
+    // library we must include by using the "require" command
+    dispatchToGa('ecommerce', 'require', 'ecommerce');
+    dispatchToGa('ecommerce', 'ecommerce:addTransaction', transaction);
+    
+    if (transaction.products) {
+      for (i = 0; i < transaction.products.length; i++) {
+
+        product = transaction.products[i];
+
+        // GA uses a SKU property and stores the transaction ID in the ID Field
+        product.sku = product.id;
+        product.id = transaction.id;
+
+        dispatchToGa('ecommerce', 'ecommerce:addItem', transaction.products[i]);
+
+      }
+    }
+
+    if (transaction.currencyCode) {
+
+      dispatchToGa('ecommerce', '_set', transaction.currencyCode); // Classic Anayltics only - UA uses fieldsObj.currencyCode instead
+
+    } 
+
+    dispatchToGa('ecommerce', 'ecommerce:send', angular.copy(transaction));
+
+  });
+
+  /**
+   * Detects if Universal Analytics is installed
+   *
+   * @name detectUniversalAnalytics
+   */
+  function detectUniversalAnalytics() {
+
+    // Use the GoogleAnalyticsObject property set by the default GA snippet
+    // to correctly determine the namespace of the GA global
+    var gaNamespace = window.GoogleAnalyticsObject;
+    return gaNamespace && window[gaNamespace];
+
+  }
+
+  /**
+   * Detects if Classic Analytics is installed
+   *
+   * @name detectClassicAnalytics
+   */
+  function detectClassicAnalytics() {
+
+    // If _gaq is undefined, we're trusting Classic Analytics to be there
+    return !angular.isUndefined(window._gaq);
+
+  }
+
+  /**
+   * Extract Custom Data for a hit
+   * @name dimensionsAndMetrics
+   * 
+   * @param {object} properties properties object from an API call that is filtered for Custom Dimensions & Metrics
+   *
+   * @returns {object} customData object with only Custom Dimensions/Metrics from properties argument
+   */
+  function dimensionsAndMetrics(properties) {
+    // add custom dimensions and metrics
+    var customData = {};
+    var key;
+
+    for (key in properties) {
+      // Keys must be dimensionXX or metricXX, e.g. dimension1, metric155, so
+      // if those strings aren't at zero (which evaluates to falsey), ignore
+      // the key
+      if (!key.indexOf('dimension') || !key.indexOf('metric')) {
+        customData[key] = properties[key];
+      }
+    }
+    return customData;
+  }
+
+  /**
+   * Handler for hits to GA. Dynamically adjusts syntax for
+   * targeted version based on global detection.
+   *
+   * @name dispatchToGa
+   *
+   * @param {string} method Name of angulartics method for checking if hits should be duplicated
+   * @param {string} command Standard Universal Analytics command (create, send, set)
+   * @param {object} fieldsObj object with hit-specific fields. Fields are whitelisted in handler - non-supported fields are ignored.
+   * 
+   */
+  var dispatchToGa = (function() {
+
+    var handler;
+
+    if (detectClassicAnalytics()) {
+      handler = dispatchToClassic_;
+    }
+
+    if (detectUniversalAnalytics()) {
+      handler = dispatchToUniversal_;
+    }
+
+    // If neither has been detected, GA is not above the angular code
+    if (!handler) {
+      return angular.noop;
+    }
+
+    return function(method, command, fieldsObj) {
+
+      var shouldCopyHit = $analyticsProvider.settings.ga.additionalAccountHitTypes[method];
+      handler(command, fieldsObj, shouldCopyHit);
+
+    }
+
+    /**
+     * Dispatches a hit using Universal syntax
+     *
+     * @name dispatchToUniversal_
+     * @private
+     *  
+     * @param {string} command Standard Universal Analytics command (create, send, set)
+     * @param {object} fieldsObj object with hit-specific fields. Fields are whitelisted in handler - non-supported fields are ignored.
+     * @param {boolean} shouldCopyHit should hit be propogated to all trackers
+     */
+    function dispatchToUniversal_(command, fieldsObj, shouldCopyHit) {
+
+      var userId = $analyticsProvider.settings.ga.userId;
+      var uaCommand,
+          pluginName;
+
+      if (command === 'require' && fieldsObj === 'ecommerce') {
+
+        pluginName = fieldsObj;
+  
+        if ($analyticsProvider.settings.ga.enhancedEcommerce) {
+  
+          pluginName = 'ec';
+
+        }
+      
+        // Exit here - require calls don't have fieldsObjs
+        return applyUniversalCall_([command, pluginName], shouldCopyHit);
+
+      }
+
+      // If our User ID is set, set it on the hit
+      if (userId && angular.isObject(fieldsObj)) fieldsObj.userId = userId;
+      // If a transport preference is specified, set it on the hit
+      if ($analyticsProvider.settings.ga.transport) {
+
+        fieldsObj.transport = $analyticsProvider.settings.ga.transport;
+
+      }
+
+      if (command.indexOf('ecommerce:') > -1 && $analyticsProvider.settings.ga.enhancedEcommerce) {
+
+        switch (command) {
+          case 'ecommerce:addTransaction':
+            command = ['ec:setAction', 'purchase'];
+            break;
+          case 'ecommerce:addItem':
+            command = 'ec:addProduct';
+            // Enhanced Ecommerce reverts to using the ID property for the SKU,
+            // so we swap them back here
+            fieldsObj.id = fieldsObj.sku;
+            break;
+          case 'ecommerce:send':
+            command = 'send';
+            fieldsObj.hitType = 'event';
+            fieldsObj.eventCategory = 'Angulartics Enhanced Ecommerce';
+            fieldsObj.eventAction = 'Purchase';
+            fieldsObj.nonInteraction = true;
+            break;
+        }
+
+      }
+
+
+      uaCommand = command instanceof Array ? command.concat(fieldsObj) : [command, fieldsObj];
+
+      applyUniversalCall_(uaCommand, shouldCopyHit);
+
+    }
+
+    /**
+     * Handles applying a constructed call to the global Universal GA object
+     * This exists primarily so calls within dispatchToUa_ can short circuit
+     * out of the function to handle specific edge cases, e.g. require commands
+     * @name applyUniversalCall_
+     * @private
+     *
+     * @param commandArray {array} command to be .apply()'d
+     * @param shouldCopyHit {boolean} should the command be applied to all accts
+     */
+    function applyUniversalCall_(commandArray, shouldCopyHit) {
+
+      var userId = $analyticsProvider.settings.ga.userId;
+      var gaNamespace = window.GoogleAnalyticsObject;
+      var commandClone;
+
+      // Perform our initial call
+      window[gaNamespace].apply(this, commandArray);
+
+      if (shouldCopyHit) {
+
+        commandClone = angular.copy(commandArray);
+
+        // If the userId shouldn't be duplicated, remove from the fieldsObj
+        if (userId && !$analyticsProvider.settings.ga.additionalAccountHitTypes.userId) {
+          
+          if (commandClone[2] && typeof commandClone[2] === 'object') {
+
+            delete commandClone[2].userId;
+
+          }
+  
+        }
+
+        angular.forEach($analyticsProvider.settings.ga.additionalAccountNames, function (accountName){
+       
+          commandClone[0] = accountName + '.' + commandClone[0];
+
+          window[gaNamespace].apply(this, commandClone);
+
+        }); 
+
+      }
+
+    }
+
+    /**
+     * Dispatches a hit using Classic syntax
+     * Translates Universal Syntax to Classic syntax
+     *
+     * @name dispatchToClassic_
+     * @private
+     *  
+     * @param {string} command Standard Universal Analytics command (create, send, set)
+     * @param {object} fieldsObj object with hit-specific fields. Fields are whitelisted in handler - non-supported fields are ignored.
+     * @param {boolean} shouldCopyHit should hit be propogated to all trackers
+     */
+    function dispatchToClassic_(command, fieldsObj, shouldCopyHit) {
+
+      if (command === 'set') {
+        return console.log('Classic Analytics does not support the "set" command or Custom Dimensions. Command ignored.');
+      }
+
+      var classicCommand;
+
+      // Transpose our syntax from Universal Analytics to Classic Analytics
+      // Currently we only support 'send' style commands
+      if (command === 'send') {
+
+        switch(fieldsObj.hitType) {
+          case 'pageview':
+            classicCommand = ['_trackPageview', fieldsObj.page];
+            break;
+          case 'event':
+            classicCommand = [
+              '_trackEvent',
+              fieldsObj.category,
+              fieldsObj.action,
+              fieldsObj.label,
+              fieldsObj.value,
+              fieldsObj.nonInteraction
+            ];
+            break;
+          case 'timing':
+            classicCommand = [
+              '_trackTiming',
+              fieldsObj.timingCategory,
+              fieldsObj.timingVar,
+              fieldsObj.timingValue,
+              fieldsObj.timingLabel,
+              fieldsObj.optSampleRate
+            ];
+            break;
+        }
+
+      }
+
+      if (command === 'ecommerce:addTransaction') {
+
+        classicCommand = [
+          '_addTrans',
+          fieldsObj.id,
+          fieldsObj.affiliation,
+          fieldsObj.revenue,
+          fieldsObj.tax,
+          fieldsObj.shipping,
+          fieldsObj.billingCity,
+          fieldsObj.billingRegion,
+          fieldsObj.billingCountry
+        ];
+
+      }
+
+      if (command === 'ecommerce:addItem') { 
+
+        classicCommand = [
+          '_addItem',
+          fieldsObj.id,
+          fieldsObj.sku,
+          fieldsObj.name,
+          fieldsObj.category,
+          fieldsObj.price,
+          fieldsObj.quantity
+        ];
+
+      }
+
+      if (command === '_set') {
+
+        classicCommand = [
+          '_set',
+          'currencyCode',
+          fieldsObj
+        ];
+
+      }
+
+      if (command === 'ecommerce:send') {
+
+        classicCommand = [
+          '_trackTrans' 
+        ];
+
+      }
+
+      if (!classicCommand) {
+        return console.log('Unable to find command ' + command + ' or fieldsObj missing required properties. Command ignored.');
+      }
+
+      // Issue our command to GA
+      window._gaq.push(classicCommand);
+
+      if (shouldCopyHit) {
+
+        angular.forEach($analyticsProvider.settings.ga.additionalAccountNames, function (accountName){
+          
+          var classicCommandClone = [].slice.call(classicCommand);
+          // Namespace the command as required
+          classicCommandClone[0] = accountName + '.' + classicCommandClone[0];
+
+          window._gaq.push(classicCommandClone);
+
+        });
+
+      }
+
+    }
+
+  })();
+
+}]);
+})(window, window.angular);
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+/**
+ * @license Angulartics
+ * (c) 2013 Luis Farzati http://angulartics.github.io/
+ * License: MIT
+ */
+(function(angular, analytics) {
+'use strict';
+
+var angulartics = window.angulartics || (window.angulartics = {});
+angulartics.waitForVendorCount = 0;
+angulartics.waitForVendorApi = function (objectName, delay, containsField, registerFn, onTimeout) {
+  if (!onTimeout) { angulartics.waitForVendorCount++; }
+  if (!registerFn) { registerFn = containsField; containsField = undefined; }
+  if (!Object.prototype.hasOwnProperty.call(window, objectName) || (containsField !== undefined && window[objectName][containsField] === undefined)) {
+    setTimeout(function () { angulartics.waitForVendorApi(objectName, delay, containsField, registerFn, true); }, delay);
+  }
+  else {
+    angulartics.waitForVendorCount--;
+    registerFn(window[objectName]);
+  }
+};
+
+/**
+ * @ngdoc overview
+ * @name angulartics
+ */
+angular.module('angulartics', [])
+.provider('$analytics', $analytics)
+.run(['$rootScope', '$window', '$analytics', '$injector', $analyticsRun])
+.directive('analyticsOn', ['$analytics', analyticsOn])
+.config(['$provide', exceptionTrack]);
+
+function $analytics() {
+  var vm = this;
+
+  var settings = {
+    pageTracking: {
+      autoTrackFirstPage: true,
+      autoTrackVirtualPages: true,
+      trackRelativePath: false,
+      trackRoutes: true,
+      trackStates: true,
+      autoBasePath: false,
+      basePath: '',
+      excludedRoutes: [],
+      queryKeysWhitelisted: [],
+      queryKeysBlacklisted: []
+    },
+    eventTracking: {},
+    bufferFlushDelay: 1000, // Support only one configuration for buffer flush delay to simplify buffering
+    trackExceptions: false,
+    optOut: false,
+    developerMode: false // Prevent sending data in local/development environment
+  };
+
+  // List of known handlers that plugins can register themselves for
+  var knownHandlers = [
+    'pageTrack',
+    'eventTrack',
+    'exceptionTrack',
+    'transactionTrack',
+    'setAlias',
+    'setUsername',
+    'setUserProperties',
+    'setUserPropertiesOnce',
+    'setSuperProperties',
+    'setSuperPropertiesOnce',
+    'incrementProperty',
+    'userTimings',
+    'clearCookies'
+  ];
+  // Cache and handler properties will match values in 'knownHandlers' as the buffering functons are installed.
+  var cache = {};
+  var handlers = {};
+  var handlerOptions = {};
+
+  // General buffering handler
+  function bufferedHandler(handlerName){
+    return function(){
+      if(angulartics.waitForVendorCount){
+        if(!cache[handlerName]){ cache[handlerName] = []; }
+        cache[handlerName].push(arguments);
+      }
+    };
+  }
+
+  // As handlers are installed by plugins, they get pushed into a list and invoked in order.
+  function updateHandlers(handlerName, fn, options){
+    if(!handlers[handlerName]){
+      handlers[handlerName] = [];
+    }
+    handlers[handlerName].push(fn);
+    handlerOptions[fn] = options;
+    return function(){
+      if(!this.settings.optOut) {
+        var handlerArgs = Array.prototype.slice.apply(arguments);
+        return this.$inject(['$q', angular.bind(this, function($q) {
+          return $q.all(handlers[handlerName].map(function(handlerFn) {
+            var options = handlerOptions[handlerFn] || {};
+            if (options.async) {
+              var deferred = $q.defer();
+              var currentArgs = angular.copy(handlerArgs);
+              currentArgs.unshift(deferred.resolve);
+              handlerFn.apply(this, currentArgs);
+              return deferred.promise;
+            } else{
+              return $q.when(handlerFn.apply(this, handlerArgs));
+            }
+          }, this));
+        })]);
+      }
+    };
+  }
+
+  // The api (returned by this provider) gets populated with handlers below.
+  var api = {
+    settings: settings
+  };
+
+  // Opt in and opt out functions
+  api.setOptOut = function(optOut) {
+    this.settings.optOut = optOut;
+    triggerRegister();
+  };
+
+  api.getOptOut = function() {
+    return this.settings.optOut;
+  };
+
+
+  // Will run setTimeout if delay is > 0
+  // Runs immediately if no delay to make sure cache/buffer is flushed before anything else.
+  // Plugins should take care to register handlers by order of precedence.
+  function onTimeout(fn, delay){
+    if(delay){
+      setTimeout(fn, delay);
+    } else {
+      fn();
+    }
+  }
+
+  var provider = {
+    $get: ['$injector', function($injector) {
+      return apiWithInjector($injector);
+    }],
+    api: api,
+    settings: settings,
+    virtualPageviews: function (value) { this.settings.pageTracking.autoTrackVirtualPages = value; },
+    trackStates: function (value) { this.settings.pageTracking.trackStates = value; },
+    trackRoutes: function (value) { this.settings.pageTracking.trackRoutes = value; },
+    excludeRoutes: function(routes) { this.settings.pageTracking.excludedRoutes = routes; },
+    queryKeysWhitelist: function(keys) { this.settings.pageTracking.queryKeysWhitelisted = keys; },
+    queryKeysBlacklist: function(keys) { this.settings.pageTracking.queryKeysBlacklisted = keys; },
+    firstPageview: function (value) { this.settings.pageTracking.autoTrackFirstPage = value; },
+    withBase: function (value) {
+      this.settings.pageTracking.basePath = (value) ? angular.element(document).find('base').attr('href') : '';
+    },
+    withAutoBase: function (value) { this.settings.pageTracking.autoBasePath = value; },
+    trackExceptions: function (value) { this.settings.trackExceptions = value; },
+    developerMode: function(value) { this.settings.developerMode = value; }
+  };
+
+  // General function to register plugin handlers. Flushes buffers immediately upon registration according to the specified delay.
+  function register(handlerName, fn, options){
+    // Do not add a handler if developerMode is true
+    if (settings.developerMode) {
+        return;
+    }
+    api[handlerName] = updateHandlers(handlerName, fn, options);
+    var handlerSettings = settings[handlerName];
+    var handlerDelay = (handlerSettings) ? handlerSettings.bufferFlushDelay : null;
+    var delay = (handlerDelay !== null) ? handlerDelay : settings.bufferFlushDelay;
+    angular.forEach(cache[handlerName], function (args, index) {
+      onTimeout(function () { fn.apply(this, args); }, index * delay);
+    });
+  }
+
+  function capitalize(input) {
+      return input.replace(/^./, function (match) {
+          return match.toUpperCase();
+      });
+  }
+
+  //provide a method to inject services into handlers
+  var apiWithInjector = function(injector) {
+    return angular.extend(api, {
+      '$inject': injector.invoke
+    });
+  };
+
+  // Adds to the provider a 'register#{handlerName}' function that manages multiple plugins and buffer flushing.
+  function installHandlerRegisterFunction(handlerName){
+    var registerName = 'register'+capitalize(handlerName);
+    provider[registerName] = function(fn, options){
+      register(handlerName, fn, options);
+    };
+    api[handlerName] = updateHandlers(handlerName, bufferedHandler(handlerName));
+  }
+
+  function startRegistering(_provider, _knownHandlers, _installHandlerRegisterFunction) {
+    angular.forEach(_knownHandlers, _installHandlerRegisterFunction);
+
+    for (var key in _provider) {
+      vm[key] = _provider[key];
+    }
+  }
+
+  // Allow $angulartics to trigger the register to update opt in/out
+  var triggerRegister = function() {
+    startRegistering(provider, knownHandlers, installHandlerRegisterFunction);
+  };
+
+  // Initial register
+  startRegistering(provider, knownHandlers, installHandlerRegisterFunction);
+
+}
+
+function $analyticsRun($rootScope, $window, $analytics, $injector) {
+
+  function matchesExcludedRoute(url) {
+    for (var i = 0; i < $analytics.settings.pageTracking.excludedRoutes.length; i++) {
+      var excludedRoute = $analytics.settings.pageTracking.excludedRoutes[i];
+      if ((excludedRoute instanceof RegExp && excludedRoute.test(url)) || url.indexOf(excludedRoute) > -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function arrayDifference(a1, a2) {
+    var result = [];
+    for (var i = 0; i < a1.length; i++) {
+      if (a2.indexOf(a1[i]) === -1) {
+        result.push(a1[i]);
+      }
+    }
+    return result;
+  }
+
+  function filterQueryString(url, keysMatchArr, thisType){
+    if (/\?/.test(url) && keysMatchArr.length > 0) {
+      var urlArr = url.split('?');
+      var urlBase = urlArr[0];
+      var pairs = urlArr[1].split('&');
+      var matchedPairs = [];
+
+      for (var i = 0; i < keysMatchArr.length; i++) {
+        var listedKey = keysMatchArr[i];
+        for (var j = 0; j < pairs.length; j++) {
+          if ((listedKey instanceof RegExp && listedKey.test(pairs[j])) || pairs[j].indexOf(listedKey) > -1) matchedPairs.push(pairs[j]);
+        }
+      }
+
+      var matchedPairsArr = (thisType == 'white' ? matchedPairs : arrayDifference(pairs,matchedPairs));
+      if(matchedPairsArr.length > 0){
+        return urlBase + '?' + matchedPairsArr.join('&');
+      }else{
+        return urlBase;
+      }
+    } else {
+      return url;
+    }
+  }
+
+  function whitelistQueryString(url){
+    return filterQueryString(url, $analytics.settings.pageTracking.queryKeysWhitelisted, 'white');
+  }
+
+  function blacklistQueryString(url){
+    return filterQueryString(url, $analytics.settings.pageTracking.queryKeysBlacklisted, 'black');
+  }
+
+  function pageTrack(url, $location) {
+    if (!matchesExcludedRoute(url)) {
+      url = whitelistQueryString(url);
+      url = blacklistQueryString(url);
+      $analytics.pageTrack(url, $location);
+    }
+  }
+
+  if ($analytics.settings.pageTracking.autoTrackFirstPage) {
+    $injector.invoke(['$location', function ($location) {
+      /* Only track the 'first page' if there are no routes or states on the page */
+      var noRoutesOrStates = true;
+      if ($injector.has('$route')) {
+         var $route = $injector.get('$route');
+         if ($route) {
+          for (var route in $route.routes) {
+            noRoutesOrStates = false;
+            break;
+          }
+         } else if ($route === null){
+          noRoutesOrStates = false;
+         }
+      } else if ($injector.has('$state')) {
+        var $state = $injector.get('$state');
+        for (var state in $state.get()) {
+          noRoutesOrStates = false;
+          break;
+        }
+      }
+      if (noRoutesOrStates) {
+        if ($analytics.settings.pageTracking.autoBasePath) {
+          $analytics.settings.pageTracking.basePath = $window.location.pathname;
+        }
+        if ($analytics.settings.pageTracking.trackRelativePath) {
+          var url = $analytics.settings.pageTracking.basePath + $location.url();
+          pageTrack(url, $location);
+        } else {
+          pageTrack($location.absUrl(), $location);
+        }
+      }
+    }]);
+  }
+
+  if ($analytics.settings.pageTracking.autoTrackVirtualPages) {
+    $injector.invoke(['$location', function ($location) {
+      if ($analytics.settings.pageTracking.autoBasePath) {
+        /* Add the full route to the base. */
+        $analytics.settings.pageTracking.basePath = $window.location.pathname + "#";
+      }
+      var noRoutesOrStates = true;
+
+      if ($analytics.settings.pageTracking.trackRoutes) {
+        if ($injector.has('$route')) {
+          var $route = $injector.get('$route');
+          if ($route) {
+            for (var route in $route.routes) {
+              noRoutesOrStates = false;
+              break;
+            }
+          } else if ($route === null){
+            noRoutesOrStates = false;
+          }
+          $rootScope.$on('$routeChangeSuccess', function (event, current) {
+            if (current && (current.$$route||current).redirectTo) return;
+            var url = $analytics.settings.pageTracking.basePath + $location.url();
+            pageTrack(url, $location);
+          });
+        }
+      }
+
+      if ($analytics.settings.pageTracking.trackStates) {
+        if ($injector.has('$state') && !$injector.has('$transitions')) {
+          noRoutesOrStates = false;
+          $rootScope.$on('$stateChangeSuccess', function (event, current) {
+            var url = $analytics.settings.pageTracking.basePath + $location.url();
+            pageTrack(url, $location);
+          });
+        }
+        if ($injector.has('$state') && $injector.has('$transitions')) {
+          noRoutesOrStates = false;
+          $injector.invoke(['$transitions', function($transitions) {
+            $transitions.onSuccess({}, function($transition$) {
+              var transitionOptions = $transition$.options();
+
+              // only track for transitions that would have triggered $stateChangeSuccess
+              if (transitionOptions.notify) {
+                var url = $analytics.settings.pageTracking.basePath + $location.url();
+                pageTrack(url, $location);
+              }
+            });
+          }]);
+        }
+      }
+
+        if (noRoutesOrStates) {
+          $rootScope.$on('$locationChangeSuccess', function (event, current) {
+            if (current && (current.$$route || current).redirectTo) return;
+            if ($analytics.settings.pageTracking.trackRelativePath) {
+              var url = $analytics.settings.pageTracking.basePath + $location.url();
+              pageTrack(url, $location);
+            } else {
+              pageTrack($location.absUrl(), $location);
+            }
+          });
+        }
+    }]);
+  }
+  if ($analytics.settings.developerMode) {
+    angular.forEach($analytics, function(attr, name) {
+      if (typeof attr === 'function') {
+        $analytics[name] = function(){};
+      }
+    });
+  }
+}
+
+function analyticsOn($analytics) {
+  return {
+    restrict: 'A',
+    link: function ($scope, $element, $attrs) {
+      var eventType = $attrs.analyticsOn || 'click';
+      var trackingData = {};
+
+      angular.forEach($attrs.$attr, function(attr, name) {
+        if (isProperty(name)) {
+          trackingData[propertyName(name)] = $attrs[name];
+          $attrs.$observe(name, function(value){
+            trackingData[propertyName(name)] = value;
+          });
+        }
+      });
+
+      angular.element($element[0]).bind(eventType, function ($event) {
+        var eventName = $attrs.analyticsEvent || inferEventName($element[0]);
+        trackingData.eventType = $event.type;
+
+        if($attrs.analyticsIf){
+          if(! $scope.$eval($attrs.analyticsIf)){
+            return; // Cancel this event if we don't pass the analytics-if condition
+          }
+        }
+        // Allow components to pass through an expression that gets merged on to the event properties
+        // eg. analytics-properites='myComponentScope.someConfigExpression.$analyticsProperties'
+        if($attrs.analyticsProperties){
+          angular.extend(trackingData, $scope.$eval($attrs.analyticsProperties));
+        }
+        $analytics.eventTrack(eventName, trackingData);
+      });
+    }
+  };
+}
+
+function exceptionTrack($provide) {
+  $provide.decorator('$exceptionHandler', ['$delegate', '$injector', function ($delegate, $injector) {
+    return function (error, cause) {
+      var result = $delegate(error, cause);
+      var $analytics = $injector.get('$analytics');
+      if ($analytics.settings.trackExceptions) {
+        $analytics.exceptionTrack(error, cause);
+      }
+      return result;
+    };
+  }]);
+}
+
+function isCommand(element) {
+  return ['a:','button:','button:button','button:submit','input:button','input:submit'].indexOf(
+    element.tagName.toLowerCase()+':'+(element.type||'')) >= 0;
+}
+
+function inferEventType(element) {
+  if (isCommand(element)) return 'click';
+  return 'click';
+}
+
+function inferEventName(element) {
+  if (isCommand(element)) return element.innerText || element.value;
+  return element.id || element.name || element.tagName;
+}
+
+function isProperty(name) {
+  return name.substr(0, 9) === 'analytics' && ['On', 'Event', 'If', 'Properties', 'EventType'].indexOf(name.substr(9)) === -1;
+}
+
+function propertyName(name) {
+  var s = name.slice(9); // slice off the 'analytics' prefix
+  if (typeof s !== 'undefined' && s!==null && s.length > 0) {
+    return s.substring(0, 1).toLowerCase() + s.substring(1);
+  }
+  else {
+    return s;
+  }
+}
+})(angular);
+
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(13)(undefined);
+exports = module.exports = __webpack_require__(17)(undefined);
 // imports
 
 
@@ -773,7 +1879,7 @@ exports.push([module.i, "body {\n    font-size: 12px;\n}\n\n.logo {\n    display
 
 
 /***/ }),
-/* 13 */
+/* 17 */
 /***/ (function(module, exports) {
 
 /*
@@ -855,13 +1961,13 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 14 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "favicon.ico";
 
 /***/ }),
-/* 15 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -907,7 +2013,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(16);
+var	fixUrls = __webpack_require__(20);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -1220,7 +2326,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 16 */
+/* 20 */
 /***/ (function(module, exports) {
 
 
@@ -1315,7 +2421,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 17 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1507,23 +2613,27 @@ const contestantData = [
 
 
 /***/ }),
-/* 18 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__style_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data_service_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__goto_service_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__notification_service_js__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__settings_service_js__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__golfers_component_js__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__footer_component_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__header_component_js__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pool_component_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__settings_component_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angulartics__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angulartics___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_angulartics__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angulartics_google_analytics__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angulartics_google_analytics___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_angulartics_google_analytics__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__style_css__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__style_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__data_service_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__goto_service_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__notification_service_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__settings_service_js__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__golfers_component_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__footer_component_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__header_component_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pool_component_js__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__settings_component_js__ = __webpack_require__(12);
 
 
 
@@ -1536,10 +2646,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('dataService', __WEBPACK_IMPORTED_MODULE_2__data_service_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('gotoService', __WEBPACK_IMPORTED_MODULE_3__goto_service_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('notificationService', __WEBPACK_IMPORTED_MODULE_4__notification_service_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('settingsService', __WEBPACK_IMPORTED_MODULE_5__settings_service_js__["a" /* default */]);
+
+
+
+__WEBPACK_IMPORTED_MODULE_3__app_js__["a" /* default */].service('dataService', __WEBPACK_IMPORTED_MODULE_4__data_service_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_3__app_js__["a" /* default */].service('gotoService', __WEBPACK_IMPORTED_MODULE_5__goto_service_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_3__app_js__["a" /* default */].service('notificationService', __WEBPACK_IMPORTED_MODULE_6__notification_service_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_3__app_js__["a" /* default */].service('settingsService', __WEBPACK_IMPORTED_MODULE_7__settings_service_js__["a" /* default */]);
 
 
 
@@ -1548,11 +2661,11 @@ __WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].service('settingsServic
 
 
 
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('golfers', __WEBPACK_IMPORTED_MODULE_6__golfers_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('gpFooter', __WEBPACK_IMPORTED_MODULE_7__footer_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('gpHeader', __WEBPACK_IMPORTED_MODULE_8__header_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('pool', __WEBPACK_IMPORTED_MODULE_9__pool_component_js__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_1__app_js__["a" /* default */].component('settings', __WEBPACK_IMPORTED_MODULE_10__settings_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_3__app_js__["a" /* default */].component('golfers', __WEBPACK_IMPORTED_MODULE_8__golfers_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_3__app_js__["a" /* default */].component('gpFooter', __WEBPACK_IMPORTED_MODULE_9__footer_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_3__app_js__["a" /* default */].component('gpHeader', __WEBPACK_IMPORTED_MODULE_10__header_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_3__app_js__["a" /* default */].component('pool', __WEBPACK_IMPORTED_MODULE_11__pool_component_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_3__app_js__["a" /* default */].component('settings', __WEBPACK_IMPORTED_MODULE_12__settings_component_js__["a" /* default */]);
 
 
 

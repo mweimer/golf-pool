@@ -5,7 +5,7 @@ import faviconUrl from './favicon.ico';
 
 contestantData.forEach((c, i) => c.id = i);
 
-const app = angular.module('golfPool', ['ngSanitize', 'ngRoute'])
+const app = angular.module('golfPool', ['ngSanitize', 'ngRoute', 'angulartics', 'angulartics.google.analytics'])
 	.constant('GOLFERS', golferData)
 	.constant('CONTESTANTS', contestantData)
 	.constant('REFRESH_TIME', 60000)
