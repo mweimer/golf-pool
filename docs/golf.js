@@ -568,21 +568,24 @@ const controller = function($location) {
 
 
 
-const service = function(settingsService) {
-	const hasNotifications = Boolean('Notification' in window);
-	let grantedNotifications = false
+const service = function(settingsService, $rootScope) {
 
-	if (hasNotifications) {
-		Notification.requestPermission().then(result => grantedNotifications = result === 'granted');
+	const status = {
+		supported: Boolean('Notification' in window),
+		granted: false
 	}
 
-	this.hasNotifications = () => hasNotifications;
+	if (status.supported) {
+		Notification.requestPermission().then(result => {
+			$rootScope.$applyAsync(() => status.granted = result === 'granted');
+		});
+	}
 
-	this.grantedNotifications = () => grantedNotifications;
+	this.getStatus = () => status;
 
 	this.update = (previousEntries, currentEntries) => {
 		const selectedContestantId = settingsService.getSelectedContestantId();
-		if (!hasNotifications || selectedContestantId < 0 || !previousEntries) {
+		if (!status.supported || selectedContestantId < 0 || !previousEntries) {
 			return;
 		}
 
@@ -599,14 +602,14 @@ const service = function(settingsService) {
 	const showNotification = (inTopTwo) => {
 		Notification.requestPermission().then(result => {
 			if (result === 'granted') {
-				grantedNotifications = true;
+				status.granted = true;
 				const title = inTopTwo ? 'You\'ve moved into the top 2!' : 'You\'ve dropped out of the top 2.';
 				const options = { 
 					icon: __WEBPACK_IMPORTED_MODULE_0__logo_png___default.a
 				};
 				const notification = new Notification(title, options);
 			} else {
-				grantedNotifications = false;
+				status.granted = false;
 			}
 		});
 	};
@@ -688,12 +691,19 @@ const template = `
   <div class="form-group">
     <label for="contestantDropdown">Selected Contestant: </label>
     <select id="contestantDropdown" class="form-control" ng-model="$ctrl.selectedContestantId" ng-change="$ctrl.contestantSelected()">
-		  <option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
-	  </select>
+		<option ng-repeat="contestant in $ctrl.contestants track by contestant.id" value="{{contestant.id}}" ng-bind="contestant.name"></option>
+	</select>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input disabled type="checkbox" value="{{$ctrl.notificationStatus.supported && $ctrl.notificationStatus.granted}}"> Enable Notifications
+      <span ng-if="$ctrl.notificationStatus.supported && !$ctrl.notificationStatus.granted">(You have not allowed notifications for this domain, please enabled in your browser settings)</span>
+      <span ng-if="!$ctrl.notificationStatus.supported">(You browser does not support notifications)</span>
+    </label>
   </div>
 </form>`;
 
-const controller = function(CONTESTANTS, settingsService) {
+const controller = function(CONTESTANTS, settingsService, notificationService) {
 	this.contestantSelected = () => {
 		settingsService.setSelectedContestantId(this.selectedContestantId);
 	};
@@ -701,6 +711,7 @@ const controller = function(CONTESTANTS, settingsService) {
 	this.$onInit = () => {
 		this.contestants = _.concat([{name: 'none', id: -1}], CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
 		this.selectedContestantId = settingsService.getSelectedContestantId().toString();
+    this.notificationStatus = notificationService.getStatus();
 	}
 };
 

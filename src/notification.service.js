@@ -2,21 +2,24 @@
 
 import logoUrl from './logo.png';
 
-const service = function(settingsService) {
-	const hasNotifications = Boolean('Notification' in window);
-	let grantedNotifications = false
+const service = function(settingsService, $rootScope) {
 
-	if (hasNotifications) {
-		Notification.requestPermission().then(result => grantedNotifications = result === 'granted');
+	const status = {
+		supported: Boolean('Notification' in window),
+		granted: false
 	}
 
-	this.hasNotifications = () => hasNotifications;
+	if (status.supported) {
+		Notification.requestPermission().then(result => {
+			$rootScope.$applyAsync(() => status.granted = result === 'granted');
+		});
+	}
 
-	this.grantedNotifications = () => grantedNotifications;
+	this.getStatus = () => status;
 
 	this.update = (previousEntries, currentEntries) => {
 		const selectedContestantId = settingsService.getSelectedContestantId();
-		if (!hasNotifications || selectedContestantId < 0 || !previousEntries) {
+		if (!status.supported || selectedContestantId < 0 || !previousEntries) {
 			return;
 		}
 
@@ -33,14 +36,14 @@ const service = function(settingsService) {
 	const showNotification = (inTopTwo) => {
 		Notification.requestPermission().then(result => {
 			if (result === 'granted') {
-				grantedNotifications = true;
+				status.granted = true;
 				const title = inTopTwo ? 'You\'ve moved into the top 2!' : 'You\'ve dropped out of the top 2.';
 				const options = { 
 					icon: logoUrl
 				};
 				const notification = new Notification(title, options);
 			} else {
-				grantedNotifications = false;
+				status.granted = false;
 			}
 		});
 	};
