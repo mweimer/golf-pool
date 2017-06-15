@@ -175,7 +175,7 @@ const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL,
 		if (selectedContestantId >= 0) {
 			const positions = entries.filter(e => e.contestantId === selectedContestantId && !e.isDQ)
 				.map(e => e.position)
-				.reduce((c, n) => c + ', ' + n, null);
+				.reduce((c, n) => c + ', ' + n);
 
 			$rootScope.positions = positions;
 		} else {
