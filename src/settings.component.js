@@ -18,17 +18,18 @@ const template = `
   </div>
 </form>`;
 
-const controller = ['CONTESTANTS', 'settingsService', 'notificationService', 
-    function(CONTESTANTS, settingsService, notificationService) {
-        this.contestantSelected = () => {
-            settingsService.setSelectedContestantId(this.selectedContestantId);
-        };
+const controller = function(CONTESTANTS, settingsService, notificationService) {
+  'ngInject';
+  
+  this.contestantSelected = () => {
+      settingsService.setSelectedContestantId(this.selectedContestantId);
+  };
 
-        this.$onInit = () => {
-            this.contestants = _.concat([{name: 'none', id: -1}], CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
-            this.selectedContestantId = settingsService.getSelectedContestantId().toString();
-            this.notificationStatus = notificationService.getStatus();
-        };
-    }];
+  this.$onInit = () => {
+      this.contestants = _.concat([{name: 'none', id: -1}], CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
+      this.selectedContestantId = settingsService.getSelectedContestantId().toString();
+      this.notificationStatus = notificationService.getStatus();
+  };
+};
 
 export default { template, controller };

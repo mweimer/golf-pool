@@ -16,7 +16,9 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute', 'angular-google
         negative: 'negative',
         none: 'none'
     })
-    .config(['$routeProvider', 'AnalyticsProvider', ($routeProvider, AnalyticsProvider) => {
+    .config(function($routeProvider, AnalyticsProvider) {
+        'ngInject';
+
         $routeProvider.when('/', { 
             template: '<pool></pool>'
         }).when('/golfers', { 
@@ -26,10 +28,12 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute', 'angular-google
         });
 
         AnalyticsProvider.setAccount('UA-8634967-4');
-    }])
-    .run(['$rootScope', 'TOURNEY_TITLE', ($rootScope, TOURNEY_TITLE) => {
+    })
+    .run(function($rootScope, TOURNEY_TITLE) {
+        'ngInject';
+        
         $rootScope.getTitle = () => $rootScope.positions ? $rootScope.positions + ' - ' + TOURNEY_TITLE + ' Player Pool' : TOURNEY_TITLE + ' Player Pool';
         $rootScope.faviconUrl = faviconUrl;
-    }]);
+    });
 
 export default app;	

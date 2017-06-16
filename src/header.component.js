@@ -28,22 +28,24 @@ const template = `
 </nav>`;
 
 
-const controller = ['$location', function($location) {
-    this.currentRoute = () => {
-        if ($location.path() === '/') {
-            return 'pool';
-        } else if ($location.path() === '/golfers') {
-            return 'golfers';
-        } else if ($location.path() === '/settings') {
-            return 'settings';
-        }
+const controller = function($location) {
+  'ngInject';
 
-        return '';
-    };
+  this.currentRoute = () => {
+      if ($location.path() === '/') {
+          return 'pool';
+      } else if ($location.path() === '/golfers') {
+          return 'golfers';
+      } else if ($location.path() === '/settings') {
+          return 'settings';
+      }
 
-    this.$onInit = () => {
-        this.logoUrl = logoUrl;
-    };
-}];
+      return '';
+  };
+
+  this.$onInit = () => {
+      this.logoUrl = logoUrl;
+  };
+};
 
 export default { template, controller };

@@ -1,6 +1,8 @@
 'use strict';
 
-const service = ['TOURNEY_TITLE', function(TOURNEY_TITLE) {
+const service = function(TOURNEY_TITLE) {
+    'ngInject';
+
     const hasLocalStorage = typeof(Storage) !== 'undefined';
     const selectedContestantKey = TOURNEY_TITLE + '-selectedContestantId';
 
@@ -15,6 +17,6 @@ const service = ['TOURNEY_TITLE', function(TOURNEY_TITLE) {
     this.setSelectedContestantId = value => {
         localStorage.setItem(selectedContestantKey, value);
     };
-}];
+};
 
 export default service;

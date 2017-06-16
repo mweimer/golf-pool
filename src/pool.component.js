@@ -20,38 +20,39 @@ const template = `
 </table>
 </div>`;
 
-const controller = ['dataService', '$interval', 'REFRESH_TIME', '$filter', 'gotoService', 
-    function(dataService, $interval, REFRESH_TIME, $filter, gotoService) {
-        const dateFilter = $filter('date');
+const controller = function(dataService, $interval, REFRESH_TIME, $filter, gotoService) {
+    'ngInject';
+    
+    const dateFilter = $filter('date');
 
-        const refreshData = () => {
-            dataService.get().then(data => {
-                this.entries = data.entries;
-            });
-        };
+    const refreshData = () => {
+        dataService.get().then(data => {
+            this.entries = data.entries;
+        });
+    };
 
-        let stop;
-        this.$onInit = () => {
-            refreshData();
-            stop = $interval(() => refreshData(), REFRESH_TIME);		
-        };
+    let stop;
+    this.$onInit = () => {
+        refreshData();
+        stop = $interval(() => refreshData(), REFRESH_TIME);		
+    };
 
-        this.$onDestroy = () => {
-            if (angular.isDefined(stop)) {
-                $interval.cancel(stop);
-                stop = undefined;
-            }
-        };
+    this.$onDestroy = () => {
+        if (angular.isDefined(stop)) {
+            $interval.cancel(stop);
+            stop = undefined;
+        }
+    };
 
-        this.getGolferInfo = (entry, index) => {
-            const golfer = entry.golfers[index];
-            const info = `${golfer.score.shortName}${golfer.isAmateur ? ' (A)' : ''}: ${golfer.score.toPar} (${golfer.score.thru ? golfer.score.thru : dateFilter(golfer.score.startTime, 'shortTime')})`;
-            return info;
-        };
+    this.getGolferInfo = (entry, index) => {
+        const golfer = entry.golfers[index];
+        const info = `${golfer.score.shortName}${golfer.isAmateur ? ' (A)' : ''}: ${golfer.score.toPar} (${golfer.score.thru ? golfer.score.thru : dateFilter(golfer.score.startTime, 'shortTime')})`;
+        return info;
+    };
 
-        this.gotoGolfer = golfer => {
-            gotoService.gotoGolfer(golfer.id);
-        };
-    }];
+    this.gotoGolfer = golfer => {
+        gotoService.gotoGolfer(golfer.id);
+    };
+};
 
 export default { template, controller};

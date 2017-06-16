@@ -40,6 +40,13 @@ const config = {
 };
 
 if (isProd) {
+
+    config.module.loaders.push({
+      test: /\.js$/,
+      exclude: /node_modules/,
+      use: [{ loader: 'ng-annotate-loader' }],
+    });
+
     config.module.loaders.push({
       test: /\.js$/,
       loader: 'babel-loader',

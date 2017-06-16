@@ -1,6 +1,8 @@
 'use strict';
 
-const service = ['$location', function($location) {
+const service = function($location) {
+    'ngInject';
+    
     let gotoGolferId = null;
 
     this.gotoGolfer = (id) => {
@@ -13,6 +15,6 @@ const service = ['$location', function($location) {
         gotoGolferId = null;
         return id;
     };
-}];
+};
 
 export default service;

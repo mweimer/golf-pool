@@ -2,7 +2,8 @@
 
 import logoUrl from './logo.png';
 
-const service = ['settingsService', '$rootScope', function(settingsService, $rootScope) {
+const service = function(settingsService, $rootScope) {
+    'ngInject';
 
     const status = {
         supported: Boolean('Notification' in window),
@@ -47,6 +48,6 @@ const service = ['settingsService', '$rootScope', function(settingsService, $roo
             }
         });
     };
-}];
+};
 
 export default service;
