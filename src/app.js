@@ -29,7 +29,7 @@ const app = angular.module('golfPool', ['ngSanitize', 'ngRoute', 'angular-google
 
         AnalyticsProvider.setAccount('UA-8634967-4');
     })
-    .run(function($rootScope, TOURNEY_TITLE) {
+    .run(function($rootScope, TOURNEY_TITLE, Analytics) {
         'ngInject';
         
         $rootScope.getTitle = () => $rootScope.positions ? $rootScope.positions + ' - ' + TOURNEY_TITLE + ' Player Pool' : TOURNEY_TITLE + ' Player Pool';
