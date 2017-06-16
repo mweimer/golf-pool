@@ -29,41 +29,41 @@ const template = `
 </div>`;
 
 const controller = ['dataService', '$interval', 'REFRESH_TIME', '$anchorScroll', '$timeout', 'gotoService', 
-function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout, gotoService) {
-	const refreshData = () => {
-		return dataService.get().then(data => {
-			this.golfers = _.sortBy(data.golfers, g => g.score.index)
-		});
-	};
+    function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout, gotoService) {
+        const refreshData = () => {
+            return dataService.get().then(data => {
+                this.golfers = _.sortBy(data.golfers, g => g.score.index);
+            });
+        };
 
-	const scrollHighlightGolfer = () => {
-		const golferId = gotoService.getGotoGolferId();
-		if (golferId) {
-			$timeout(() => $anchorScroll('golfer-' + golferId), 10);
-			const golfer = this.golfers.find(g => g.id === golferId);
-			if (golfer) {
-				golfer.isHighlighted = true;
-				$timeout(() => golfer.isHighlighted = false, 3000);
-			}
-		}
-	}
+        const scrollHighlightGolfer = () => {
+            const golferId = gotoService.getGotoGolferId();
+            if (golferId) {
+                $timeout(() => $anchorScroll('golfer-' + golferId), 10);
+                const golfer = this.golfers.find(g => g.id === golferId);
+                if (golfer) {
+                    golfer.isHighlighted = true;
+                    $timeout(() => golfer.isHighlighted = false, 3000);
+                }
+            }
+        };
 
-	let stop;
-	this.$onInit = () => {
-		refreshData().then(() => scrollHighlightGolfer());
-		stop = $interval(() => refreshData(), REFRESH_TIME);		
-	};
+        let stop;
+        this.$onInit = () => {
+            refreshData().then(() => scrollHighlightGolfer());
+            stop = $interval(() => refreshData(), REFRESH_TIME);		
+        };
 
-	this.$onDestroy = () => {
-		if (angular.isDefined(stop)) {
-	        $interval.cancel(stop);
-	        stop = undefined;
-        }
-	};
+        this.$onDestroy = () => {
+            if (angular.isDefined(stop)) {
+                $interval.cancel(stop);
+                stop = undefined;
+            }
+        };
 
-	this.getName = golfer => {
-		return `${golfer.firstName} ${golfer.lastName}${golfer.isAmateur ? ' (A)' : ''}`;
-	};
-}];
+        this.getName = golfer => {
+            return `${golfer.firstName} ${golfer.lastName}${golfer.isAmateur ? ' (A)' : ''}`;
+        };
+    }];
 
 export default { template, controller };

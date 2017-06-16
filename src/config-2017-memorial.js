@@ -127,11 +127,11 @@ const golferData = [
     { id: 119, firstName: 'Steven', lastName: 'Bowditch', tier: 'D' }
 ];
 const contestantData = [
-	{ name: 'Kevin O\'Brien', entries: [[1, 18, 36, 77], [4, 27, 44, 89], [3, 19, 53, 105]] },
-	{ name: 'Matt Kilianski', entries: [[1, 18, 44, 71], [1, 26, 53, 73], [4, 15, 36, 77]] },
-	{ name: 'Matt Weimer', entries: [[8, 32, 51, 81], [4, 32, 63, 66], [7, 11, 33, 67]] },
-	{ name: 'Nate Heckmann', entries: [[1, 12, 35, 77], [2, 16, 33, 80], [8, 12, 33, 67]] },
-	{ name: 'Ryan Boudouris', entries: [[8, 13, 35, 67], [1, 12, 39, 87], [4, 12, 37, 107]] }
+    { name: 'Kevin O\'Brien', entries: [[1, 18, 36, 77], [4, 27, 44, 89], [3, 19, 53, 105]] },
+    { name: 'Matt Kilianski', entries: [[1, 18, 44, 71], [1, 26, 53, 73], [4, 15, 36, 77]] },
+    { name: 'Matt Weimer', entries: [[8, 32, 51, 81], [4, 32, 63, 66], [7, 11, 33, 67]] },
+    { name: 'Nate Heckmann', entries: [[1, 12, 35, 77], [2, 16, 33, 80], [8, 12, 33, 67]] },
+    { name: 'Ryan Boudouris', entries: [[8, 13, 35, 67], [1, 12, 39, 87], [4, 12, 37, 107]] }
 ];
 
 export { tourneyTitle, leaderboardUrl, golferData, contestantData };
