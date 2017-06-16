@@ -2,7 +2,7 @@
 
 import logoUrl from './logo.png';
 
-const service = function(settingsService, $rootScope) {
+const service = ['settingsService', '$rootScope', function(settingsService, $rootScope) {
 
 	const status = {
 		supported: Boolean('Notification' in window),
@@ -47,6 +47,6 @@ const service = function(settingsService, $rootScope) {
 			}
 		});
 	};
-};
+}];
 
 export default service;

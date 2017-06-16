@@ -28,7 +28,7 @@ const template = `
 </nav>`;
 
 
-const controller = function($location) {
+const controller = ['$location', function($location) {
     this.currentRoute = () => {
         if ($location.path() === '/') {
             return 'pool';
@@ -44,6 +44,6 @@ const controller = function($location) {
     this.$onInit = () => {
         this.logoUrl = logoUrl;
     };
-};
+}];
 
 export default { template, controller };

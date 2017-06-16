@@ -1,6 +1,7 @@
 'use strict';
 
-const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL, settingsService, notificationService, $rootScope) {
+const service = ['$http', 'GOLFERS', 'CONTESTANTS', 'MOVEMENT', 'LEADERBOARD_URL', 'settingsService', 'notificationService', '$rootScope', 
+function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL, settingsService, notificationService, $rootScope) {
 
 	const entries = CONTESTANTS
 		.map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
@@ -225,6 +226,6 @@ const service = function($http, GOLFERS, CONTESTANTS, MOVEMENT, LEADERBOARD_URL,
 		return sortedEntries;
 	}
 
-};
+}];
 
 export default service;

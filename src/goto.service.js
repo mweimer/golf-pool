@@ -1,6 +1,6 @@
 'use strict';
 
-const service = function($location) {
+const service = ['$location', function($location) {
     let gotoGolferId = null;
 
     this.gotoGolfer = (id) => {
@@ -13,6 +13,6 @@ const service = function($location) {
         gotoGolferId = null;
         return id;
     };
-};
+}];
 
 export default service;

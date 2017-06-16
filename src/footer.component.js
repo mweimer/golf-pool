@@ -6,10 +6,10 @@ const template = `
 </footer>`;
 
 
-const controller = function(REFRESH_TIME) {
+const controller = ['REFRESH_TIME', function(REFRESH_TIME) {
     this.$onInit = () => {
         this.refreshTime = `Refresh Time: ${REFRESH_TIME / 1000} seconds`;
     };
-};
+}];
 
 export default { template, controller };

@@ -28,7 +28,8 @@ const template = `
 </table>
 </div>`;
 
-const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout, gotoService) {
+const controller = ['dataService', '$interval', 'REFRESH_TIME', '$anchorScroll', '$timeout', 'gotoService', 
+function(dataService, $interval, REFRESH_TIME, $anchorScroll, $timeout, gotoService) {
 	const refreshData = () => {
 		return dataService.get().then(data => {
 			this.golfers = _.sortBy(data.golfers, g => g.score.index)
@@ -63,6 +64,6 @@ const controller = function(dataService, $interval, REFRESH_TIME, $anchorScroll,
 	this.getName = golfer => {
 		return `${golfer.firstName} ${golfer.lastName}${golfer.isAmateur ? ' (A)' : ''}`;
 	};
-};
+}];
 
 export default { template, controller };

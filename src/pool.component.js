@@ -20,7 +20,8 @@ const template = `
 </table>
 </div>`;
 
-const controller = function(dataService, $interval, REFRESH_TIME, $filter, gotoService) {
+const controller = ['dataService', '$interval', 'REFRESH_TIME', '$filter', 'gotoService', 
+function(dataService, $interval, REFRESH_TIME, $filter, gotoService) {
 	const dateFilter = $filter('date');
 
 	const refreshData = () => {
@@ -51,6 +52,6 @@ const controller = function(dataService, $interval, REFRESH_TIME, $filter, gotoS
 	this.gotoGolfer = golfer => {
 		gotoService.gotoGolfer(golfer.id);
 	};
-};
+}];
 
 export default { template, controller};

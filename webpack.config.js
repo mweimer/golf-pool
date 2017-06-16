@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 
 const isProd = (process.env.NODE_ENV === 'prod');
@@ -48,11 +49,8 @@ if (isProd) {
         presets: ['es2015']
       }
     });
-    config.module.loaders.push({
-        test: /\.js$/,
-        exclude: /src/,
-        loader: 'uglify-loader'
-    });
+
+    config.plugins.push(new UglifyJSPlugin());
 }
 
 module.exports = config;

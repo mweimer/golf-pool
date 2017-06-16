@@ -18,7 +18,8 @@ const template = `
   </div>
 </form>`;
 
-const controller = function(CONTESTANTS, settingsService, notificationService) {
+const controller = ['CONTESTANTS', 'settingsService', 'notificationService', 
+function(CONTESTANTS, settingsService, notificationService) {
 	this.contestantSelected = () => {
 		settingsService.setSelectedContestantId(this.selectedContestantId);
 	};
@@ -28,6 +29,6 @@ const controller = function(CONTESTANTS, settingsService, notificationService) {
 		this.selectedContestantId = settingsService.getSelectedContestantId().toString();
     this.notificationStatus = notificationService.getStatus();
 	}
-};
+}];
 
 export default { template, controller };
