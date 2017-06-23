@@ -1,0 +1,16 @@
+<form class="settings">
+  <div class="form-group">
+    <label for="contestantDropdown">Selected Contestant: </label>
+    <select id="contestantDropdown" class="form-control" [(ngModel)]="selectedContestantId" (ngModelChange)="contestantSelected()" name="selectedContestantId">
+        <option *ngFor="let contestant of contestants" [value]="contestant.id">{{contestant.name}}</option>
+    </select>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input disabled type="checkbox" [checked]="notificationStatus.supported && notificationStatus.granted"> Notifications Enabled
+      <span *ngIf="notificationStatus.supported && !notificationStatus.granted">(To turn on notifications, go into your browser settings and enable them for this domain)</span>
+      <span *ngIf="notificationStatus.supported && notificationStatus.granted">(To turn off notifications, go into your browser settings and disable them for this domain)</span>
+      <span *ngIf="!notificationStatus.supported">(Your browser does not support notifications)</span>
+    </label>
+  </div>
+</form>

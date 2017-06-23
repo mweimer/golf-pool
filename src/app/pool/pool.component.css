@@ -1,0 +1,11 @@
+@media only screen and (max-width: 375px) {
+    .pool-leaderboard table td, .pool-leaderboard table th {
+        max-width: 50px;
+        word-wrap: break-word;
+        font-size: 10px;
+    }
+}
+
+.golfer-score {
+    cursor: pointer;;
+}

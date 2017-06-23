@@ -1,0 +1,11 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    font-size: 12px;
+}
+
+table tr.selected {
+    border: 2px solid black;
+}
+table tr.selected:first-child {
+    border-top-width: 3px;
+}

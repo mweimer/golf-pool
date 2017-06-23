@@ -1,0 +1,18 @@
+<div class="pool-leaderboard">
+<table class="table table-responsive table-condensed">
+    <thead><tr>
+        <th>Pos</th><th>Name</th><th>Golfer A</th><th>Golfer B</th><th>Golfer C</th><th>Golfer D</th><th>To Par</th>
+    </tr></thead>
+    <tbody>
+        <tr *ngFor="let entry of entries" [ngClass]="{danger: entry.isDQ, selected: entry.isSelected}">
+            <td>{{ entry.position }}</td>
+            <td>{{entry.name}}</td>
+            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[0])" [ngClass]="entry.golferScores[0].throwaway ? 'warning' : 'success'">{{getGolferInfo(entry, 0)}}</td>
+            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[1])" [ngClass]="entry.golferScores[1].throwaway ? 'warning' : 'success'">{{getGolferInfo(entry, 1)}}</td>
+            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[2])" [ngClass]="entry.golferScores[2].throwaway ? 'warning' : 'success'">{{getGolferInfo(entry, 2)}}</td>
+            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[3])" [ngClass]="entry.golferScores[3].throwaway ? 'warning' : 'success'">{{getGolferInfo(entry, 3)}}</td>
+            <th>{{entry.overallToPar}}</th>
+        </tr>
+    </tbody>
+</table>
+</div>
