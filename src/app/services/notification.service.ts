@@ -24,6 +24,8 @@ export class NotificationService {
                 this.requestPermission(observer);
             }
         });
+
+        this.statusObservable.subscribe().unsubscribe();
     }
 
     private requestPermission(observer: Observer<NotificationStatus>): Promise<boolean> {
