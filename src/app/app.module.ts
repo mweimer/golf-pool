@@ -2,7 +2,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HttpModule, JsonpModule } from '@angular/http';
-import { DatePipe } from '@angular/common';
+import { DatePipe, HashLocationStrategy, Location, LocationStrategy } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { Ng2SimplePageScrollModule } from 'ng2-simple-page-scroll';
@@ -50,6 +50,8 @@ import { NotificationService } from './services/notification.service';
     SettingsComponent
   ],
   providers: [
+    Location, 
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
     Title,
     DatePipe,
     DataService,
