@@ -1,9 +1,9 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule }   from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { DatePipe } from '@angular/common';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { Ng2SimplePageScrollModule } from 'ng2-simple-page-scroll';
 

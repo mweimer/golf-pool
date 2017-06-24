@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { Subscription } from 'rxjs/Subscription'
@@ -8,12 +8,12 @@ import { GotoService } from '../services/goto.service';
 import { Entry, GolfData, GolferScore } from '../models/models';
 
 @Component({
-  selector: 'pool',
+  selector: 'app-pool',
   templateUrl: './pool.component.html',
   styleUrls: ['./pool.component.css']
 })
 
-export class PoolComponent {
+export class PoolComponent implements OnInit, OnDestroy {
 
     entries: Entry[];
 

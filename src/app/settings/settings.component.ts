@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy  } from '@angular/core';
 
 import { concat } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
@@ -9,12 +9,12 @@ import { AppConfig } from '../app.config';
 
 
 @Component({
-  selector: 'settings',
+  selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
 
-export class SettingsComponent {
+export class SettingsComponent implements OnInit, OnDestroy {
 
     contestants: Array<any>;
     selectedContestantId: string;
@@ -26,7 +26,7 @@ export class SettingsComponent {
     }
 
     ngOnInit(): void {
-        this.contestants = concat([{name: 'none', id: -1}], AppConfig.CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
+        this.contestants = concat([{name: 'none', id: 0}], AppConfig.CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
         this.selectedContestantId = this.settingsService.selectedContestantId.toString();
         this.statusSubscription = this.notificationService.getStatus().subscribe((status: NotificationStatus) => {
             this.notificationStatus = status;
@@ -38,6 +38,6 @@ export class SettingsComponent {
     }
 
     contestantSelected() {
-        this.settingsService.selectedContestantId = parseInt(this.selectedContestantId);
+        this.settingsService.selectedContestantId = parseInt(this.selectedContestantId, 10);
     }
 }

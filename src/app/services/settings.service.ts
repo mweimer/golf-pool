@@ -13,7 +13,7 @@ export class SettingsService {
             return 0;
         }
 
-        return parseInt(localStorage.getItem(this.selectedContestantKey));
+        return parseInt(localStorage.getItem(this.selectedContestantKey), 10);
     }
 
     set selectedContestantId(value: number) {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription'
 import { SimplePageScrollService } from 'ng2-simple-page-scroll';
@@ -8,18 +8,19 @@ import { GotoService } from '../services/goto.service';
 import { GolfData, GolferScore, MovementDirection } from '../models/models';
 
 @Component({
-  selector: 'golfers',
+  selector: 'app-golfers',
   templateUrl: './golfers.component.html',
   styleUrls: ['./golfers.component.css']
 })
 
-export class GolfersComponent {
+export class GolfersComponent implements OnInit, OnDestroy {
 
     golferScores: GolferScore[];
 
     private subscription: Subscription;
 
-    constructor(private dataService: DataService, private simplePageScrollService: SimplePageScrollService, private gotoService: GotoService) {
+    constructor(private dataService: DataService, private simplePageScrollService: SimplePageScrollService,
+        private gotoService: GotoService) {
 
     }
 

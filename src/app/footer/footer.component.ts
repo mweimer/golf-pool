@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppConfig} from '../app.config';
 
 @Component({
-  selector: 'gp-footer',
+  selector: 'app-footer',
   templateUrl: './footer.component.html',
 })
 

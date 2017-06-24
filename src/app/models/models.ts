@@ -37,7 +37,7 @@ export class Golfer {
     firstName: string;
     lastName: string;
     tier: string
-    isAmateur?: boolean = false;
+    isAmateur? = false;
 }
 
 export class Score {

@@ -24,7 +24,8 @@ export class DataService {
     private intervalSubscription: Subscription;
     private cacheData: GolfData;
 
-    public constructor(private titleService: Title, private http: Http, private settingsService: SettingsService, private notificationService: NotificationService) {
+    public constructor(private titleService: Title, private http: Http, private settingsService: SettingsService,
+        private notificationService: NotificationService) {
         this.entryConfig = AppConfig.CONTESTANTS
             .map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
             .reduce((prev, curr) => prev.concat(curr));
@@ -103,7 +104,7 @@ export class DataService {
         const golferScores: GolferScore[] = AppConfig.GOLFERS.map(golfer => {
             const firstName: string = golfer.firstName.toLowerCase();
             const lastName: string = golfer.lastName.toLowerCase();
-            const score: Score = scores.find(score => {
+            const matchingScore: Score = scores.find(score => {
                 const fullName = score.fullName.toLowerCase();
                 return fullName.includes(firstName) && fullName.includes(lastName);
             });
@@ -112,8 +113,8 @@ export class DataService {
             const golferScore: GolferScore = new GolferScore();
             golferScore.golfer = golferCopy;
 
-            if (score) {
-                golferScore.score = score;
+            if (matchingScore) {
+                golferScore.score = matchingScore;
             } else {
                 golferScore.score = this.emptyScore(golferCopy);
             }
@@ -155,14 +156,14 @@ export class DataService {
         let isDNF = false;
 
         const toPar: string = row.find('.relativeScore').text();
-        let relativeScore = toPar === 'E' ? 0 : parseInt(toPar);
+        let relativeScore = toPar === 'E' ? 0 : parseInt(toPar, 10);
         if (isNaN(relativeScore)) {
             relativeScore = Number.MAX_SAFE_INTEGER;
             isDNF = true;
         }
 
         const total: string = row.find('.totalScore').text();
-        let totalScore = total === '--' ? 0 : parseInt(total);
+        let totalScore = total === '--' ? 0 : parseInt(total, 10);
         if (isNaN(totalScore)) {
             totalScore = Number.MAX_SAFE_INTEGER;
         }
@@ -224,12 +225,17 @@ export class DataService {
 
     private getEntries(golferScores: GolferScore[]): Entry[] {
         const entries: Entry[] = this.entryConfig.map((config: EntryConfig)  => {
-            const entryGolferScores: GolferScore[] = config.golferIds.map(gid => cloneDeep(golferScores.find(golferScore => golferScore.golfer.id === gid)));
+
+            const entryGolferScores: GolferScore[] = config.golferIds.map(gid => {
+                return cloneDeep(golferScores.find(golferScore => golferScore.golfer.id === gid));
+            });
+
             let overallRelativeScore: number, overallTotalScore: string, overallToPar: string;
             const isDQ: boolean = entryGolferScores.filter(golferScore => golferScore.score.isDNF).length > 1;
 
             if (!isDQ) {
-                const worstGolferScores: GolferScore[] = orderBy(entryGolferScores, ['score.relativeScore', 'score.totalScore', 'golfer.id'], ['desc', 'desc', 'desc']);
+                const worstGolferScores: GolferScore[] = orderBy(entryGolferScores,
+                    ['score.relativeScore', 'score.totalScore', 'golfer.id'], ['desc', 'desc', 'desc']);
                 worstGolferScores[0].throwaway = true;
 
                 overallRelativeScore = entryGolferScores
