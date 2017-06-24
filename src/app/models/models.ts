@@ -8,6 +8,7 @@ export class GolfData {
     entries: Entry[];
     golfersScores: GolferScore[];
     selectedContestantId = 0;
+    timeStamp: Date;
 }
 
 export class Entry {

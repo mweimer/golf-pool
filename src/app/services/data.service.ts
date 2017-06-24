@@ -68,6 +68,7 @@ export class DataService {
     }
 
     private convertToData(res: Response): GolfData {
+        const now = new Date();
         const scorePage = jQuery(res.text());
         const golferRows = scorePage.find('.leaderboard-table .player-overview');
         const scores: Score[] = [];
@@ -77,6 +78,7 @@ export class DataService {
         });
 
         const data: GolfData = new GolfData();
+        data.timeStamp = now;
         data.golfersScores = this.getGolferScores(scores);
         data.entries = this.getEntries(data.golfersScores);
         return data;
