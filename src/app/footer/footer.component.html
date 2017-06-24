@@ -1,4 +1,5 @@
 <footer>
-  <div>{{refreshTime}}</div>
-  <div *ngIf="timeStamp">Last refresh time: {{timeStamp | date: 'mediumTime'}}</div>
+    <hr/>
+    <div>{{refreshTime}}</div>
+    <div *ngIf="timeStamp">Last refresh: {{timeStamp | date: 'mediumTime'}}</div>
 </footer>
