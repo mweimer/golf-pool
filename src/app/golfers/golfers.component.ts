@@ -46,7 +46,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
     private scrollHighlightGolfer() {
         const golferId: number = this.gotoService.gotoGolferId;
         if (golferId > 0) {
-            setTimeout(() => this.simplePageScrollService.scrollToElement('#golfer-' + golferId, 60), 10);
+            setTimeout(() => this.simplePageScrollService.scrollToElement('#golfer-' + golferId, 40), 10);
             const golferScore: GolferScore = this.golferScores.find(g => g.golfer.id === golferId);
             if (golferScore) {
                 golferScore.isHighlighted = true;
