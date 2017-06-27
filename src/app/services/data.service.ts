@@ -8,10 +8,10 @@ import { Observer } from 'rxjs/Observer';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import jQuery from 'jquery';
+import * as jQuery from 'jquery';
 import { cloneDeep, orderBy, sortBy, union } from 'lodash';
 
-import { Golfer, MovementDirection, Score, GolferScore, GolfData, Entry, EntryConfig } from '../models/models';
+import { Golfer, MovementDirection, Score, GolferScore, GolfData, Entry, EntryConfig, PlayerInfo } from '../models/models';
 import { AppConfig} from '../app.config';
 import { SettingsService } from '../services/settings.service';
 import { NotificationService } from '../services/notification.service';
@@ -48,6 +48,17 @@ export class DataService {
 
     get(): Observable<GolfData> {
         return this.dataObservable;
+    }
+
+    getPlayerInfo(golferScore: GolferScore): Observable<PlayerInfo> {
+        return this.http.get(AppConfig.PLAYER_INFO_URL + golferScore.score.espnId)
+            .map((res: Response) => this.handlePlayerResponse(res))
+            .catch(this.handleError);
+    }
+
+    private handlePlayerResponse(res: Response): PlayerInfo {
+        const playerInfo: PlayerInfo = res.json();
+        return playerInfo;
     }
 
     private getThenPushData(observer: Observer<GolfData>) {
@@ -190,6 +201,9 @@ export class DataService {
         const shortName: string = row.find('.short-name').text();
         const logoImage: string = row.find('.team-logo img').attr('src');
 
+        const match: string[] = row.attr('class').match(/player-overview-([0-9]{1,5})/);
+        const espnId = match[match.length - 1];
+
         const movementElement = row.find('.movement');
         const movementText: string = movementElement.text();
         let movementDirection: MovementDirection;
@@ -220,6 +234,7 @@ export class DataService {
         score.shortName = shortName;
         score.logoImage = logoImage;
         score.startTime = startTime;
+        score.espnId = espnId;
         score.movement = { text: movementText, direction: movementDirection };
 
         return score;

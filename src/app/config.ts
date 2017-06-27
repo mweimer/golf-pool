@@ -1,6 +1,6 @@
 const tourneyTitle = '2017 US Open';
 
-const leaderboardUrl = 'http://www.espn.com/golf/leaderboard?tournamentId=3066';
+const tourneyId = '3066';
 
 const golferData = [
     { id: 1, firstName: 'Dustin', lastName: 'Johnson', tier: 'A' },
@@ -178,4 +178,4 @@ const contestantData = [
     { id: 16, name: 'David Prevo', entries: [[2, 20, 36, 77], [4, 22, 39, 68], [3, 13, 34, 69]] }
 ];
 
-export { tourneyTitle, leaderboardUrl, golferData, contestantData };
+export { tourneyTitle, tourneyId, golferData, contestantData };

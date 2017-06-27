@@ -1,3 +1,9 @@
+export class Contestant {
+    id: number;
+    name: string;
+    entries: number[][];
+}
+
 export class EntryConfig {
     name: string;
     golferIds: number[];
@@ -59,6 +65,7 @@ export class Score {
     shortName: string;
     logoImage: string;
     startTime: Date;
+    espnId: string;
     movement: {
         text: string;
         direction: MovementDirection
@@ -70,3 +77,43 @@ export enum MovementDirection {
     Negative,
     None
 }
+
+export class PlayerInfo
+{
+    profile: {
+        age: number;
+        birthPlace: string;
+        college: string;
+        dateOfBirth: Date;
+        displayName: string;
+        hand: string;
+        headshot: string;
+        link: string;
+    };
+    rounds: { 
+        courseId: number;
+        currentPosition: number;
+        displayValue: string;
+        hasStream: boolean;
+        inScore: number;
+        linescores: {
+            displayValue: string
+            par: number;
+            period: number;
+            scoreType: {
+                displayName: string
+                displayValue: string
+                name: string;
+            }
+            value: number;
+        }[];
+        movement: number;
+        outScore: number
+        period: number
+        startPosition: number
+        teeTime: Date;
+        value: number;
+    }[];
+}
+
+
