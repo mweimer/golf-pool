@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 import { SettingsService } from './settings.service'
 import { Entry } from '../models/models';
@@ -14,32 +14,12 @@ export class NotificationService {
         granted: false
     };
 
-    private statusObservable: Observable<NotificationStatus> = new Observable<NotificationStatus>();
+    private statusObservable: ReplaySubject<NotificationStatus> = new ReplaySubject<NotificationStatus>();
 
     constructor(private settingsService: SettingsService) {
-        this.statusObservable = Observable.create((observer: Observer<NotificationStatus>) => {
-            observer.next(this.status);
-
-            if (this.status.supported && !this.status.granted) {
-                this.requestPermission(observer);
-            }
-        });
-
-        this.statusObservable.subscribe().unsubscribe();
-    }
-
-    private requestPermission(observer: Observer<NotificationStatus>): Promise<boolean> {
-        return Notification.requestPermission().then(result => {
-            const granted: boolean = result === 'granted';
-            this.setGrantedStatus(granted, observer);
-            return granted;
-        });
-    }
-
-    private setGrantedStatus(granted: boolean, observer: Observer<NotificationStatus>) {
-        if (this.status.granted !== granted) {
-            this.status.granted = granted;
-            observer.next(this.status);
+        this.statusObservable.next(this.status);
+        if (this.status.supported) {
+            this.requestPermission();
         }
     }
 
@@ -49,7 +29,7 @@ export class NotificationService {
 
     update(previousEntries: Entry[], currentEntries: Entry[]) {
         const selectedContestantId: number = this.settingsService.selectedContestantId;
-        if (!this.status.supported || !this.status.granted || selectedContestantId <= 0 || !previousEntries) {
+        if (!this.status.supported || selectedContestantId <= 0 || !previousEntries) {
             return;
         }
 
@@ -63,12 +43,31 @@ export class NotificationService {
         }
     }
 
+    private requestPermission(): Promise<boolean> {
+        return Notification.requestPermission().then(result => {
+            const granted = result === 'granted';
+            this.setGrantedStatus(granted);
+            return granted;
+        });
+    }
+
+    private setGrantedStatus(granted: boolean) {
+        if (this.status.granted !== granted) {
+            this.status.granted = granted;
+            this.statusObservable.next(this.status);
+        }
+    }
+    
     private showNotification(inTopTwo: boolean) {
-        const title = inTopTwo ? 'You\'ve moved into the top 2!' : 'You\'ve dropped out of the top 2.';
-        const options = {
-            icon: '/assets/logo.png'
-        };
-        return new Notification(title, options);
+        this.requestPermission().then(granted => {
+            if (granted) {
+                const title = inTopTwo ? 'You\'ve moved into the top 2!' : 'You\'ve dropped out of the top 2.';
+                const options = {
+                    icon: '/assets/logo.png'
+                };
+                return new Notification(title, options);
+            }
+        });
     }
 }
 

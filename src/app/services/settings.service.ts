@@ -19,5 +19,4 @@ export class SettingsService {
     set selectedContestantId(value: number) {
         localStorage.setItem(this.selectedContestantKey, value.toString());
     }
-
 }

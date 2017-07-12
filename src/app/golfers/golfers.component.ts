@@ -5,17 +5,18 @@ import { SimplePageScrollService } from 'ng2-simple-page-scroll';
 
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
-import { GolfData, GolferScore, MovementDirection } from '../models/models';
+import { GolfData, GolferScore, MovementDirection, PlayerInfo } from '../models/models';
 
 @Component({
-  selector: 'app-golfers',
-  templateUrl: './golfers.component.html',
-  styleUrls: ['./golfers.component.css']
+    selector: 'app-golfers',
+    templateUrl: './golfers.component.html',
+    styleUrls: ['./golfers.component.scss']
 })
 
 export class GolfersComponent implements OnInit, OnDestroy {
 
     golferScores: GolferScore[];
+    playerInfo: PlayerInfo;
 
     private subscription: Subscription;
 
@@ -26,8 +27,8 @@ export class GolfersComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.subscription = this.dataService.get().subscribe((data: GolfData) => {
-          this.golferScores = data.golfersScores;
-          this.scrollHighlightGolfer();
+            this.golferScores = data.golfersScores;
+            this.scrollHighlightGolfer();
         });
     }
 
@@ -41,6 +42,17 @@ export class GolfersComponent implements OnInit, OnDestroy {
 
     getMovementClass(golferScore: GolferScore): string {
         return MovementDirection[golferScore.score.movement.direction].toLowerCase();
+    }
+
+    showGolferDetail(golferScore: GolferScore) {
+        if (this.playerInfo && this.playerInfo.golferId === golferScore.golfer.id) {
+            this.playerInfo = null;
+            return;
+        }
+
+        this.dataService.getPlayerInfo(golferScore).subscribe((playerInfo: PlayerInfo) => {
+            this.playerInfo = playerInfo;
+        });
     }
 
     private scrollHighlightGolfer() {

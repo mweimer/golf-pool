@@ -80,6 +80,7 @@ export enum MovementDirection {
 
 export class PlayerInfo
 {
+    golferId: number;
     profile: {
         age: number;
         birthPlace: string;

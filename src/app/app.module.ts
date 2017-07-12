@@ -6,6 +6,7 @@ import { DatePipe, HashLocationStrategy, Location, LocationStrategy } from '@ang
 import { FormsModule } from '@angular/forms';
 
 import { Ng2SimplePageScrollModule } from 'ng2-simple-page-scroll';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -20,45 +21,46 @@ import { GotoService } from './services/goto.service';
 import { NotificationService } from './services/notification.service';
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    RouterModule.forRoot([
-      {
-        path: '',
-        component: PoolComponent
-      },
-      {
-        path: 'golfers',
-        component: GolfersComponent
-      },
-      {
-        path: 'settings',
-        component: SettingsComponent
-      }
-    ]),
-    HttpModule,
-    JsonpModule,
-    FormsModule,
-    Ng2SimplePageScrollModule.forRoot()
-  ],
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    FooterComponent,
-    PoolComponent,
-    GolfersComponent,
-    SettingsComponent
-  ],
-  providers: [
-    Location, 
-    {provide: LocationStrategy, useClass: HashLocationStrategy},
-    Title,
-    DatePipe,
-    DataService,
-    SettingsService,
-    GotoService,
-    NotificationService
-  ],
-  bootstrap: [AppComponent]
+    imports: [
+        BrowserModule,
+        RouterModule.forRoot([
+            {
+                path: '',
+                component: PoolComponent
+            },
+            {
+                path: 'golfers',
+                component: GolfersComponent
+            },
+            {
+                path: 'settings',
+                component: SettingsComponent
+            }
+        ]),
+        HttpModule,
+        JsonpModule,
+        FormsModule,
+        Ng2SimplePageScrollModule.forRoot(),
+        NgbModule.forRoot()
+    ],
+    declarations: [
+        AppComponent,
+        HeaderComponent,
+        FooterComponent,
+        PoolComponent,
+        GolfersComponent,
+        SettingsComponent
+    ],
+    providers: [
+        Location, 
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        Title,
+        DatePipe,
+        DataService,
+        SettingsService,
+        GotoService,
+        NotificationService
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

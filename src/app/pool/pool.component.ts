@@ -8,9 +8,9 @@ import { GotoService } from '../services/goto.service';
 import { Entry, GolfData, GolferScore } from '../models/models';
 
 @Component({
-  selector: 'app-pool',
-  templateUrl: './pool.component.html',
-  styleUrls: ['./pool.component.css']
+    selector: 'app-pool',
+    templateUrl: './pool.component.html',
+    styleUrls: ['./pool.component.scss']
 })
 
 export class PoolComponent implements OnInit, OnDestroy {
@@ -25,7 +25,7 @@ export class PoolComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.subscription = this.dataService.get().subscribe((data: GolfData) => {
-          this.entries = data.entries;
+            this.entries = data.entries;
         });
     }
 
@@ -43,5 +43,16 @@ export class PoolComponent implements OnInit, OnDestroy {
 
     gotoGolfer(golferScore: GolferScore) {
         this.gotoService.gotoGolfer(golferScore.golfer.id);
+    }
+
+    getGolferClass(entry: Entry, golferIndex: number) {
+        if (entry.isDQ) {
+            return;
+        }
+        else if (entry.golferScores[golferIndex].throwaway) {
+            return 'table-warning';
+        }
+
+        return 'table-success';
     }
 }

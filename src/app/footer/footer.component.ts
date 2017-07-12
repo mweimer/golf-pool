@@ -7,22 +7,22 @@ import { GolfData } from '../models/models';
 import { DataService } from '../services/data.service';
 
 @Component({
-  selector: 'app-footer',
-  templateUrl: './footer.component.html',
+    selector: 'app-footer',
+    templateUrl: './footer.component.html',
 })
 
 export class FooterComponent implements OnInit, OnDestroy {
 
-     refreshTime = `Refresh Time: ${AppConfig.REFRESH_TIME / 1000} seconds`;
-     timeStamp: Date;
+    refreshTime = `Refresh Time: ${AppConfig.REFRESH_TIME / 1000} seconds`;
+    timeStamp: Date;
 
-     private subscription: Subscription;
+    private subscription: Subscription;
 
-     constructor(private dataService: DataService) {}
+    constructor(private dataService: DataService) {}
 
-     ngOnInit(): void {
+    ngOnInit(): void {
         this.subscription = this.dataService.get().subscribe((data: GolfData) => {
-          this.timeStamp = data.timeStamp;
+            this.timeStamp = data.timeStamp;
         });
     }
 

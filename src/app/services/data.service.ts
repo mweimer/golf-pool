@@ -40,8 +40,8 @@ export class DataService {
 
             if (!this.intervalSubscription) {
                 this.intervalSubscription = IntervalObservable
-                    .create(AppConfig.REFRESH_TIME)
-                    .subscribe(() => this.getThenPushData(observer));
+                .create(AppConfig.REFRESH_TIME)
+                .subscribe(() => this.getThenPushData(observer));
             }
         });
     }
@@ -52,12 +52,13 @@ export class DataService {
 
     getPlayerInfo(golferScore: GolferScore): Observable<PlayerInfo> {
         return this.http.get(AppConfig.PLAYER_INFO_URL + golferScore.score.espnId)
-            .map((res: Response) => this.handlePlayerResponse(res))
+            .map((res: Response) => this.handlePlayerResponse(res, golferScore))
             .catch(this.handleError);
     }
 
-    private handlePlayerResponse(res: Response): PlayerInfo {
+    private handlePlayerResponse(res: Response, golferScore: GolferScore): PlayerInfo {
         const playerInfo: PlayerInfo = res.json();
+        playerInfo.golferId = golferScore.golfer.id;
         return playerInfo;
     }
 
@@ -103,7 +104,7 @@ export class DataService {
             data.entries.forEach((entry: Entry) => {
                 entry.isSelected = entry.contestantId === selectedContestantId;
                 if (entry.isSelected) {
-                     selectedGolferIds = union(selectedGolferIds, entry.golferScores.map(golferScore => golferScore.golfer.id));
+                    selectedGolferIds = union(selectedGolferIds, entry.golferScores.map(golferScore => golferScore.golfer.id));
                 }
             });
 
@@ -306,11 +307,11 @@ export class DataService {
     private handleError (error: Response | any) {
         let errMsg: string;
         if (error instanceof Response) {
-          const body = error.json() || '';
-          const err = body.error || JSON.stringify(body);
-          errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+            const body = error.json() || '';
+            const err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
         } else {
-          errMsg = error.message ? error.message : error.toString();
+            errMsg = error.message ? error.message : error.toString();
         }
         console.error(errMsg);
         return Observable.throw(errMsg);

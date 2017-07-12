@@ -1,0 +1,57 @@
+.logo {
+    display: inline;
+    margin-right: 5px;
+
+    img {
+        bottom: 8px;
+        position: relative;
+        width: 20px;
+        margin-bottom: -14px;
+    }
+}
+
+table {
+    tr {
+        cursor: pointer;
+    }
+    
+    th.movement {
+        &:before {
+            content: "↑";/*"\2B06";*/
+        }
+
+        &:after {
+            content: "↓";
+        }
+    }
+
+    td.negative {
+        color: #d00;
+
+        &:before {
+            content: "↓";
+            position: relative;
+            top: -1px;
+            margin-right: 2px;
+        }
+    }
+
+    td.positive {
+        color: #094;
+
+        &:before {
+            content: "↑";
+            position: relative;
+            top: -1px;
+            margin-right: 2px;
+        }
+    }
+}
+
+@media only screen and (max-width: 375px) {
+    table td, table th {
+        max-width: 40px;
+        word-wrap: break-word;
+        font-size: 8px;
+    }
+}

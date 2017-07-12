@@ -17,14 +17,11 @@
       "polyfills": "polyfills.ts",
       "tsconfig": "tsconfig.app.json",
       "prefix": "app",
-      "styles": [
-         "../node_modules/bootstrap/dist/css/bootstrap.css",
-         "../node_modules/bootstrap/dist/css/bootstrap-theme.css",
-        "styles.css"
-      ],
+      "styles": ["styles.scss"],
       "scripts": [
         "../node_modules/jquery/dist/jquery.js",
-        "../node_modules/bootstrap/dist/js/bootstrap.js"
+        "../node_modules/bootstrap/js/dist/util.js",
+        "../node_modules/bootstrap/js/dist/collapse.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
@@ -39,7 +36,7 @@
     }
   ],
   "defaults": {
-    "styleExt": "css",
+    "styleExt": "scss",
     "component": {}
   }
 }
