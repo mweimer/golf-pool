@@ -21,7 +21,7 @@
             <td>{{golferScore.score.round4Score}}</td>
             <td>{{golferScore.score.total}}</td>
         </tr>
-        <tr *ngIf="playerInfo && playerInfo.golferId === golferScore.golfer.id">
+        <tr class="player-info-row" *ngIf="playerInfo && playerInfo.golferId === golferScore.golfer.id">
             <td colspan="12">
                 <app-player-info [info]="playerInfo"></app-player-info>
             </td>
