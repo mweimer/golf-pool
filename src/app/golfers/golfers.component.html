@@ -21,7 +21,11 @@
             <td>{{golferScore.score.round4Score}}</td>
             <td>{{golferScore.score.total}}</td>
         </tr>
-        <tr *ngIf="playerInfo && playerInfo.golferId === golferScore.golfer.id"><td colspan="12"><img *ngIf="playerInfo.profile.headshot" [src]="playerInfo.profile.headshot" /></td></tr>
+        <tr *ngIf="playerInfo && playerInfo.golferId === golferScore.golfer.id">
+            <td colspan="12">
+                <app-player-info [info]="playerInfo"></app-player-info>
+            </td>
+        </tr>
         </ng-container>
     </tbody>
 </table>

@@ -1,0 +1,44 @@
+<div class="row">
+	<div class="col-sm-2">
+		<div class="text-center">
+		<img *ngIf="player.profile.headshot" class="headshot" [src]="player.profile.headshot" />
+		<img *ngIf="!player.profile.headshot" class="headshot placeholder" src="/assets/placeholder.png" />
+		</div>
+	</div>
+
+	<div class="col-sm-10">
+
+	<div *ngIf="selectedRound >= 0" ngbDropdown class="d-inline-block">
+      <button class="btn btn-outline-secondary btn-sm" ngbDropdownToggle>Round {{selectedRound + 1}}</button>
+      <div class="dropdown-menu">
+        <button class="dropdown-item" *ngFor="let round of player.rounds" (click)="roundSelected(round)">Round {{round.period}}</button>
+      </div>
+    </div>
+
+	<div class="table-key">
+		<ul>
+			<li class="yellow">Eagle</li>
+			<li class="green">Birdie</li>
+			<li class="red">Bogey</li>
+			<li class="blue">Double Bogey or Worse</li>
+
+		</ul>
+	</div>
+
+	<table class="table table-sm table-bordered">
+		<thead class="thead-default">
+		<tr>
+			<th>HOLE</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>OUT</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>IN</th><th>TOT</th>
+		</tr>
+		</thead>
+		<tbody *ngIf="selectedRound >= 0">
+		<tr>
+			<td *ngFor="let cell of cells">{{getPar(cell)}}</td>
+		</tr>
+		<tr>
+			<td *ngFor="let cell of cells" [ngClass]="getClass(cell)">{{getScore(cell)}}</td>
+		</tr>
+		</tbody>
+	</table>
+	</div>
+</div>

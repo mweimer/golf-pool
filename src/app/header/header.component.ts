@@ -9,9 +9,9 @@ import { Router } from '@angular/router';
 
 export class HeaderComponent {
 
-    constructor(private router: Router) {
+    isOpen = false;
 
-    }
+    constructor(private router: Router) {}
 
     currentRoute(): string {
         if (this.router.url === '/') {
@@ -23,5 +23,9 @@ export class HeaderComponent {
         }
 
         return '';
-    };
+    }
+
+    toggle() {
+        this.isOpen = !this.isOpen;
+    }
 }

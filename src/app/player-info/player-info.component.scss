@@ -1,0 +1,93 @@
+@import '~bootstrap/scss/_variables';
+
+.row {
+	background-color: white;
+	cursor: default;
+}
+
+img.headshot {
+	border: 1px solid grey;
+	border-radius: 10px;
+    width: 100%;
+    height: auto;
+
+    &.placeholder{
+    	left: -15px;
+    }
+}
+
+
+@media only screen and (max-width: 575px) {
+	img.headshot {
+		 width: 50%
+	}
+}
+
+.btn {
+	float: left;
+}
+
+
+table {
+	tbody tr:nth-of-type(odd) {
+	    background-color: transparent;
+	}
+
+	td, th {
+		width: 4%;
+		text-align: center;
+
+		&.yellow {
+	    	background: $yellow;
+	    }
+	    &.green {
+	    	background: $green;
+	    }
+	    &.red {
+	    	background: $red;
+	    }
+	    &.blue {
+	    	background: $blue;
+	    }
+	}
+}
+
+.table-key {
+	text-align: right;
+	display: inline-block;
+	float:right;
+	
+
+	ul {
+		list-style: none;
+
+		li {
+		    color: #6c6d6f;
+		    display: inline-block;
+		    font-size: 10px;
+
+		    &:before {
+			    content: " ";
+			    display: inline-block;
+			    height: 10px;
+			    margin: 0 3px 0 5px;
+			    position: relative;
+			    top: 1px;
+			    width: 10px;
+			}
+
+			&.yellow:before {
+		    	background: $yellow;
+		    }
+		    &.green:before {
+		    	background: $green;
+		    }
+		    &.red:before {
+		    	background: $red;
+		    }
+		    &.blue:before {
+		    	background: $blue;
+		    }
+		}
+	}
+}
