@@ -18,10 +18,10 @@ export class PlayerInfoComponent implements OnInit {
 	set info(info: PlayerInfo) {
 		this.player = info;
 
-		if (info && info.rounds.length > 0) {
+		if (info && info.rounds && info.rounds.length > 0) {
 			this.selectedRound = info.rounds.length - 1;
 		} else {
-			this.selectedRound = null;
+			this.selectedRound = -1;
 		}
 	}
 
@@ -33,6 +33,8 @@ export class PlayerInfoComponent implements OnInit {
 	getPar(cell: string | number) {
 		if (cell === 'label') {
 			return 'Par'
+		} else if(!this.hasScores()) {
+			return '';
 		} else if (cell === 'out') {
 			return this.player.rounds[this.selectedRound].linescores
 				.filter(s => s.period < 10)
@@ -57,6 +59,8 @@ export class PlayerInfoComponent implements OnInit {
 	getScore(cell: string | number) {
 		if (cell === 'label') {
 			return 'Score'
+		} else if(!this.hasScores()) {
+			return '';
 		} else if (cell === 'out') {
 			return this.player.rounds[this.selectedRound].outScore;
 		} else if (cell === 'in') {
@@ -71,7 +75,7 @@ export class PlayerInfoComponent implements OnInit {
 	}
 
 	getClass(cell: string | number) {
-		if (cell === 'label' || cell === 'out' || cell === 'in' || cell === 'tot') {
+		if (cell === 'label' || cell === 'out' || cell === 'in' || cell === 'tot' || !this.hasScores()) {
 			return;
 		}
 
@@ -96,6 +100,10 @@ export class PlayerInfoComponent implements OnInit {
 
 	roundSelected(round) {
 		this.selectedRound = round.period - 1;
+	}
+
+	private hasScores(): boolean {
+		return this.selectedRound !== -1 && Boolean(this.player.rounds[this.selectedRound].linescores);
 	}
 
 }
