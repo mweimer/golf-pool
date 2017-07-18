@@ -1,17 +1,30 @@
 @import '~bootstrap/scss/_variables';
 
-img.headshot {
-	border: 1px solid grey;
-	border-radius: 10px;
-    width: 100%;
-    height: auto;
+.player-img-container {
+	img.headshot {
+		position: relative;
+	    width: 100%;
+	    height: auto;
 
-    &.placeholder{
-    	left: -15px;
-    }
+	    &.placeholder{
+	    	left: -15px;
+	    }
+	}
+	.addt-details {
+		background-color: rgba(0, 0, 0, 0.5);
+	    position: absolute;
+	    bottom: 0;
+	    left: 0;
+	    width: 100%;
+	    color: white;
+	    font-weight: bold;
+	    padding: .75rem 0;
+	    .college,
+	    .hometown {
+	    	padding-right: 1rem;
+	    }
+	}
 }
-
-
 
 table {
 	tbody tr:nth-of-type(odd) {

@@ -1,8 +1,15 @@
 <div class="row">
 	<div class="col-sm-2">
 		<div class="text-center">
-		<img *ngIf="player.profile.headshot" class="headshot" [src]="player.profile.headshot" />
-		<img *ngIf="!player.profile.headshot" class="headshot placeholder" src="/assets/placeholder.png" />
+			<div class="player-img-container">
+				<img *ngIf="player.profile.headshot" class="headshot" [src]="player.profile.headshot" />
+				<img *ngIf="!player.profile.headshot" class="headshot placeholder" src="/assets/placeholder.png" />
+				<div class="addt-details">
+					<span *ngIf="player.profile.college" class="college">College: {{player.profile.college}}</span>
+					<span *ngIf="!player.profile.college" class="hometown">POB: {{player.profile.birthPlace}}</span>
+					<span class="age">Age: {{player.profile.age}}</span>
+				</div>
+			</div>
 		</div>
 	</div>
 
