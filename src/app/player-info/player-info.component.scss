@@ -1,24 +1,25 @@
 @import '~bootstrap/scss/_variables';
 
 .player-img-container {
+
 	img.headshot {
 		position: relative;
 	    width: 100%;
 	    height: auto;
 
 	    &.placeholder{
-	    	left: -15px;
+	    	width: 80%;
 	    }
 	}
 	.addt-details {
 		background-color: rgba(0, 0, 0, 0.5);
 	    position: absolute;
 	    bottom: 0;
-	    left: 0;
-	    width: 100%;
+	    left: 2%;
+	    width: 96%;
 	    color: white;
-	    font-weight: bold;
-	    padding: .75rem 0;
+	    font-weight: 600;
+	    padding: .50rem 0;
 	    .college,
 	    .hometown {
 	    	padding-right: 1rem;
@@ -89,9 +90,8 @@ table {
 }
 
 @media only screen and (max-width: 575px) {
-	img.headshot {
-		 width: 50%;
-		 margin-bottom: 10px;
+	.player-img-container {
+		 display: none;
 	}
 	.table-key ul li {
 		font-size: 8px;

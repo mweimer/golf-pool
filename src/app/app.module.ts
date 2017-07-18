@@ -54,7 +54,7 @@ import { PlayerInfoComponent } from './player-info/player-info.component';
         PlayerInfoComponent
     ],
     providers: [
-        Location, 
+        Location,
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         Title,
         DatePipe,

@@ -57,7 +57,7 @@ export class NotificationService {
             this.statusObservable.next(this.status);
         }
     }
-    
+
     private showNotification(inTopTwo: boolean) {
         this.requestPermission().then(granted => {
             if (granted) {

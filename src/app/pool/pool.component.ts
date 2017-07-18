@@ -48,8 +48,7 @@ export class PoolComponent implements OnInit, OnDestroy {
     getGolferClass(entry: Entry, golferIndex: number) {
         if (entry.isDQ) {
             return;
-        }
-        else if (entry.golferScores[golferIndex].throwaway) {
+        } else if (entry.golferScores[golferIndex].throwaway) {
             return 'table-warning';
         }
 

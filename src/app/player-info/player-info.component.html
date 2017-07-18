@@ -5,9 +5,10 @@
 				<img *ngIf="player.profile.headshot" class="headshot" [src]="player.profile.headshot" />
 				<img *ngIf="!player.profile.headshot" class="headshot placeholder" src="/assets/placeholder.png" />
 				<div class="addt-details">
-					<span *ngIf="player.profile.college" class="college">College: {{player.profile.college}}</span>
-					<span *ngIf="!player.profile.college" class="hometown">POB: {{player.profile.birthPlace}}</span>
-					<span class="age">Age: {{player.profile.age}}</span>
+					<span *ngIf="player.profile.college" class="college">College:&nbsp;{{player.profile.college}}</span>
+					<span *ngIf="!player.profile.college && !!player.profile.birthPlace" class="hometown">POB:&nbsp;{{player.profile.birthPlace}}</span>
+					<span *ngIf="player.profile.age" class="age">Age:&nbsp;{{player.profile.age}}</span>
+					<span *ngIf="!player.profile.college && !player.profile.birthPlace && !player.profile.age" class="name">{{player.profile.displayName}}</span>
 				</div>
 			</div>
 		</div>

@@ -78,8 +78,7 @@ export enum MovementDirection {
     None
 }
 
-export class PlayerInfo
-{
+export class PlayerInfo {
     golferId: number;
     profile: {
         age: number;
@@ -91,7 +90,7 @@ export class PlayerInfo
         headshot: string;
         link: string;
     };
-    rounds: { 
+    rounds: {
         courseId: number;
         currentPosition: number;
         displayValue: string;
