@@ -48,11 +48,13 @@ export class NotificationService {
     }
 
     private requestPermission(): Promise<boolean> {
-        return Notification.requestPermission().then(result => {
-            const granted = result === 'granted';
-            this.setGrantedStatus(granted);
-            return granted;
-        });
+        return new Promise<boolean>((resolve, reject) => {
+            Notification.requestPermission(result => {
+                const granted = result === 'granted';
+                this.setGrantedStatus(granted);
+                resolve(granted);
+            });
+        })
     }
 
     private setGrantedStatus(granted: boolean) {
