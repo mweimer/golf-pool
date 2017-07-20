@@ -1,17 +1,7 @@
-import { LiveData, Competitor } from './live-data';
-
-export class ContestantConfig {
+export class Contestant {
     id: number;
     name: string;
     entries: number[][];
-}
-
-export class GolferConfig {
-    id: number;
-    firstName: string;
-    lastName: string;
-    tier: string
-    isAmateur? = false;
 }
 
 export class EntryConfig {
@@ -20,17 +10,16 @@ export class EntryConfig {
     contestantId: number;
 }
 
-export class PoolData {
+export class GolfData {
     entries: Entry[];
-    golfers: GolferData[];
-    liveData: LiveData;
+    golfersScores: GolferScore[];
     selectedContestantId = 0;
     timeStamp: Date;
 }
 
 export class Entry {
     name: string;
-    golfers: GolferData[];
+    golferScores: GolferScore[];
     overallRelativeScore: number;
     overallTotalScore: string;
     overallToPar: string;
@@ -41,21 +30,22 @@ export class Entry {
     positionNumber: number;
 }
 
-export class GolferData {
-    golferConfig: GolferConfig;
-    competitor: Competitor;
+export class GolferScore {
+    golfer: Golfer;
+    score: Score;
     throwaway = false;
     entryCount = 0;
     isSelected = false;
     isHighlighted = false;
 }
 
-
-
-
-
-
-
+export class Golfer {
+    id: number;
+    firstName: string;
+    lastName: string;
+    tier: string
+    isAmateur? = false;
+}
 
 export class Score {
     index: number;
