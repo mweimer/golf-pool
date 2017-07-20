@@ -22,7 +22,6 @@
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.28",
     "bootstrap": "^4.0.0-alpha.6",
     "core-js": "^2.4.1",
-    "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "ng2-simple-page-scroll": "^2.0.0",
     "rxjs": "^5.4.1",
