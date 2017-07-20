@@ -19,7 +19,7 @@ export class PlayerInfoComponent implements OnInit {
         this.player = info;
 
         if (info && info.rounds && info.rounds.length > 0) {
-            this.selectedRound = info.rounds.length - 1;
+            this.selectedRound = 0;
         } else {
             this.selectedRound = -1;
         }
