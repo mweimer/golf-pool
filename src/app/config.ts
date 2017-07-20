@@ -69,7 +69,7 @@ const golferData = [
     { id: 62, firstName: 'Kevin', lastName: 'Chappell', tier: 'C' },
     { id: 63, firstName: 'Kyle', lastName: 'Stanley', tier: 'C' },
     { id: 64, firstName: 'Si Woo', lastName: 'Kim', tier: 'C' },
-    { id: 65, firstName: 'Charles Howell', lastName: 'III', tier: 'C' },
+    { id: 65, firstName: 'Charles', lastName: 'Howell III', tier: 'C' },
     { id: 66, firstName: 'Martin', lastName: 'Laird', tier: 'C' },
     { id: 67, firstName: 'Webb', lastName: 'Simpson', tier: 'C' },
     { id: 68, firstName: 'Billy', lastName: 'Horschel', tier: 'C' },
@@ -173,6 +173,7 @@ const contestantData = [
     { id: 6, name: 'Ryan Boudouris', entries: [[5, 16, 35, 75], [11, 12, 37, 75], [7, 13, 36, 78]] },
     { id: 7, name: 'Cameron Weimer', entries: [[2, 12, 37, 79], [5, 14, 45, 90], [6, 17, 50, 94]]},
     { id: 8, name: 'Sean Buckle', entries: [[3, 14, 36, 79], [2, 12, 39, 84], [1, 20, 50, 94]]},
+    { id: 9, name: 'Ryan Romes', entries: [[2, 14, 37, 81], [3, 19, 35, 82], [4, 20, 42, 84]]}
 ];
 
 export { tourneyTitle, tourneyId, golferData, contestantData };
