@@ -15,12 +15,17 @@ export class NotificationService {
     };
 
     private statusObservable: ReplaySubject<NotificationStatus> = new ReplaySubject<NotificationStatus>();
+    private selectedContestantId: number = 0;
 
     constructor(private settingsService: SettingsService) {
         this.statusObservable.next(this.status);
         if (this.status.supported) {
             this.requestPermission();
         }
+
+        this.settingsService.getSelectedContestantId().subscribe(selectedContestantId => {
+            this.selectedContestantId = selectedContestantId;
+        });
     }
 
     getStatus(): Observable<NotificationStatus> {
@@ -28,13 +33,12 @@ export class NotificationService {
     }
 
     update(previousEntries: Entry[], currentEntries: Entry[]) {
-        const selectedContestantId: number = this.settingsService.selectedContestantId;
-        if (!this.status.supported || selectedContestantId <= 0 || !previousEntries) {
+        if (!this.status.supported || this.selectedContestantId <= 0 || !previousEntries) {
             return;
         }
 
-        const previousPositions: number[] = previousEntries.filter(e => e.contestantId === selectedContestantId).map(e => e.positionNumber);
-        const currentPositions: number[] = currentEntries.filter(e => e.contestantId === selectedContestantId).map(e => e.positionNumber);
+        const previousPositions: number[] = previousEntries.filter(e => e.contestantId === this.selectedContestantId).map(e => e.positionNumber);
+        const currentPositions: number[] = currentEntries.filter(e => e.contestantId === this.selectedContestantId).map(e => e.positionNumber);
 
         if (previousPositions.some(p => p === 1 || p === 2) && !currentPositions.some(p => p === 1 || p === 2)) {
             this.showNotification(false);

@@ -22,12 +22,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
     statusSubscription: Subscription;
 
     constructor(private settingsService: SettingsService, private notificationService: NotificationService) {
+        this.settingsService.getSelectedContestantId().subscribe(selectedContestantId => {
+            this.selectedContestantId = selectedContestantId.toString();
+        });
 
     }
 
     ngOnInit(): void {
         this.contestants = concat([{name: 'none', id: 0}], AppConfig.CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
-        this.selectedContestantId = this.settingsService.selectedContestantId.toString();
         this.statusSubscription = this.notificationService.getStatus().subscribe((status: NotificationStatus) => {
             this.notificationStatus = status;
         });
@@ -38,6 +40,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
 
     contestantSelected() {
-        this.settingsService.selectedContestantId = parseInt(this.selectedContestantId, 10);
+        const value = parseInt(this.selectedContestantId, 10);
+        this.settingsService.setSelectedContestantId(value);
     }
 }

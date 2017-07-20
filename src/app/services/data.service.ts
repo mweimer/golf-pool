@@ -4,8 +4,7 @@ import { Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { Observer } from 'rxjs/Observer';
-import { Subscription } from 'rxjs/Subscription';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import * as jQuery from 'jquery';
@@ -20,30 +19,33 @@ import { NotificationService } from '../services/notification.service';
 export class DataService {
 
     private entryConfig: EntryConfig[];
-    private dataObservable: Observable<GolfData>;
-    private intervalSubscription: Subscription;
-    private cacheData: GolfData;
+    private dataObservable: ReplaySubject<GolfData>;
+    private cacheData: GolfData = null;
+    private selectedContestantId: number = 0;
 
     public constructor(private titleService: Title, private http: Http, private settingsService: SettingsService,
         private notificationService: NotificationService) {
+
         this.entryConfig = AppConfig.CONTESTANTS
             .map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
             .reduce((prev, curr) => prev.concat(curr));
 
-        this.dataObservable = Observable.create((observer: Observer<GolfData>) => {
-            if (this.cacheData) {
-                this.setSelected(this.cacheData);
-                observer.next(this.cacheData);
-            } else {
-                this.getThenPushData(observer);
-            }
+        this.settingsService.getSelectedContestantId().subscribe(selectedContestantId => {
+            this.selectedContestantId = selectedContestantId;
 
-            if (!this.intervalSubscription) {
-                this.intervalSubscription = IntervalObservable
-                .create(AppConfig.REFRESH_TIME)
-                .subscribe(() => this.getThenPushData(observer));
+            if (this.cacheData !== null) {
+                this.updateTitle(this.cacheData.entries);
+                this.setSelected(this.cacheData);
+            } else {
+                this.updateTitle();  
             }
         });
+
+        this.dataObservable = new ReplaySubject<GolfData>();
+
+        this.getLiveData();
+
+        IntervalObservable.create(AppConfig.REFRESH_TIME).subscribe(() => this.getLiveData());
     }
 
     get(): Observable<GolfData> {
@@ -62,7 +64,7 @@ export class DataService {
         return playerInfo;
     }
 
-    private getThenPushData(observer: Observer<GolfData>) {
+    private getLiveData() {
         this.http.get(AppConfig.LEADERBOARD_URL)
             .map((res: Response) => this.convertToData(res))
             .catch(this.handleError)
@@ -74,8 +76,7 @@ export class DataService {
 
                 this.updateTitle(data.entries);
                 this.notificationService.update(previousEntries, data.entries);
-
-                observer.next(data);
+                this.dataObservable.next(data);
             });
     }
 
@@ -94,24 +95,6 @@ export class DataService {
         data.golfersScores = this.getGolferScores(scores);
         data.entries = this.getEntries(data.golfersScores);
         return data;
-    }
-
-    private setSelected(data: GolfData) {
-        const selectedContestantId: number = this.settingsService.selectedContestantId;
-        if (selectedContestantId !== data.selectedContestantId) {
-            data.selectedContestantId = selectedContestantId;
-            let selectedGolferIds: number[] = [];
-            data.entries.forEach((entry: Entry) => {
-                entry.isSelected = entry.contestantId === selectedContestantId;
-                if (entry.isSelected) {
-                    selectedGolferIds = union(selectedGolferIds, entry.golferScores.map(golferScore => golferScore.golfer.id));
-                }
-            });
-
-            data.golfersScores.forEach(golferScore => {
-                golferScore.isSelected = selectedGolferIds.includes(golferScore.golfer.id);
-            });
-        }
     }
 
     private getGolferScores(scores: Score[]): GolferScore[] {
@@ -304,6 +287,35 @@ export class DataService {
         return sortedEntries;
     }
 
+    private updateTitle(entries: Entry[] = null) {
+        let positions = null;
+        if (this.selectedContestantId > 0 && entries !== null) {
+            positions = entries.filter(e => e.contestantId === this.selectedContestantId && !e.isDQ)
+                .map(e => e.position)
+                .reduce((c, n) => c !== null ? c + ', ' + n : n , null);
+
+        }
+        const title = positions ? positions + ' - ' + AppConfig.TOURNEY_TITLE + ' Player Pool' : AppConfig.TOURNEY_TITLE + ' Player Pool';
+        this.titleService.setTitle(title);
+    }
+
+    private setSelected(data: GolfData) {
+        if (this.selectedContestantId !== data.selectedContestantId) {
+            data.selectedContestantId = this.selectedContestantId;
+            let selectedGolferIds: number[] = [];
+            data.entries.forEach((entry: Entry) => {
+                entry.isSelected = entry.contestantId === this.selectedContestantId;
+                if (entry.isSelected) {
+                    selectedGolferIds = union(selectedGolferIds, entry.golferScores.map(golferScore => golferScore.golfer.id));
+                }
+            });
+
+            data.golfersScores.forEach(golferScore => {
+                golferScore.isSelected = selectedGolferIds.includes(golferScore.golfer.id);
+            });
+        }
+    }
+
     private handleError (error: Response | any) {
         let errMsg: string;
         if (error instanceof Response) {
@@ -315,18 +327,5 @@ export class DataService {
         }
         console.error(errMsg);
         return Observable.throw(errMsg);
-    }
-
-    private updateTitle(entries: Entry[]) {
-        const selectedContestantId: number = this.settingsService.selectedContestantId;
-        let positions = null;
-        if (selectedContestantId > 0) {
-            positions = entries.filter(e => e.contestantId === selectedContestantId && !e.isDQ)
-                .map(e => e.position)
-                .reduce((c, n) => c !== null ? c + ', ' + n : n , null);
-
-        }
-        const title = positions ? positions + ' - ' + AppConfig.TOURNEY_TITLE + ' Player Pool' : AppConfig.TOURNEY_TITLE + ' Player Pool';
-        this.titleService.setTitle(title);
     }
 }
