@@ -14,6 +14,7 @@ const golferData = [
     { id: 9, firstName: 'Tommy', lastName: 'Fleetwood', tier: 'A' },
     { id: 10, firstName: 'Henrik', lastName: 'Stenson', tier: 'A' },
     { id: 11, firstName: 'Adam', lastName: 'Scott', tier: 'A' },
+
     { id: 12, firstName: 'Brooks', lastName: 'Koepka', tier: 'B' },
     { id: 13, firstName: 'Jason', lastName: 'Day', tier: 'B' },
     { id: 14, firstName: 'Paul', lastName: 'Casey', tier: 'B' },
@@ -35,6 +36,7 @@ const golferData = [
     { id: 30, firstName: 'Lee', lastName: 'Westwood', tier: 'B' },
     { id: 31, firstName: 'Daniel', lastName: 'Berger', tier: 'B' },
     { id: 32, firstName: 'Matthew', lastName: 'Fitzpatrick', tier: 'B' },
+
     { id: 33, firstName: 'Andy', lastName: 'Sullivan', tier: 'C' },
     { id: 34, firstName: 'Ross', lastName: 'Fisher', tier: 'C' },
     { id: 35, firstName: 'Zach', lastName: 'Johnson', tier: 'C' },
@@ -76,6 +78,7 @@ const golferData = [
     { id: 71, firstName: 'Richie', lastName: 'Ramsay', tier: 'C' },
     { id: 72, firstName: 'Russell', lastName: 'Knox', tier: 'C' },
     { id: 73, firstName: 'Joost', lastName: 'Luiten', tier: 'C' },
+
     { id: 74, firstName: 'Anirban', lastName: 'Lahiri', tier: 'D' },
     { id: 75, firstName: 'Gary', lastName: 'Woodland', tier: 'D' },
     { id: 76, firstName: 'Alexander', lastName: 'Levy', tier: 'D' },
@@ -162,22 +165,11 @@ const golferData = [
 ];
 
 const contestantData = [
-    { id: 1, name: 'Adam Weiss', entries: [[1, 11, 39, 95], [2, 15, 43, 95], [6, 13, 34, 73]] },
-    { id: 2, name: 'Cameron Weimer', entries: [[2, 20, 35, 82], [1, 15, 34, 95], [6, 12, 33, 75]] },
-    { id: 3, name: 'Drew Serruto', entries: [[1, 12, 46, 68], [6, 11, 32, 62], [3, 20, 50, 69]] },
-    { id: 4, name: 'Jon Frantz', entries: [[2, 21, 33, 63], [6, 20, 32, 68], [1, 31, 47, 69]] },
-    { id: 5, name: 'Kevin Donoher', entries: [[1, 11, 36, 60], [5, 16, 43, 61], [6, 19, 50, 71]] },
-    { id: 6, name: 'Kyle Bivenour', entries: [[2, 20, 32, 68], [1, 20, 58, 68], [6, 11, 33, 69]] },
-    { id: 7, name: 'Matt Kilianski', entries: [[3, 12, 40, 64], [1, 27, 33, 68], [6, 27, 48, 62]] },
-    { id: 8, name: 'Matt Weimer', entries: [[2, 12, 32, 95], [6, 13, 40, 62], [1, 20, 33, 75]] },
-    { id: 9, name: 'Nate Heckmann', entries: [[4, 27, 50, 75], [6, 12, 47, 69], [2, 14, 33, 69]] },
-    { id: 10, name: 'Neil Thompson', entries: [[1, 13, 46, 71], [2, 12, 34, 71], [3, 17, 34, 71]] },
-    { id: 11, name: 'Ryan Boudouris', entries: [[4, 11, 48, 60], [3, 13, 38, 85], [1, 15, 32, 62]] },
-    { id: 12, name: 'Nick Royer', entries: [[1, 11, 37, 62], [1, 15, 43, 74], [7, 15, 33, 62]] },
-    { id: 13, name: 'Ryan Romes', entries: [[4, 25, 39, 62], [6, 15, 41, 60], [7, 18, 33, 75]] },
-    { id: 14, name: 'Sean Buckle', entries: [[1, 12, 33, 67], [3, 11, 36, 68], [6, 12, 45, 75]] },
-    { id: 15, name: 'Ian Horwich', entries: [[1, 17, 32, 71], [6, 25, 40, 61], [4, 16, 42, 94]] },
-    { id: 16, name: 'David Prevo', entries: [[2, 20, 36, 77], [4, 22, 39, 68], [3, 13, 34, 69]] }
+    { id: 1, name: 'Kevin Donoher', entries: [[2, 13, 41, 86], [4, 16, 37, 74], [6, 30, 33, 88]] },
+    { id: 2, name: 'Kyle Bivenour', entries: [[3, 13, 43, 90], [2, 12, 35, 94], [10, 28, 46, 88]] },
+    { id: 3, name: 'Matt Weimer', entries: [[3, 21, 50, 75], [3, 20, 46, 79], [6, 23, 38, 90]] },
+    { id: 4, name: 'Nate Heckmann', entries: [[3, 30, 51, 90], [9, 26, 43, 94], [6, 25, 38, 79]] },
+    { id: 5, name: 'Ryan Boudouris', entries: [[5, 16, 35, 75], [11, 12, 37, 75], [7, 13, 36, 78]] }
 ];
 
 export { tourneyTitle, tourneyId, golferData, contestantData };
