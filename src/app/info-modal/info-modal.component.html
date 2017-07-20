@@ -1,0 +1,70 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{player.profile.displayName}}</h4>
+    <button type="button" class="close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <div class="row">
+    	<div class="col-4">
+			<img *ngIf="player.profile.headshot" class="headshot" [src]="player.profile.headshot" />
+			<img *ngIf="!player.profile.headshot" class="headshot placeholder" src="/assets/placeholder.png" />
+		</div>
+		<div class="col-8">
+			<table class="table table-bordered">
+				<tr *ngIf="player.profile.college"><td>College:</td><td>{{player.profile.college}}</td ></tr>
+				<tr *ngIf="player.profile.birthPlace"><td>Hometown:</td><td>{{player.profile.birthPlace}}</td></tr>
+				<tr *ngIf="player.profile.age"><td>Age:</td><td>{{player.profile.age}}</td></tr>
+				<tr *ngIf="player.profile.hand"><td>hand:</td><td>{{player.profile.hand}}</td></tr>
+			</table>
+		</div>
+	</div>
+
+	<div class="row mt-2">
+
+		<div class="col-2">
+			<div *ngIf="selectedRound >= 0" ngbDropdown class="round-dropdown">
+		      <button class="btn btn-outline-secondary btn-sm" ngbDropdownToggle>Round {{selectedRound + 1}}</button>
+		      <div class="dropdown-menu">
+		        <button class="dropdown-item" *ngFor="let round of player.rounds" (click)="roundSelected(round)">Round {{round.period}}</button>
+		      </div>
+		    </div>
+	    </div>
+
+	    <div class="col-10">
+			<div class="table-key mt-2">
+				<ul>
+					<li class="yellow">Eagle</li>
+					<li class="green">Birdie</li>
+					<li class="red">Bogey</li>
+					<li class="blue">Double Bogey or Worse</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="row mt-2">
+		<div class="col-12">
+			<table class="table table-sm table-bordered">
+				<thead class="thead-default">
+				<tr>
+					<th>HOLE</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>OUT</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>IN</th><th>TOT</th>
+				</tr>
+				</thead>
+				<tbody *ngIf="selectedRound >= 0">
+				<tr>
+					<td *ngFor="let cell of cells">{{getPar(cell)}}</td>
+				</tr>
+				<tr>
+					<td *ngFor="let cell of cells" [ngClass]="getClass(cell)">{{getScore(cell)}}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Close</button>
+</div>
+

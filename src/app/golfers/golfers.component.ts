@@ -2,9 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { SimplePageScrollService } from 'ng2-simple-page-scroll';
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
+import { InfoModalComponent } from '../info-modal/info-modal.component'
 import { PoolData, GolferScore, MovementDirection, PlayerInfo } from '../models/models';
 
 @Component({
@@ -16,12 +18,11 @@ import { PoolData, GolferScore, MovementDirection, PlayerInfo } from '../models/
 export class GolfersComponent implements OnInit, OnDestroy {
 
     golferScores: GolferScore[];
-    playerInfo: PlayerInfo;
 
     private subscription: Subscription;
 
     constructor(private dataService: DataService, private simplePageScrollService: SimplePageScrollService,
-        private gotoService: GotoService) {
+        private gotoService: GotoService, private modalService: NgbModal) {
 
     }
 
@@ -45,13 +46,10 @@ export class GolfersComponent implements OnInit, OnDestroy {
     }
 
     showGolferDetail(golferScore: GolferScore) {
-        if (this.playerInfo && this.playerInfo.golferId === golferScore.golferConfig.id) {
-            this.playerInfo = null;
-            return;
-        }
-
         this.dataService.getPlayerInfo(golferScore).subscribe((playerInfo: PlayerInfo) => {
-            this.playerInfo = playerInfo;
+            const modal = this.modalService.open(InfoModalComponent, { size: 'lg' });
+            const infoModalComponent: InfoModalComponent = modal.componentInstance;
+            infoModalComponent.info = playerInfo;
         });
     }
 

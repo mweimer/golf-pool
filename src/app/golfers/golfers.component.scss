@@ -48,11 +48,6 @@ table {
     }
 }
 
-tr.player-info-row {
-    background-color: white !important;
-    cursor: default !important;
-}
-
 @media only screen and (max-width: 375px) {
     table td, table th {
         max-width: 40px;

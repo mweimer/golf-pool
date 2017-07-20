@@ -1,20 +1,21 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { PlayerInfo } from '../models/models';
 
 @Component({
-    selector: 'app-player-info',
-    templateUrl: './player-info.component.html',
-    styleUrls: ['./player-info.component.scss']
+    selector: 'app-info-modal',
+    templateUrl: './info-modal.component.html',
+    styleUrls: ['./info-modal.component.scss']
 })
-export class PlayerInfoComponent implements OnInit {
+export class InfoModalComponent implements OnInit {
 
     player: PlayerInfo;
     selectedRound: number
 
     cells = ['label', 1, 2, 3, 4, 5, 6, 7, 8, 9, 'out', 10, 11, 12, 13, 14, 15, 16, 17, 18, 'in', 'tot'];
 
-    @Input()
     set info(info: PlayerInfo) {
         this.player = info;
 
@@ -28,10 +29,9 @@ export class PlayerInfoComponent implements OnInit {
         this.selectedRound = -1;
     }
 
-    constructor() { }
+    constructor(public activeModal: NgbActiveModal) { }
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     getPar(cell: string | number) {
         if (cell === 'label') {

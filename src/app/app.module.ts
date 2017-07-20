@@ -19,7 +19,7 @@ import { DataService } from './services/data.service';
 import { SettingsService } from './services/settings.service';
 import { GotoService } from './services/goto.service';
 import { NotificationService } from './services/notification.service';
-import { PlayerInfoComponent } from './player-info/player-info.component';
+import { InfoModalComponent } from './info-modal/info-modal.component';
 
 @NgModule({
     imports: [
@@ -51,7 +51,10 @@ import { PlayerInfoComponent } from './player-info/player-info.component';
         PoolComponent,
         GolfersComponent,
         SettingsComponent,
-        PlayerInfoComponent
+        InfoModalComponent
+    ],
+    entryComponents: [
+        InfoModalComponent
     ],
     providers: [
         Location,

@@ -1,36 +1,18 @@
 @import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/mixins/_breakpoints';
 
-.player-info {
-	max-height: 118px;
+img.headshot {
+	max-width: 200px;
+    width: 100%;
+    height: auto;
+    border: 1px solid #EAE9E9;
+    border-radius: 5px;
+
+    &.placeholder{
+    	width: 80%;
+    }
 }
 
-.player-img-container {
-	img.headshot {
-		max-height: 118px;
-		max-width: 162px;
-		position: relative;
-	    width: 100%;
-	    height: auto;
-
-	    &.placeholder{
-	    	width: 80%;
-	    }
-	}
-	.addt-details {
-		background-color: rgba(0, 0, 0, 0.5);
-	    position: absolute;
-	    bottom: 0;
-	    left: 5px;
-	    width: calc(100% - 10px);
-	    color: white;
-	    font-weight: 600;
-	    padding: .50rem 0;
-	    .college,
-	    .hometown {
-	    	padding-right: 1rem;
-	    }
-	}
-}
 
 table {
 	tbody tr:nth-of-type(odd) {
@@ -57,6 +39,7 @@ table {
 }
 
 .table-key {
+	width: 100%;
 	text-align: right;
 	
 	ul {
@@ -94,10 +77,7 @@ table {
 	}
 }
 
-@media only screen and (max-width: 575px) {
-	.player-img-container {
-		 display: none;
-	}
+@include media-breakpoint-up(xs) {
 	.table-key ul li {
 		font-size: 8px;
 	}
