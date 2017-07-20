@@ -1,8 +1,13 @@
 @import '~bootstrap/scss/_variables';
 
-.player-img-container {
+.player-info {
+	max-height: 118px;
+}
 
+.player-img-container {
 	img.headshot {
+		max-height: 118px;
+		max-width: 162px;
 		position: relative;
 	    width: 100%;
 	    height: auto;
@@ -15,8 +20,8 @@
 		background-color: rgba(0, 0, 0, 0.5);
 	    position: absolute;
 	    bottom: 0;
-	    left: 2%;
-	    width: 96%;
+	    left: 5px;
+	    width: calc(100% - 10px);
 	    color: white;
 	    font-weight: 600;
 	    padding: .50rem 0;
