@@ -79,7 +79,8 @@ table {
 
 @include media-breakpoint-up(xs) {
 	.table-key ul li {
-		font-size: 8px;
+		font-size: 6px;
+		padding: 0;
 	}
 
 	table {
