@@ -19,10 +19,13 @@ export class PlayerInfoComponent implements OnInit {
         this.player = info;
 
         if (info && info.rounds && info.rounds.length > 0) {
-            this.selectedRound = 0;
-        } else {
-            this.selectedRound = -1;
-        }
+            const roundsWithScores = info.rounds.filter(r => r.linescores);
+            if (roundsWithScores) {
+                this.selectedRound = roundsWithScores.length - 1
+                return;
+            }
+        } 
+        this.selectedRound = -1;
     }
 
     constructor() { }
@@ -34,7 +37,7 @@ export class PlayerInfoComponent implements OnInit {
         if (cell === 'label') {
             return 'Par'
         } else if (!this.hasScores()) {
-            return '';
+            return '-';
         } else if (cell === 'out') {
             return this.player.rounds[this.selectedRound].linescores
             .filter(s => s.period < 10)
@@ -53,15 +56,16 @@ export class PlayerInfoComponent implements OnInit {
 
         const score = this.player.rounds[this.selectedRound].linescores.find(s => s.period === cell);
 
-        return score ? score.par : '';
+        return score ? score.par : '-';
     }
 
     getScore(cell: string | number) {
         if (cell === 'label') {
             return 'Score'
         } else if (!this.hasScores()) {
-            return '';
+            return '-';
         } else if (cell === 'out') {
+            if (this.player.rounds)
             return this.player.rounds[this.selectedRound].outScore;
         } else if (cell === 'in') {
             return this.player.rounds[this.selectedRound].inScore;
@@ -71,7 +75,7 @@ export class PlayerInfoComponent implements OnInit {
 
         const score = this.player.rounds[this.selectedRound].linescores.find(s => s.period === cell);
 
-        return score ? score.value : '';
+        return score ? score.value : '-';
     }
 
     getClass(cell: string | number) {
