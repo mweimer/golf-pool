@@ -5,7 +5,7 @@ import { SimplePageScrollService } from 'ng2-simple-page-scroll';
 
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
-import { GolfData, GolferScore, MovementDirection, PlayerInfo } from '../models/models';
+import { PoolData, GolferScore, MovementDirection, PlayerInfo } from '../models/models';
 
 @Component({
     selector: 'app-golfers',
@@ -26,7 +26,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.subscription = this.dataService.get().subscribe((data: GolfData) => {
+        this.subscription = this.dataService.get().subscribe((data: PoolData) => {
             this.golferScores = data.golfersScores;
             this.scrollHighlightGolfer();
         });
@@ -37,7 +37,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
     }
 
     getName (golferScore: GolferScore): string {
-        return `${golferScore.golfer.firstName} ${golferScore.golfer.lastName}${golferScore.golfer.isAmateur ? ' (A)' : ''}`;
+        return `${golferScore.golferConfig.firstName} ${golferScore.golferConfig.lastName}${golferScore.golferConfig.isAmateur ? ' (A)' : ''}`;
     }
 
     getMovementClass(golferScore: GolferScore): string {
@@ -45,7 +45,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
     }
 
     showGolferDetail(golferScore: GolferScore) {
-        if (this.playerInfo && this.playerInfo.golferId === golferScore.golfer.id) {
+        if (this.playerInfo && this.playerInfo.golferId === golferScore.golferConfig.id) {
             this.playerInfo = null;
             return;
         }
@@ -59,7 +59,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
         const golferId: number = this.gotoService.gotoGolferId;
         if (golferId > 0) {
             setTimeout(() => this.simplePageScrollService.scrollToElement('#golfer-' + golferId, 0), 10);
-            const golferScore: GolferScore = this.golferScores.find(g => g.golfer.id === golferId);
+            const golferScore: GolferScore = this.golferScores.find(g => g.golferConfig.id === golferId);
             if (golferScore) {
                 golferScore.isHighlighted = true;
                 setTimeout(() => golferScore.isHighlighted = false, 3000);

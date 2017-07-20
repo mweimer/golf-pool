@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { AppConfig} from '../app.config';
-import { GolfData } from '../models/models';
+import { PoolData } from '../models/models';
 import { DataService } from '../services/data.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class FooterComponent implements OnInit, OnDestroy {
     constructor(private dataService: DataService) {}
 
     ngOnInit(): void {
-        this.subscription = this.dataService.get().subscribe((data: GolfData) => {
+        this.subscription = this.dataService.get().subscribe((data: PoolData) => {
             this.timeStamp = data.timeStamp;
         });
     }

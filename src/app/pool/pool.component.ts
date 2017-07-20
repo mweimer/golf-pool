@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription'
 
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
-import { Entry, GolfData, GolferScore } from '../models/models';
+import { Entry, PoolData, GolferScore } from '../models/models';
 
 @Component({
     selector: 'app-pool',
@@ -24,7 +24,7 @@ export class PoolComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.subscription = this.dataService.get().subscribe((data: GolfData) => {
+        this.subscription = this.dataService.get().subscribe((data: PoolData) => {
             this.entries = data.entries;
         });
     }
@@ -36,13 +36,13 @@ export class PoolComponent implements OnInit, OnDestroy {
     getGolferInfo(entry: Entry, index: number): string {
         const golferScore: GolferScore = entry.golferScores[index];
         const thru = golferScore.score.thru ? golferScore.score.thru : this.datePipe.transform(golferScore.score.startTime, 'shortTime');
-        const name = golferScore.score.shortName + (golferScore.golfer.isAmateur ? ' (A)' : '');
+        const name = golferScore.score.shortName + (golferScore.golferConfig.isAmateur ? ' (A)' : '');
         const info = `${name}: ${golferScore.score.toPar} (${thru})`;
         return info;
     }
 
     gotoGolfer(golferScore: GolferScore) {
-        this.gotoService.gotoGolfer(golferScore.golfer.id);
+        this.gotoService.gotoGolfer(golferScore.golferConfig.id);
     }
 
     getGolferClass(entry: Entry, golferIndex: number) {

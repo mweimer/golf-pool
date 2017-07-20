@@ -6,7 +6,7 @@
     </thead>
     <tbody>
         <ng-container *ngFor="let golferScore of golferScores">
-        <tr [attr.id]="'golfer-' + golferScore.golfer.id" [ngClass]="{'table-success': golferScore.isHighlighted, 'selected': golferScore.isSelected}" (click)="showGolferDetail(golferScore)">
+        <tr [attr.id]="'golfer-' + golferScore.golferConfig.id" [ngClass]="{'table-success': golferScore.isHighlighted, 'selected': golferScore.isSelected}" (click)="showGolferDetail(golferScore)">
             <td>{{golferScore.score.position}}</td>
             <td [ngClass]="getMovementClass(golferScore)">{{golferScore.score.movement.text}}</td>
             <td><div *ngIf="golferScore.score.logoImage" class="logo"><img [src]="golferScore.score.logoImage" /></div>{{getName(golferScore)}}</td>
@@ -21,7 +21,7 @@
             <td>{{golferScore.score.round4Score}}</td>
             <td>{{golferScore.score.total}}</td>
         </tr>
-        <tr class="player-info-row" *ngIf="playerInfo && playerInfo.golferId === golferScore.golfer.id">
+        <tr class="player-info-row" *ngIf="playerInfo && playerInfo.golferId === golferScore.golferConfig.id">
             <td colspan="12">
                 <app-player-info [info]="playerInfo"></app-player-info>
             </td>

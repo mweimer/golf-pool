@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 import * as jQuery from 'jquery';
 import { cloneDeep, orderBy, sortBy, union } from 'lodash';
 
-import { Golfer, MovementDirection, Score, GolferScore, GolfData, Entry, EntryConfig, PlayerInfo } from '../models/models';
+import { GolferConfig, EntryConfig, PoolData, Entry, GolferScore, Score, MovementDirection, PlayerInfo } from '../models/models';
 import { AppConfig} from '../app.config';
 import { SettingsService } from '../services/settings.service';
 import { NotificationService } from '../services/notification.service';
@@ -18,8 +18,8 @@ import { NotificationService } from '../services/notification.service';
 export class DataService {
 
     private entryConfig: EntryConfig[];
-    private dataObservable: ReplaySubject<GolfData>;
-    private cacheData: GolfData = null;
+    private dataObservable: ReplaySubject<PoolData>;
+    private cacheData: PoolData = null;
     private selectedContestantId: number = 0;
 
     public constructor(private titleService: Title, private http: Http, private settingsService: SettingsService,
@@ -40,14 +40,14 @@ export class DataService {
             }
         });
 
-        this.dataObservable = new ReplaySubject<GolfData>();
+        this.dataObservable = new ReplaySubject<PoolData>();
 
         this.getLiveData();
 
         setInterval(() => this.getLiveData(), AppConfig.REFRESH_TIME);
     }
 
-    get(): Observable<GolfData> {
+    get(): Observable<PoolData> {
         return this.dataObservable;
     }
 
@@ -59,7 +59,7 @@ export class DataService {
 
     private handlePlayerResponse(res: Response, golferScore: GolferScore): PlayerInfo {
         const playerInfo: PlayerInfo = res.json();
-        playerInfo.golferId = golferScore.golfer.id;
+        playerInfo.golferId = golferScore.golferConfig.id;
         return playerInfo;
     }
 
@@ -67,7 +67,7 @@ export class DataService {
         this.http.get(AppConfig.LEADERBOARD_URL)
             .map((res: Response) => this.convertToData(res))
             .catch(this.handleError)
-            .subscribe((data: GolfData) => {
+            .subscribe((data: PoolData) => {
                 this.setSelected(data);
                 const previousEntries = this.cacheData ? this.cacheData.entries : null;
 
@@ -79,7 +79,7 @@ export class DataService {
             });
     }
 
-    private convertToData(res: Response): GolfData {
+    private convertToData(res: Response): PoolData {
         const now = new Date();
         const scorePage = jQuery(res.text());
         const golferRows = scorePage.find('.leaderboard-table .player-overview');
@@ -89,7 +89,7 @@ export class DataService {
             scores.push(this.extractScore(jQuery(row), index));
         });
 
-        const data: GolfData = new GolfData();
+        const data: PoolData = new PoolData();
         data.timeStamp = now;
         data.golfersScores = this.getGolferScores(scores);
         data.entries = this.getEntries(data.golfersScores);
@@ -97,25 +97,25 @@ export class DataService {
     }
 
     private getGolferScores(scores: Score[]): GolferScore[] {
-        const golferScores: GolferScore[] = AppConfig.GOLFERS.map(golfer => {
-            const firstName: string = golfer.firstName.toLowerCase();
-            const lastName: string = golfer.lastName.toLowerCase();
+        const golferScores: GolferScore[] = AppConfig.GOLFERS.map(golferConfig => {
+            const firstName: string = golferConfig.firstName.toLowerCase();
+            const lastName: string = golferConfig.lastName.toLowerCase();
             const matchingScore: Score = scores.find(score => {
                 const fullName = score.fullName.toLowerCase();
                 return fullName.includes(firstName) && fullName.includes(lastName);
             });
 
-            const golferCopy: Golfer = cloneDeep(golfer);
+            const golferConfigCopy: GolferConfig = cloneDeep(golferConfig);
             const golferScore: GolferScore = new GolferScore();
-            golferScore.golfer = golferCopy;
+            golferScore.golferConfig = golferConfigCopy;
 
             if (matchingScore) {
                 golferScore.score = matchingScore;
             } else {
-                golferScore.score = this.emptyScore(golferCopy);
+                golferScore.score = this.emptyScore(golferConfigCopy);
             }
 
-            golferScore.entryCount = this.entryConfig.filter((e: EntryConfig) => e.golferIds.includes(golferCopy.id)).length;
+            golferScore.entryCount = this.entryConfig.filter((e: EntryConfig) => e.golferIds.includes(golferConfigCopy.id)).length;
 
             return golferScore;
         });
@@ -123,7 +123,7 @@ export class DataService {
         return sortBy(golferScores, (golferScore: GolferScore) => golferScore.score.index);
     }
 
-    private emptyScore(golfer: Golfer): Score {
+    private emptyScore(golferConfig: GolferConfig): Score {
         const score = new Score();
 
         score.index = Number.MAX_SAFE_INTEGER;
@@ -140,7 +140,7 @@ export class DataService {
         score.round3Score = '--';
         score.round4Score = '--';
         score.fullName = '';
-        score.shortName = `${golfer.firstName[0]}. ${golfer.lastName}`;
+        score.shortName = `${golferConfig.firstName[0]}. ${golferConfig.lastName}`;
         score.logoImage = '';
         score.startTime = null;
         score.movement = { text: '-', direction: MovementDirection.None };
@@ -227,7 +227,7 @@ export class DataService {
         const entries: Entry[] = this.entryConfig.map((config: EntryConfig)  => {
 
             const entryGolferScores: GolferScore[] = config.golferIds.map(gid => {
-                return cloneDeep(golferScores.find(golferScore => golferScore.golfer.id === gid));
+                return cloneDeep(golferScores.find(golferScore => golferScore.golferConfig.id === gid));
             });
 
             let overallRelativeScore: number, overallTotalScore: string, overallToPar: string;
@@ -298,19 +298,19 @@ export class DataService {
         this.titleService.setTitle(title);
     }
 
-    private setSelected(data: GolfData) {
+    private setSelected(data: PoolData) {
         if (this.selectedContestantId !== data.selectedContestantId) {
             data.selectedContestantId = this.selectedContestantId;
             let selectedGolferIds: number[] = [];
             data.entries.forEach((entry: Entry) => {
                 entry.isSelected = entry.contestantId === this.selectedContestantId;
                 if (entry.isSelected) {
-                    selectedGolferIds = union(selectedGolferIds, entry.golferScores.map(golferScore => golferScore.golfer.id));
+                    selectedGolferIds = union(selectedGolferIds, entry.golferScores.map(golferScore => golferScore.golferConfig.id));
                 }
             });
 
             data.golfersScores.forEach(golferScore => {
-                golferScore.isSelected = selectedGolferIds.includes(golferScore.golfer.id);
+                golferScore.isSelected = selectedGolferIds.includes(golferScore.golferConfig.id);
             });
         }
     }

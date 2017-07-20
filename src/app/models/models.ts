@@ -1,4 +1,14 @@
-export class Contestant {
+// Configuration models
+
+export class GolferConfig {
+    id: number;
+    firstName: string;
+    lastName: string;
+    tier: string
+    isAmateur? = false;
+}
+
+export class ContestantConfig {
     id: number;
     name: string;
     entries: number[][];
@@ -10,7 +20,10 @@ export class EntryConfig {
     contestantId: number;
 }
 
-export class GolfData {
+
+// Models for pool and golfer leaderboards
+
+export class PoolData {
     entries: Entry[];
     golfersScores: GolferScore[];
     selectedContestantId = 0;
@@ -31,20 +44,12 @@ export class Entry {
 }
 
 export class GolferScore {
-    golfer: Golfer;
+    golferConfig: GolferConfig;
     score: Score;
     throwaway = false;
     entryCount = 0;
     isSelected = false;
     isHighlighted = false;
-}
-
-export class Golfer {
-    id: number;
-    firstName: string;
-    lastName: string;
-    tier: string
-    isAmateur? = false;
 }
 
 export class Score {
