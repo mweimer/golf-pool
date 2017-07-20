@@ -20,7 +20,6 @@ export class GolfersComponent implements OnInit, OnDestroy {
     golferScores: GolferScore[];
 
     private subscription: Subscription;
-    private intialized = false;
 
     constructor(private dataService: DataService, private simplePageScrollService: SimplePageScrollService,
         private gotoService: GotoService, private modalService: NgbModal) {
