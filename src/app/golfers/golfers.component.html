@@ -5,7 +5,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let golferScore of golferScores" [attr.id]="'golfer-' + golferScore.golferConfig.id" [ngClass]="{'table-success': golferScore.isHighlighted, 'selected': golferScore.isSelected}" (click)="showGolferDetail(golferScore)"> 
+        <tr *ngFor="let golferScore of golferScores" [attr.id]="'golfer-' + golferScore.golferConfig.id" [ngClass]="{'table-success': golferScore.golferConfig.id === highlightedGolferId, 'selected': golferScore.isSelected}" (click)="showGolferDetail(golferScore)"> 
             <td>{{golferScore.score.position}}</td>
             <td [ngClass]="getMovementClass(golferScore)">{{golferScore.score.movement.text}}</td>
             <td><div *ngIf="golferScore.score.logoImage" class="logo"><img [src]="golferScore.score.logoImage" /></div>{{getName(golferScore)}}</td>

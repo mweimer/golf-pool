@@ -77,7 +77,16 @@ table {
 	}
 }
 
-@include media-breakpoint-up(xs) {
+@include media-breakpoint-down(md) {
+	table {
+		td, th {
+			font-size: 11px;
+			padding: 3.5px;
+		}
+	}
+}
+
+@include media-breakpoint-down(xs) {
 	.table-key ul li {
 		font-size: 6px;
 		padding: 0;

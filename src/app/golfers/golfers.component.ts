@@ -20,6 +20,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
     golferScores: GolferScore[];
 
     private subscription: Subscription;
+    private highlightedGolferId: number;
 
     constructor(private dataService: DataService, private simplePageScrollService: SimplePageScrollService,
         private gotoService: GotoService, private modalService: NgbModal) {
@@ -57,8 +58,9 @@ export class GolfersComponent implements OnInit, OnDestroy {
     private checkForGotoGolfer() {
         const golferId: number = this.gotoService.gotoGolferId;
         if (golferId > 0) {
+            this.highlightedGolferId = golferId
             setTimeout(() => this.simplePageScrollService.scrollToElement('#golfer-' + golferId, 0), 10);
-            this.dataService.highlightGolfer(golferId);
+            setTimeout(() => this.highlightedGolferId = null, 3000);
         }
     }
 

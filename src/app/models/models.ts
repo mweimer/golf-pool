@@ -49,7 +49,6 @@ export class GolferScore {
     throwaway = false;
     entryCount = 0;
     isSelected = false;
-    isHighlighted = false;
 }
 
 export class Score {
