@@ -3,7 +3,6 @@ import { Title } from '@angular/platform-browser';
 import { Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -45,7 +44,7 @@ export class DataService {
 
         this.getLiveData();
 
-        IntervalObservable.create(AppConfig.REFRESH_TIME).subscribe(() => this.getLiveData());
+        setInterval(() => this.getLiveData(), AppConfig.REFRESH_TIME);
     }
 
     get(): Observable<GolfData> {
