@@ -57,6 +57,20 @@ export class DataService {
             .catch(this.handleError);
     }
 
+    highlightGolfer(golferId: number) {
+        if (this.cacheData) {
+            const golferScore = this.cacheData.golfersScores.find(g => g.golferConfig.id == golferId);
+            if (golferScore) {
+                golferScore.isHighlighted = true;
+                this.dataObservable.next(this.cacheData);
+                setTimeout(() => {
+                    golferScore.isHighlighted = false;
+                    this.dataObservable.next(this.cacheData);
+                }, 3000);
+            }
+        }
+    }
+
     private handlePlayerResponse(res: Response, golferScore: GolferScore): PlayerInfo {
         const playerInfo: PlayerInfo = res.json();
         playerInfo.golferId = golferScore.golferConfig.id;

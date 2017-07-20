@@ -20,6 +20,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
     golferScores: GolferScore[];
 
     private subscription: Subscription;
+    private intialized = false;
 
     constructor(private dataService: DataService, private simplePageScrollService: SimplePageScrollService,
         private gotoService: GotoService, private modalService: NgbModal) {
@@ -27,9 +28,10 @@ export class GolfersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.subscription = this.dataService.get().subscribe((data: PoolData) => {
-            this.golferScores = data.golfersScores;
-            this.scrollHighlightGolfer();
+        this.subscription = this.dataService.get()
+        .subscribe((data: PoolData) => {
+            this.golferScores = data.golfersScores;  
+            this.checkForGotoGolfer();
         });
     }
 
@@ -53,15 +55,11 @@ export class GolfersComponent implements OnInit, OnDestroy {
         });
     }
 
-    private scrollHighlightGolfer() {
+    private checkForGotoGolfer() {
         const golferId: number = this.gotoService.gotoGolferId;
         if (golferId > 0) {
             setTimeout(() => this.simplePageScrollService.scrollToElement('#golfer-' + golferId, 0), 10);
-            const golferScore: GolferScore = this.golferScores.find(g => g.golferConfig.id === golferId);
-            if (golferScore) {
-                golferScore.isHighlighted = true;
-                setTimeout(() => golferScore.isHighlighted = false, 3000);
-            }
+            this.dataService.highlightGolfer(golferId);
         }
     }
 
