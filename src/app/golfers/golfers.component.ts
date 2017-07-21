@@ -48,11 +48,23 @@ export class GolfersComponent implements OnInit, OnDestroy {
     }
 
     showGolferDetail(golferScore: GolferScore) {
-        this.dataService.getPlayerInfo(golferScore).subscribe((playerInfo: PlayerInfo) => {
+        if (golferScore.score.espnId) {
+            this.dataService.getPlayerInfo(golferScore).subscribe((playerInfo: PlayerInfo) => {
+                const modal = this.modalService.open(InfoModalComponent, { size: 'lg' });
+                const infoModalComponent: InfoModalComponent = modal.componentInstance;
+                infoModalComponent.info = playerInfo;
+                infoModalComponent.logoImage = golferScore.score.logoImage;
+            });
+        } else {
+            const info: PlayerInfo = new PlayerInfo()
+            info.golferId = golferScore.golferConfig.id;
+            info.profile = {
+                displayName: `${golferScore.golferConfig.firstName} ${golferScore.golferConfig.lastName}`,
+            };
             const modal = this.modalService.open(InfoModalComponent, { size: 'lg' });
             const infoModalComponent: InfoModalComponent = modal.componentInstance;
-            infoModalComponent.info = playerInfo;
-        });
+            infoModalComponent.info = info;
+        }
     }
 
     private checkForGotoGolfer() {

@@ -85,14 +85,14 @@ export enum MovementDirection {
 export class PlayerInfo {
     golferId: number;
     profile: {
-        age: number;
-        birthPlace: string;
-        college: string;
-        dateOfBirth: Date;
+        age?: number;
+        birthPlace?: string;
+        college?: string;
+        dateOfBirth?: Date;
         displayName: string;
-        hand: string;
-        headshot: string;
-        link: string;
+        hand?: string;
+        headshot?: string;
+        link?: string;
     };
     rounds: {
         courseId: number;
