@@ -8,10 +8,10 @@
         <tr *ngFor="let entry of entries" [ngClass]="{'table-danger': entry.isDQ, 'selected': entry.isSelected}">
             <td>{{ entry.position }}</td>
             <td>{{entry.name}}</td>
-            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[0])" [ngClass]="getGolferClass(entry, 0)">{{getGolferInfo(entry, 0)}}</td>
-            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[1])" [ngClass]="getGolferClass(entry, 1)">{{getGolferInfo(entry, 1)}}</td>
-            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[2])" [ngClass]="getGolferClass(entry, 2)">{{getGolferInfo(entry, 2)}}</td>
-            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[3])" [ngClass]="getGolferClass(entry, 3)">{{getGolferInfo(entry, 3)}}</td>
+            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[0])" [ngClass]="getGolferClass(entry, 0)" [innerHtml]="getGolferInfo(entry, 0)"></td>
+            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[1])" [ngClass]="getGolferClass(entry, 1)" [innerHtml]="getGolferInfo(entry, 1)"></td>
+            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[2])" [ngClass]="getGolferClass(entry, 2)" [innerHtml]="getGolferInfo(entry, 2)"></td>
+            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[3])" [ngClass]="getGolferClass(entry, 3)" [innerHtml]="getGolferInfo(entry, 3)"></td>
             <th>{{entry.overallToPar}}</th>
         </tr>
     </tbody>

@@ -18,12 +18,14 @@ export class PoolComponent implements OnInit, OnDestroy {
     entries: Entry[];
 
     private subscription: Subscription;
+    private cutline: number;
 
     constructor(private dataService: DataService, private datePipe: DatePipe, private gotoService: GotoService) {}
 
     ngOnInit(): void {
         this.subscription = this.dataService.get().subscribe((data: PoolData) => {
             this.entries = data.entries;
+            this.cutline = data.cutline;
         });
     }
 
@@ -35,7 +37,8 @@ export class PoolComponent implements OnInit, OnDestroy {
         const golferScore: GolferScore = entry.golferScores[index];
         const thru = golferScore.score.thru ? golferScore.score.thru : this.datePipe.transform(golferScore.score.startTime, 'shortTime');
         const name = golferScore.score.shortName + (golferScore.golferConfig.isAmateur ? ' (A)' : '');
-        const info = `${name}: ${golferScore.score.toPar} (${thru})`;
+        const score = this.cutline && golferScore.score.relativeScore > this.cutline ? `<span class="text-danger">${golferScore.score.toPar}</span>` : golferScore.score.toPar;
+        const info = `${name}: ${score} (${thru})`;
         return info;
     }
 
