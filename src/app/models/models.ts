@@ -1,20 +1,36 @@
 // Configuration models
 
-export class GolferConfig {
+export interface Config {
+    tourneyTitle: string;
+    tourneyId: string;
+    golferData: GolferConfig[];
+    contestantData: ContestantConfig[];
+}
+
+export interface IAppConfig {
+    REFRESH_TIME: number;
+    GOLFERS: GolferConfig[];
+    CONTESTANTS: ContestantConfig[];
+    LEADERBOARD_URL: string;
+    PLAYER_INFO_URL: string;
+    TOURNEY_TITLE: string;
+}
+
+export interface GolferConfig {
     id: number;
     firstName: string;
     lastName: string;
     tier: string
-    isAmateur? = false;
+    isAmateur?: boolean;
 }
 
-export class ContestantConfig {
+export interface ContestantConfig {
     id: number;
     name: string;
     entries: number[][];
 }
 
-export class EntryConfig {
+export interface EntryConfig {
     name: string;
     golferIds: number[];
     contestantId: number;

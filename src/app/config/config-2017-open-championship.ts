@@ -176,4 +176,4 @@ const contestantData = [
     { id: 9, name: 'Ryan Romes', entries: [[2, 14, 37, 81], [3, 19, 35, 82], [4, 20, 42, 84]]}
 ];
 
-export { tourneyTitle, tourneyId, golferData, contestantData };
+export default { tourneyTitle, tourneyId, golferData, contestantData };

@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { AppConfig} from '../app.config';
-import { PoolData } from '../models/models';
+import { PoolData, IAppConfig } from '../models/models';
 import { DataService } from '../services/data.service';
+import { ConfigService } from '../config/config.service';
 
 @Component({
     selector: 'app-footer',
@@ -13,20 +13,26 @@ import { DataService } from '../services/data.service';
 
 export class FooterComponent implements OnInit, OnDestroy {
 
-    refreshTime = `Refresh Time: ${AppConfig.REFRESH_TIME / 1000} seconds`;
+    private dataSubscription: Subscription;
+    private configSubscription: Subscription;
+
+    refreshTime: string;
     timeStamp: Date;
 
-    private subscription: Subscription;
-
-    constructor(private dataService: DataService) {}
+    constructor(private dataService: DataService, private configService: ConfigService) {}
 
     ngOnInit(): void {
-        this.subscription = this.dataService.get().subscribe((data: PoolData) => {
+        this.dataSubscription = this.dataService.get().subscribe((data: PoolData) => {
             this.timeStamp = data.timeStamp;
+        });
+
+        this.configSubscription = this.configService.config.subscribe((config: IAppConfig) => {
+            this.refreshTime = `Refresh Time: ${config.REFRESH_TIME / 1000} seconds`;
         });
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        this.dataSubscription.unsubscribe();
+        this.configSubscription.unsubscribe();
     }
 }

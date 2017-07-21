@@ -9,10 +9,10 @@ import 'rxjs/add/operator/map';
 import * as jQuery from 'jquery';
 import { cloneDeep, orderBy, sortBy, union } from 'lodash';
 
-import { GolferConfig, EntryConfig, PoolData, Entry, GolferScore, Score, MovementDirection, PlayerInfo } from '../models/models';
-import { AppConfig} from '../app.config';
-import { SettingsService } from '../services/settings.service';
+import { GolferConfig, EntryConfig, PoolData, Entry, GolferScore, Score, MovementDirection, PlayerInfo, IAppConfig } from '../models/models';
+import { SettingsService } from '../settings/settings.service';
 import { NotificationService } from '../services/notification.service';
+import { ConfigService } from '../config/config.service';
 
 @Injectable()
 export class DataService {
@@ -21,13 +21,21 @@ export class DataService {
     private dataObservable: ReplaySubject<PoolData>;
     private cacheData: PoolData = null;
     private selectedContestantId: number = 0;
+    private config: IAppConfig;
+    private interval: any;
 
     public constructor(private titleService: Title, private http: Http, private settingsService: SettingsService,
-        private notificationService: NotificationService) {
+        private notificationService: NotificationService, private configService: ConfigService) {
 
-        this.entryConfig = AppConfig.CONTESTANTS
-            .map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
-            .reduce((prev, curr) => prev.concat(curr));
+        this.configService.config.subscribe((config: IAppConfig) => {
+            this.config = config;
+            this.entryConfig = config.CONTESTANTS
+                .map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
+                .reduce((prev, curr) => prev.concat(curr));
+
+            this.init();
+        });
+
 
         this.settingsService.getSelectedContestantId().subscribe(selectedContestantId => {
             this.selectedContestantId = selectedContestantId;
@@ -41,18 +49,28 @@ export class DataService {
         });
 
         this.dataObservable = new ReplaySubject<PoolData>();
-
-        this.getLiveData();
-
-        setInterval(() => this.getLiveData(), AppConfig.REFRESH_TIME);
     }
+
+    private init() {
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
+        }
+
+        this.cacheData = null;
+
+        this.getLiveData()
+
+        this.interval = setInterval(() => this.getLiveData(), this.config.REFRESH_TIME);
+    }
+
 
     get(): Observable<PoolData> {
         return this.dataObservable;
     }
 
     getPlayerInfo(golferScore: GolferScore): Observable<PlayerInfo> {
-        return this.http.get(AppConfig.PLAYER_INFO_URL + golferScore.score.espnId)
+        return this.http.get(this.config.PLAYER_INFO_URL + golferScore.score.espnId)
             .map((res: Response) => this.handlePlayerResponse(res, golferScore))
             .catch(this.handleError);
     }
@@ -64,7 +82,7 @@ export class DataService {
     }
 
     private getLiveData() {
-        this.http.get(AppConfig.LEADERBOARD_URL)
+        this.http.get(this.config.LEADERBOARD_URL)
             .map((res: Response) => this.convertToData(res))
             .catch(this.handleError)
             .subscribe((data: PoolData) => {
@@ -97,7 +115,7 @@ export class DataService {
     }
 
     private getGolferScores(scores: Score[]): GolferScore[] {
-        const golferScores: GolferScore[] = AppConfig.GOLFERS.map(golferConfig => {
+        const golferScores: GolferScore[] = this.config.GOLFERS.map(golferConfig => {
             const firstName: string = golferConfig.firstName.toLowerCase();
             const lastName: string = golferConfig.lastName.toLowerCase();
             const matchingScore: Score = scores.find(score => {
@@ -294,7 +312,7 @@ export class DataService {
                 .reduce((c, n) => c !== null ? c + ', ' + n : n , null);
 
         }
-        const title = positions ? positions + ' - ' + AppConfig.TOURNEY_TITLE + ' Player Pool' : AppConfig.TOURNEY_TITLE + ' Player Pool';
+        const title = positions ? positions + ' - ' + this.config.TOURNEY_TITLE + ' Player Pool' : this.config.TOURNEY_TITLE + ' Player Pool';
         this.titleService.setTitle(title);
     }
 

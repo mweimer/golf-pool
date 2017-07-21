@@ -14,12 +14,14 @@ import { FooterComponent } from './footer/footer.component';
 import { GolfersComponent } from './golfers/golfers.component';
 import { PoolComponent } from './pool/pool.component';
 import { SettingsComponent } from './settings/settings.component';
+import { InfoModalComponent } from './info-modal/info-modal.component';
 
 import { DataService } from './services/data.service';
-import { SettingsService } from './services/settings.service';
+import { SettingsService } from './settings/settings.service';
 import { GotoService } from './services/goto.service';
 import { NotificationService } from './services/notification.service';
-import { InfoModalComponent } from './info-modal/info-modal.component';
+import { ConfigService } from './config/config.service';
+
 
 @NgModule({
     imports: [
@@ -64,7 +66,8 @@ import { InfoModalComponent } from './info-modal/info-modal.component';
         DataService,
         SettingsService,
         GotoService,
-        NotificationService
+        NotificationService,
+        ConfigService
     ],
     bootstrap: [AppComponent]
 })

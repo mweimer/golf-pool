@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
-import { SettingsService } from './settings.service'
+import { SettingsService } from '../settings/settings.service'
 import { Entry } from '../models/models';
 
 @Injectable()

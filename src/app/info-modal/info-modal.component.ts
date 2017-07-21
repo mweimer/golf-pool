@@ -17,6 +17,10 @@ export class InfoModalComponent implements OnInit {
 
     cells = ['label', 1, 2, 3, 4, 5, 6, 7, 8, 9, 'out', 10, 11, 12, 13, 14, 15, 16, 17, 18, 'in', 'tot'];
 
+    constructor(public activeModal: NgbActiveModal) { }
+
+    ngOnInit() {}
+
     set info(info: PlayerInfo) {
         this.player = info;
 
@@ -29,10 +33,6 @@ export class InfoModalComponent implements OnInit {
         } 
         this.selectedRound = -1;
     }
-
-    constructor(public activeModal: NgbActiveModal) { }
-
-    ngOnInit() {}
 
     getPar(cell: string | number) {
         if (cell === 'label') {

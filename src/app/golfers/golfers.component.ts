@@ -23,16 +23,14 @@ export class GolfersComponent implements OnInit, OnDestroy {
     private highlightedGolferId: number;
 
     constructor(private dataService: DataService, private simplePageScrollService: SimplePageScrollService,
-        private gotoService: GotoService, private modalService: NgbModal) {
-
-    }
+        private gotoService: GotoService, private modalService: NgbModal) {}
 
     ngOnInit(): void {
         this.subscription = this.dataService.get()
-        .subscribe((data: PoolData) => {
-            this.golferScores = data.golfersScores;  
-            this.checkForGotoGolfer();
-        });
+            .subscribe((data: PoolData) => {
+                this.golferScores = data.golfersScores;  
+                this.checkForGotoGolfer();
+            });
     }
 
     ngOnDestroy() {

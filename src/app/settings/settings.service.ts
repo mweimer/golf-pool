@@ -3,18 +3,22 @@ import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
 
-import { AppConfig } from '../app.config';
+
+import { ConfigService } from '../config/config.service';
+import { IAppConfig } from '../models/models';
 
 @Injectable()
 export class SettingsService {
 
     private hasLocalStorage: boolean = typeof(Storage) !== 'undefined';
-    private selectedContestantKey: string = AppConfig.TOURNEY_TITLE + '-selectedContestantId';
-    private selectedContestantIdObservable: ReplaySubject<number>;
+    private selectedContestantKey: string;
+    private selectedContestantIdObservable: ReplaySubject<number> = new ReplaySubject<number>();
 
-    constructor() {
-        this.selectedContestantIdObservable = new ReplaySubject<number>();
-        this.init();
+    constructor(private configService: ConfigService) {
+        this.configService.config.subscribe((config: IAppConfig) => {
+            this.selectedContestantKey = config.TOURNEY_TITLE + '-selectedContestantId';
+            this.init();
+        });
     }
 
     getSelectedContestantId(): Observable<number> {

@@ -19,9 +19,7 @@ export class PoolComponent implements OnInit, OnDestroy {
 
     private subscription: Subscription;
 
-    constructor(private dataService: DataService, private datePipe: DatePipe, private gotoService: GotoService) {
-
-    }
+    constructor(private dataService: DataService, private datePipe: DatePipe, private gotoService: GotoService) {}
 
     ngOnInit(): void {
         this.subscription = this.dataService.get().subscribe((data: PoolData) => {

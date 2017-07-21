@@ -178,4 +178,4 @@ const contestantData = [
     { id: 16, name: 'David Prevo', entries: [[2, 20, 36, 77], [4, 22, 39, 68], [3, 13, 34, 69]] }
 ];
 
-export { tourneyTitle, tourneyId, golferData, contestantData };
+export default { tourneyTitle, tourneyId, golferData, contestantData };
