@@ -8,8 +8,6 @@ export interface Config {
 }
 
 export class IAppConfig {
-    REFRESH_TIME: number;
-    UPDATE_CHECK_INTERVAL: number;
     GOLFERS: GolferConfig[];
     CONTESTANTS: ContestantConfig[];
     LEADERBOARD_URL: string;

@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { PoolData, IAppConfig } from '../models/models';
 import { DataService } from '../services/data.service';
 import { ConfigService } from '../config/config.service';
+import { Constants } from '../config/constants';
 
 @Component({
     selector: 'app-footer',
@@ -27,7 +28,7 @@ export class FooterComponent implements OnInit, OnDestroy {
         });
 
         this.configSubscription = this.configService.config.subscribe((config: IAppConfig) => {
-            this.refreshTime = `Refresh Time: ${config.REFRESH_TIME / 1000} seconds`;
+            this.refreshTime = `Refresh Time: ${Constants.REFRESH_TIME / 1000} seconds`;
         });
     }
 

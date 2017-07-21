@@ -4,26 +4,19 @@ import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import * as jQuery from 'jquery';
 
-import { ConfigService } from '../config/config.service';
 import { IAppConfig } from '../models/models';
+import { Constants } from '../config/constants';
 
 
 @Injectable()
 export class UpdateService {
 
     private statusObservable: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
-    private interval: any;
 
-    constructor(private configService: ConfigService) {
+    constructor() {
         this.statusObservable.next(false);
-
-        this.configService.config.subscribe((config: IAppConfig) => {
-            if (!this.interval) {
-                this.interval = setInterval(() => {
-                    this.checkForUpdate();
-                }, config.UPDATE_CHECK_INTERVAL);
-            }
-        });
+        
+        setInterval(() => this.checkForUpdate(), Constants.UPDATE_CHECK_INTERVAL);
     }
 
     checkForUpdate() {

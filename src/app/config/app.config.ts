@@ -4,10 +4,6 @@ export class AppConfig implements IAppConfig {
 
     constructor(private config: Config) {}
 
-    public REFRESH_TIME = 60000;
-
-    public UPDATE_CHECK_INTERVAL = 1800000; // 30 mins
-
     public GOLFERS = this.config.golferData;
 
     public CONTESTANTS = this.config.contestantData;

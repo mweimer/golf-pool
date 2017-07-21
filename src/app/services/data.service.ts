@@ -13,6 +13,7 @@ import { GolferConfig, EntryConfig, PoolData, Entry, GolferScore, Score, Movemen
 import { SettingsService } from '../settings/settings.service';
 import { NotificationService } from '../services/notification.service';
 import { ConfigService } from '../config/config.service';
+import { Constants } from '../config/constants';
 
 @Injectable()
 export class DataService {
@@ -59,7 +60,7 @@ export class DataService {
 
         this.getLiveData()
 
-        this.interval = setInterval(() => this.getLiveData(), this.config.REFRESH_TIME);
+        this.interval = setInterval(() => this.getLiveData(), Constants.REFRESH_TIME);
     }
 
 
