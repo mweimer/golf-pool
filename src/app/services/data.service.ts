@@ -6,7 +6,6 @@ import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
 import * as jQuery from 'jquery';
 import { cloneDeep, orderBy, sortBy, union } from 'lodash';
 
@@ -82,9 +81,9 @@ export class DataService {
 
     private getLiveData() {
         this.http.get(this.config.LEADERBOARD_URL)
-            .toPromise()
-            .then((res: Response) => this.convertToData(res))
-            .then((data: PoolData) => {
+            .map((res: Response) => this.convertToData(res))
+            .catch(this.handleError)
+            .subscribe((data: PoolData) => {
                 this.setSelected(data);
                 const previousEntries = this.cacheData ? this.cacheData.entries : null;
 
