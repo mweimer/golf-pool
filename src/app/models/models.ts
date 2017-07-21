@@ -7,8 +7,9 @@ export interface Config {
     contestantData: ContestantConfig[];
 }
 
-export interface IAppConfig {
+export class IAppConfig {
     REFRESH_TIME: number;
+    UPDATE_CHECK_INTERVAL: number;
     GOLFERS: GolferConfig[];
     CONTESTANTS: ContestantConfig[];
     LEADERBOARD_URL: string;

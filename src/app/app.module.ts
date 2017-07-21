@@ -21,6 +21,7 @@ import { SettingsService } from './settings/settings.service';
 import { GotoService } from './services/goto.service';
 import { NotificationService } from './services/notification.service';
 import { ConfigService } from './config/config.service';
+import { UpdateService } from './services/update.service';
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import { ConfigService } from './config/config.service';
         SettingsService,
         GotoService,
         NotificationService,
-        ConfigService
+        ConfigService,
+        UpdateService
     ],
     bootstrap: [AppComponent]
 })

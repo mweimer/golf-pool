@@ -20,3 +20,10 @@
         </ul>
     </div>
 </nav>
+
+<div *ngIf="showAlert" class="alert alert-warning alert-dismissible text-center" role="alert">
+    <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Update Available!</strong> Please update the app by refreshing or clicking: <a href="/" target="_self">Update <i class="fa fa-refresh" aria-hidden="true"></i></a>.
+</div>
