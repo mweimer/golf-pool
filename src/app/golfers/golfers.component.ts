@@ -18,9 +18,13 @@ import { PoolData, GolferScore, MovementDirection, PlayerInfo } from '../models/
 export class GolfersComponent implements OnInit, OnDestroy {
 
     golferScores: GolferScore[];
+    highlightedGolferId: number;
+    lastInIndex: number;
+    cutline: number;
+    cutlineDisplay: string;
 
     private subscription: Subscription;
-    private highlightedGolferId: number;
+    
 
     constructor(private dataService: DataService, private simplePageScrollService: SimplePageScrollService,
         private gotoService: GotoService, private modalService: NgbModal) {}
@@ -28,7 +32,9 @@ export class GolfersComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.subscription = this.dataService.get()
             .subscribe((data: PoolData) => {
-                this.golferScores = data.golfersScores;  
+                this.golferScores = data.golfersScores;
+                this.cutline = data.cutline;
+                this.checkCutline();
                 this.checkForGotoGolfer();
             });
     }
@@ -62,6 +68,13 @@ export class GolfersComponent implements OnInit, OnDestroy {
             const modal = this.modalService.open(InfoModalComponent, { size: 'lg' });
             const infoModalComponent: InfoModalComponent = modal.componentInstance;
             infoModalComponent.info = info;
+        }
+    }
+
+    private checkCutline() {
+        if (this.cutline) {
+            this.cutlineDisplay = this.cutline > 0 ? '+' + this.cutline.toString() : this.cutline.toString();
+            this.lastInIndex = this.golferScores.findIndex(gs => gs.score.relativeScore === this.cutline + 1) - 1;
         }
     }
 

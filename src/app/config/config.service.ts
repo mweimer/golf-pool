@@ -17,12 +17,10 @@ export class ConfigService {
 
     allConfigs: IAppConfig[]; 
 
-    private configObservable: ReplaySubject<IAppConfig>
+    private configObservable: ReplaySubject<IAppConfig> = new ReplaySubject<IAppConfig>(1);
     private selectedIndex: number;
 
     constructor() {
-        this.configObservable = new ReplaySubject<IAppConfig>();
-        
         const configs = [config1, config2, config3, config4];
         this.allConfigs = configs.map(c => new AppConfig(c))
 

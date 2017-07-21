@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 import * as jQuery from 'jquery';
 import { cloneDeep, orderBy, sortBy, union } from 'lodash';
 
@@ -18,7 +19,7 @@ import { ConfigService } from '../config/config.service';
 export class DataService {
 
     private entryConfig: EntryConfig[];
-    private dataObservable: ReplaySubject<PoolData>;
+    private dataObservable: ReplaySubject<PoolData> = new ReplaySubject<PoolData>(1);
     private cacheData: PoolData = null;
     private selectedContestantId: number = 0;
     private config: IAppConfig;
@@ -47,8 +48,6 @@ export class DataService {
                 this.updateTitle();  
             }
         });
-
-        this.dataObservable = new ReplaySubject<PoolData>();
     }
 
     private init() {
@@ -83,9 +82,9 @@ export class DataService {
 
     private getLiveData() {
         this.http.get(this.config.LEADERBOARD_URL)
-            .map((res: Response) => this.convertToData(res))
-            .catch(this.handleError)
-            .subscribe((data: PoolData) => {
+            .toPromise()
+            .then((res: Response) => this.convertToData(res))
+            .then((data: PoolData) => {
                 this.setSelected(data);
                 const previousEntries = this.cacheData ? this.cacheData.entries : null;
 
@@ -107,10 +106,17 @@ export class DataService {
             scores.push(this.extractScore(jQuery(row), index));
         });
 
+        const cutlineRow = scorePage.find('.leaderboard-table .cut-score');
+        let cutline = null; 
+        if (cutlineRow.length > 0) {
+            cutline = parseInt(cutlineRow.text(), 10);
+        }
+
         const data: PoolData = new PoolData();
         data.timeStamp = now;
         data.golfersScores = this.getGolferScores(scores);
         data.entries = this.getEntries(data.golfersScores);
+        data.cutline = cutline;
         return data;
     }
 

@@ -12,7 +12,7 @@ export class SettingsService {
 
     private hasLocalStorage: boolean = typeof(Storage) !== 'undefined';
     private selectedContestantKey: string;
-    private selectedContestantIdObservable: ReplaySubject<number> = new ReplaySubject<number>();
+    private selectedContestantIdObservable: ReplaySubject<number> = new ReplaySubject<number>(1);
 
     constructor(private configService: ConfigService) {
         this.configService.config.subscribe((config: IAppConfig) => {

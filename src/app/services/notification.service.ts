@@ -14,7 +14,7 @@ export class NotificationService {
         granted: false
     };
 
-    private statusObservable: ReplaySubject<NotificationStatus> = new ReplaySubject<NotificationStatus>();
+    private statusObservable: ReplaySubject<NotificationStatus> = new ReplaySubject<NotificationStatus>(1);
     private selectedContestantId: number = 0;
 
     constructor(private settingsService: SettingsService) {
