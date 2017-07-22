@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import * as jQuery from 'jquery';
+import 'rxjs/add/operator/toPromise';
 
 import { IAppConfig } from '../models/models';
 import { Constants } from '../config/constants';
@@ -13,20 +14,18 @@ export class UpdateService {
 
     private statusObservable: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 
-    constructor() {
+    constructor(private http: Http) {
         this.statusObservable.next(false);
         
         setInterval(() => this.checkForUpdate(), Constants.UPDATE_CHECK_INTERVAL);
     }
 
     checkForUpdate() {
-        const src = jQuery('script[src*="main"]').attr('src');
-        jQuery.ajax({
-            type: 'get',
-            cache: false,
-            url: src
-        })
-        .fail((err) => this.handleError(err));
+        const time = (new Date()).getTime();
+        const scriptUrl = document.querySelector('script[src*="main"]').getAttribute('src');
+        this.http.get(scriptUrl + '?_=' + time)
+            .toPromise()
+            .catch(err  => this.handleError(err));
     }
 
     get status(): ReplaySubject<boolean> {

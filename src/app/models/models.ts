@@ -41,7 +41,10 @@ export interface EntryConfig {
 export class PoolData {
     entries: Entry[];
     golfersScores: GolferScore[];
-    cutline?: number;
+    cutline?: {
+        value: number;
+        type: string;
+    };
     selectedContestantId = 0;
     timeStamp: Date;
 }

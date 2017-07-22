@@ -20,7 +20,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
     golferScores: GolferScore[];
     highlightedGolferId: number;
     lastInIndex: number;
-    cutline: number;
+    cutline: any;
     cutlineDisplay: string;
 
     private subscription: Subscription;
@@ -34,7 +34,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
             .subscribe((data: PoolData) => {
                 this.golferScores = data.golfersScores;
                 this.cutline = data.cutline;
-                this.checkCutline();
+                this.checkForProjectedCutline();
                 this.checkForGotoGolfer();
             });
     }
@@ -71,10 +71,10 @@ export class GolfersComponent implements OnInit, OnDestroy {
         }
     }
 
-    private checkCutline() {
-        if (this.cutline) {
-            this.cutlineDisplay = this.cutline > 0 ? '+' + this.cutline.toString() : this.cutline.toString();
-            this.lastInIndex = this.golferScores.findIndex(gs => gs.score.relativeScore === this.cutline + 1) - 1;
+    private checkForProjectedCutline() {
+        if (this.cutline && this.cutline.type === 'projected') {
+            this.cutlineDisplay = this.cutline.value > 0 ? '+' + this.cutline.value.toString() : this.cutline.value.toString();
+            this.lastInIndex = this.golferScores.findIndex(gs => gs.score.relativeScore  >= this.cutline.value + 1) - 1;
         }
     }
 

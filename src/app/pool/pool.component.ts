@@ -18,7 +18,7 @@ export class PoolComponent implements OnInit, OnDestroy {
     entries: Entry[];
 
     private subscription: Subscription;
-    private cutline: number;
+    private cutline: any;
 
     constructor(private dataService: DataService, private datePipe: DatePipe, private gotoService: GotoService) {}
 
@@ -37,7 +37,8 @@ export class PoolComponent implements OnInit, OnDestroy {
         const golferScore: GolferScore = entry.golferScores[index];
         const thru = golferScore.score.thru ? golferScore.score.thru : this.datePipe.transform(golferScore.score.startTime, 'shortTime');
         const name = golferScore.score.shortName + (golferScore.golferConfig.isAmateur ? ' (A)' : '');
-        const score = this.cutline && golferScore.score.relativeScore > this.cutline ? `<span class="text-danger">${golferScore.score.toPar}</span>` : golferScore.score.toPar;
+        const score = this.cutline && this.cutline.type === 'projected' && golferScore.score.relativeScore > this.cutline.value 
+            ? `<span class="text-danger">${golferScore.score.toPar}</span>` : golferScore.score.toPar;
         const info = `${name}: ${score} (${thru})`;
         return info;
     }

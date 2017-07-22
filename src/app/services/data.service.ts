@@ -106,18 +106,27 @@ export class DataService {
             scores.push(this.extractScore(jQuery(row), index));
         });
 
-        const cutlineRow = scorePage.find('.leaderboard-table .cut-score');
-        let cutline = null; 
-        if (cutlineRow.length > 0) {
-            cutline = parseInt(cutlineRow.text(), 10);
-        }
-
         const data: PoolData = new PoolData();
         data.timeStamp = now;
         data.golfersScores = this.getGolferScores(scores);
         data.entries = this.getEntries(data.golfersScores);
-        data.cutline = cutline;
+        data.cutline = this.getCutline(scorePage);
         return data;
+    }
+
+    private getCutline(scorePage) {
+        const cutlineScoreRow = scorePage.find('.leaderboard-table .cutline .cut-score');
+        const cutlineMsgRow = scorePage.find('.leaderboard-table .cutline .msg');
+        let cutlineValue, cutlineType; 
+        if (cutlineScoreRow.length > 0) {
+            cutlineValue = parseInt(cutlineScoreRow.text(), 10);
+            cutlineType = cutlineMsgRow.text().toLowerCase().includes('projected') ? 'projected' : 'actual';
+        }
+
+        return {
+            value: cutlineValue,
+            type: cutlineType
+        };
     }
 
     private getGolferScores(scores: Score[]): GolferScore[] {
