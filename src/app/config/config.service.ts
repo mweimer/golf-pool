@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
-import config1 from './config-2017-open-championship';
-import config2 from './config-2017-us-open';
-import config3 from './config-2017-memorial';
-import config4 from './config-2017-masters';
+import config4 from './config-2017-open-championship';
+import config3 from './config-2017-us-open';
+import config2 from './config-2017-memorial';
+import config1 from './config-2017-masters';
 
 
 import { Config, IAppConfig } from '../models/models';
@@ -21,7 +21,7 @@ export class ConfigService {
     private selectedIndex: number;
 
     constructor() {
-        const configs = [config1, config2, config3, config4];
+        const configs: Config[] = [config4, config3, config2, config1];
         this.allConfigs = configs.map(c => new AppConfig(c))
 
         this.selectedIndex = 0;

@@ -39,7 +39,7 @@ export class PoolComponent implements OnInit, OnDestroy {
         const name = golferScore.score.shortName + (golferScore.golferConfig.isAmateur ? ' (A)' : '');
         const score = this.cutline && this.cutline.type === 'projected' && golferScore.score.relativeScore > this.cutline.value 
             ? `<span class="text-danger">${golferScore.score.toPar}</span>` : golferScore.score.toPar;
-        const info = `${name}: ${score} (${thru})`;
+        const info =  golferScore.score.isDNF ?  `${name}: ${score}` : `${name}: ${score} (${thru})`;
         return info;
     }
 
