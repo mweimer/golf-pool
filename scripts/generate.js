@@ -1,6 +1,13 @@
 const xlsx = require('xlsx');
 const fs = require('fs');
 
+if (process.argv.length < 3 || (process.argv.length >= 3 && !/\.xlsx$/.test(process.argv[2]))) {
+    console.log('Please specify xlsx file.');
+    return;
+}
+
+const inputFile = process.argv[2];
+
 let golferIdIndex = 1;
 let contestantIdIndex = 1;
 
@@ -20,7 +27,7 @@ const contestantsSheetName = 'Contestants';
 run();
 
 function run() {
-    const workbook = xlsx.readFile('test.xlsx');
+    const workbook = xlsx.readFile(inputFile);
     const golfersWorksheet = workbook.Sheets[golfersSheetName];
     const contestantWorksheet = workbook.Sheets[contestantsSheetName];
 
@@ -119,7 +126,6 @@ function createEntry(worksheet, position, golferConfig) {
     return [golferId1, golferId2, golferId3, golferId4];
 }
 
-
 function incrementColumn(row, delta = 1) {
     const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
@@ -135,21 +141,22 @@ function writeConfig(golferConfig, titleId, contestantConfig) {
 
     stream.write(`const tourneyTitle = \'${titleId.title}\';\n\nconst tourneyId = \'${titleId.id}\';\n\nconst golferData = [\n`);
     let previousTier = 'A';
-    golferConfig.forEach(g => {
-        stream.write(`    { id: ${g.id}, firstName: '${g.firstName}', lastName: '${g.lastName}', tier: '${g.tier}' },\n`);
+    golferConfig.forEach((g, i) => {
         if (g.tier !== previousTier) {
             previousTier = g.tier;
             stream.write('\n');
         }
+
+        stream.write(`    { id: ${g.id}, firstName: '${g.firstName}', lastName: '${g.lastName}', tier: '${g.tier}' }${i !== golferConfig.length - 1 ? ',' : ''}\n`);
     });
 
     stream.write('];\n\nconst contestantData = [\n');
-    contestantConfig.forEach(c => {
+    contestantConfig.forEach((c, i) => {
         stream.write(`    { id: ${c.id}, name: '${c.name}', entries: [` + 
             `[${c.entries[0][0]}, ${c.entries[0][1]}, ${c.entries[0][2]}, ${c.entries[0][3]}], ` +
             `[${c.entries[1][0]}, ${c.entries[1][1]}, ${c.entries[1][2]}, ${c.entries[1][3]}], ` +
             `[${c.entries[2][0]}, ${c.entries[2][1]}, ${c.entries[2][2]}, ${c.entries[2][3]}]` +
-            '] },\n');
+            `] }${i !== contestantConfig.length - 1 ? ',' : ''}\n`);
     });
 
     stream.write('];\n\nexport default { tourneyTitle, tourneyId, golferData, contestantData };\n');
