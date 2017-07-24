@@ -1,3 +1,0 @@
-^([a-z ,.'-]+) ([a-z ,.'-]+)$
-
-{ id: 1, firstName: '\1', lastName: '\2', tier: 'A' },

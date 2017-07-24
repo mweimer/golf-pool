@@ -38,6 +38,7 @@
     "codelyzer": "~3.0.1",
     "ts-node": "~3.0.4",
     "tslint": "~5.3.2",
-    "typescript": "~2.3.3"
+    "typescript": "~2.3.3",
+    "xlsx": "^0.10.8"
   }
 }
