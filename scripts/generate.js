@@ -137,7 +137,7 @@ function writeConfig(golferConfig, titleId, contestantConfig) {
 
     const fileName = titleId.title.toLowerCase().replace(/\s/g, '-');
 
-    const stream = fs.createWriteStream(fileName + '.ts');
+    const stream = fs.createWriteStream('config-' + fileName + '.ts');
 
     stream.write(`const tourneyTitle = \'${titleId.title}\';\n\nconst tourneyId = \'${titleId.id}\';\n\nconst golferData = [\n`);
     let previousTier = 'A';
