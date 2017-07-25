@@ -1,4 +1,4 @@
-const tourneyTitle = 'The Open';
+const tourneyTitle = '2017 The Open';
 
 const tourneyId = '2710';
 
