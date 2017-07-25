@@ -195,7 +195,9 @@ function writeConfig(golferConfig, contestantConfig, espnData) {
 
     stream.write('];\n\nconst contestantData = [\n');
     contestantConfig.forEach((c, i) => {
-        stream.write(`    { id: ${c.id}, name: '${c.name}', entries: [` + 
+        const name = c.name.replace(/'/g, '\\\'');
+
+        stream.write(`    { id: ${c.id}, name: '${name}', entries: [` + 
             `[${c.entries[0][0]}, ${c.entries[0][1]}, ${c.entries[0][2]}, ${c.entries[0][3]}], ` +
             `[${c.entries[1][0]}, ${c.entries[1][1]}, ${c.entries[1][2]}, ${c.entries[1][3]}], ` +
             `[${c.entries[2][0]}, ${c.entries[2][1]}, ${c.entries[2][2]}, ${c.entries[2][3]}]` +
