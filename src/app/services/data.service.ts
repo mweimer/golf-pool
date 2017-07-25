@@ -8,6 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import * as jQuery from 'jquery';
 import { cloneDeep, orderBy, sortBy, union } from 'lodash';
+import * as Fuse from 'fuse.js';
 
 import { GolferConfig, EntryConfig, PoolData, Entry, GolferScore, Score, MovementDirection, PlayerInfo, IAppConfig } from '../models/models';
 import { SettingsService } from '../settings/settings.service';
@@ -130,20 +131,26 @@ export class DataService {
     }
 
     private getGolferScores(scores: Score[]): GolferScore[] {
+        const options = {
+          shouldSort: true,
+          threshold: 0.4,
+          location: 0,
+          distance: 100,
+          maxPatternLength: 32,
+          minMatchCharLength: 1,
+          keys: ['fullName']
+        };
+        const fuse = new Fuse(scores, options);
+  
         const golferScores: GolferScore[] = this.config.GOLFERS.map(golferConfig => {
-            const firstName: string = golferConfig.firstName.toLowerCase();
-            const lastName: string = golferConfig.lastName.toLowerCase();
-            const matchingScore: Score = scores.find(score => {
-                const fullName = score.fullName.toLowerCase();
-                return fullName.includes(firstName) && fullName.includes(lastName);
-            });
+            const result = fuse.search(golferConfig.firstName + ' ' + golferConfig.lastName);
 
             const golferConfigCopy: GolferConfig = cloneDeep(golferConfig);
             const golferScore: GolferScore = new GolferScore();
             golferScore.golferConfig = golferConfigCopy;
 
-            if (matchingScore) {
-                golferScore.score = matchingScore;
+            if (result.length > 0) {
+                golferScore.score = <Score> result[0];
             } else {
                 golferScore.score = this.emptyScore(golferConfigCopy);
             }

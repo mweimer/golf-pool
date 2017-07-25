@@ -1,5 +1,6 @@
 const xlsx = require('xlsx');
 const fs = require('fs');
+const Fuse = require('fuse.js');
 
 if (process.argv.length < 3 || (process.argv.length >= 3 && !/\.xlsx$/.test(process.argv[2]))) {
     console.log('Please specify xlsx file.');
@@ -67,7 +68,7 @@ function createGolfer(cellValue, tierIndex) {
     const firstName = nameMatch[1];
     const lastName = nameMatch[2];
 
-    return { id: golferIdIndex++, firstName,  lastName, tier };
+    return { id: golferIdIndex++, firstName, lastName, name, tier };
 }
 
 function createTitleId(worksheet) {
@@ -107,21 +108,31 @@ function createContestant(worksheet, position, golferConfig) {
 }
 
 function createEntry(worksheet, position, golferConfig) {
-    const golfer1 = worksheet[position.column + position.row].v.trim();
-    const golfer2 = worksheet[position.column + (position.row + 1)].v.trim();
-    const golfer3 = worksheet[position.column + (position.row + 2)].v.trim();
-    const golfer4 = worksheet[position.column + (position.row + 3)].v.trim();
+    const golfer1Name = worksheet[position.column + position.row].v.trim();
+    const golfer2Name = worksheet[position.column + (position.row + 1)].v.trim();
+    const golfer3Name = worksheet[position.column + (position.row + 2)].v.trim();
+    const golfer4Name = worksheet[position.column + (position.row + 3)].v.trim();
 
-
-    const matchGolfer = (golferConfig, golferName) => {
-        const regex = new RegExp(`${golferConfig.firstName}.*${golferConfig.lastName}` , 'i')
-        return regex.test(golferName);
+    const options = {
+      shouldSort: true,
+      threshold: 0.4,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 1,
+      keys: ['name']
+    };
+    const fuse = new Fuse(golferConfig, options);
+   
+    const matchGolfer = (golferName) => {
+        const result = fuse.search(golferName);
+        return result[0];
     }
 
-    const golferId1 = golferConfig.find(gc => matchGolfer(gc, golfer1)).id;
-    const golferId2 = golferConfig.find(gc => matchGolfer(gc, golfer2)).id;
-    const golferId3 = golferConfig.find(gc => matchGolfer(gc, golfer3)).id;
-    const golferId4 = golferConfig.find(gc => matchGolfer(gc, golfer4)).id;
+    const golferId1 = matchGolfer(golfer1Name).id;
+    const golferId2 = matchGolfer(golfer2Name).id;
+    const golferId3 = matchGolfer(golfer3Name).id;
+    const golferId4 = matchGolfer(golfer4Name).id;
 
     return [golferId1, golferId2, golferId3, golferId4];
 }

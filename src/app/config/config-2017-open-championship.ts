@@ -120,7 +120,7 @@ const golferData = [
     { id: 112, firstName: 'Aaron', lastName: 'Baddeley', tier: 'D' },
     { id: 113, firstName: 'Kyung-Tae', lastName: 'Kim', tier: 'D' },
     { id: 114, firstName: 'Maverick', lastName: 'McNealy', tier: 'D', isAmateur: true },
-    { id: 115, firstName: 'Miyazato', lastName: 'Yusaku', tier: 'D' },
+    { id: 115, firstName: 'Yusaku', lastName: 'Miyazato', tier: 'D' },
     { id: 116, firstName: 'Paul', lastName: 'Lawrie', tier: 'D' },
     { id: 117, firstName: 'Sebastian', lastName: 'Munoz', tier: 'D' },
     { id: 118, firstName: 'Shiv', lastName: 'Kapur', tier: 'D' },
