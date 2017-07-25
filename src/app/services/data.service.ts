@@ -8,7 +8,6 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import * as jQuery from 'jquery';
 import { cloneDeep, orderBy, sortBy, union } from 'lodash';
-import * as Fuse from 'fuse.js';
 
 import { GolferConfig, EntryConfig, PoolData, Entry, GolferScore, Score, MovementDirection, PlayerInfo, IAppConfig } from '../models/models';
 import { SettingsService } from '../settings/settings.service';
@@ -25,7 +24,6 @@ export class DataService {
     private selectedContestantId: number = 0;
     private config: IAppConfig;
     private interval: any;
-    private ids = new Map<number, string>();
 
     public constructor(private titleService: Title, private http: Http, private settingsService: SettingsService,
         private notificationService: NotificationService, private configService: ConfigService) {
@@ -132,34 +130,16 @@ export class DataService {
     }
 
     private getGolferScores(scores: Score[]): GolferScore[] {
-        const options = {
-          shouldSort: true,
-          threshold: 0.4,
-          location: 0,
-          distance: 100,
-          maxPatternLength: 32,
-          minMatchCharLength: 1,
-          keys: ['fullName']
-        };
-        const fuse = new Fuse(scores, options);
-  
         const golferScores: GolferScore[] = this.config.GOLFERS.map(golferConfig => {
-
-            let score: Score;
-            if (this.ids.has(golferConfig.id)) {
-                const espnId = this.ids.get(golferConfig.id);
-                score = scores.find(s => s.espnId === espnId);
-            } else {
-                const result = fuse.search(golferConfig.firstName + ' ' + golferConfig.lastName);
-                if (result.length > 0) {
-                    score = <Score> result[0];
-                    this.ids.set(golferConfig.id, score.espnId);
-                }
-            }
 
             const golferConfigCopy: GolferConfig = cloneDeep(golferConfig);
             const golferScore: GolferScore = new GolferScore();
             golferScore.golferConfig = golferConfigCopy;
+
+            let score: Score;
+            if (golferConfig.espnId) {
+                score = scores.find(s => s.espnId === golferConfig.espnId);
+            } 
 
             if (score) {
                 golferScore.score = score;
@@ -176,6 +156,10 @@ export class DataService {
     }
 
     private emptyScore(golferConfig: GolferConfig): Score {
+        const nameMatch = golferConfig.name.match(/^([a-zA-Z,.'-]+) ([a-zA-Z ,.'-]+)$/);
+        const firstName = nameMatch[1];
+        const lastName = nameMatch[2];
+
         const score = new Score();
 
         score.index = Number.MAX_SAFE_INTEGER;
@@ -191,8 +175,8 @@ export class DataService {
         score.round2Score = '--';
         score.round3Score = '--';
         score.round4Score = '--';
-        score.fullName = `${golferConfig.firstName} ${golferConfig.lastName}`;
-        score.shortName = `${golferConfig.firstName[0]}. ${golferConfig.lastName}`;
+        score.fullName = golferConfig.name;
+        score.shortName = `${firstName[0]}. ${lastName}`;
         score.logoImage = '';
         score.startTime = null;
         score.movement = { text: '-', direction: MovementDirection.None };

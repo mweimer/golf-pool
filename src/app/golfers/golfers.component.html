@@ -9,7 +9,7 @@
         <tr [attr.id]="'golfer-' + golferScore.golferConfig.id" [ngClass]="{'table-success': golferScore.golferConfig.id === highlightedGolferId, 'selected': golferScore.isSelected}" (click)="showGolferDetail(golferScore)"> 
             <td>{{golferScore.score.position}}</td>
             <td [ngClass]="getMovementClass(golferScore)">{{golferScore.score.movement.text}}</td>
-            <td><div *ngIf="golferScore.score.logoImage" class="logo"><img [src]="golferScore.score.logoImage" /></div>{{getName(golferScore)}}</td>
+            <td><div *ngIf="golferScore.score.logoImage" class="logo"><img [src]="golferScore.score.logoImage" /></div>{{golferScore.score.fullName}}</td>
             <td>{{golferScore.entryCount}}</td>
             <td>{{golferScore.score.toPar}}</td>
             <td>{{golferScore.score.currentRoundScore}}</td>

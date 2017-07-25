@@ -16,7 +16,7 @@ export class SettingsService {
 
     constructor(private configService: ConfigService) {
         this.configService.config.subscribe((config: IAppConfig) => {
-            this.selectedContestantKey = config.TOURNEY_TITLE + '-selectedContestantId';
+            this.selectedContestantKey = config.TOURNEY_ID + '-selectedContestantId';
             this.init();
         });
     }

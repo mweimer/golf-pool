@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
-import config4 from './config-2017-open-championship';
+import config4 from './config-2017-the-open';
 import config3 from './config-2017-us-open';
 import config2 from './config-2017-memorial';
 import config1 from './config-2017-masters';

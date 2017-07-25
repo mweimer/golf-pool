@@ -1,6 +1,7 @@
 const xlsx = require('xlsx');
 const fs = require('fs');
 const Fuse = require('fuse.js');
+const http = require('http');
 
 if (process.argv.length < 3 || (process.argv.length >= 3 && !/\.xlsx$/.test(process.argv[2]))) {
     console.log('Please specify xlsx file.');
@@ -9,6 +10,15 @@ if (process.argv.length < 3 || (process.argv.length >= 3 && !/\.xlsx$/.test(proc
 
 const inputFile = process.argv[2];
 
+if (process.argv.length < 4 || (process.argv.length >= 4 && !/^[0-9]{4}$/.test(process.argv[3])))  {
+    console.log('Please specify tourneyId');
+    return;
+}
+
+const tourneyId = process.argv[3];
+const host = `cdn.espn.com`;
+const path = `/core/golf/leaderboard?tournamentId=${tourneyId}&xhr=1`;
+
 let golferIdIndex = 1;
 let contestantIdIndex = 1;
 
@@ -16,41 +26,66 @@ const tierStartingPositions = [
     { column: 'C', row: 15 }, 
     { column: 'F', row: 15 }, 
     { column: 'I', row: 15 }, 
-    { column: 'L', row: 15 }];
-const titleCellAddress = 'B1';
-const idCellAddress = 'B2';
-const contestantStartCellAddress = { column: 'A', row: 4 };
+    { column: 'L', row: 15 }
+];
+
+const contestantStartCellAddress = { column: 'A', row: 1 };
 
 const tiers = { 0: 'A', 1: 'B', 2: 'C', 3: 'D' };
 const golfersSheetName = 'Player Tiers & Instructions';
 const contestantsSheetName = 'Contestants';
 
-run();
 
-function run() {
+getEspnData().then(espnData => {
+    run(espnData);
+}).catch(e => console.error(e));
+
+function run(espnData) {
     const workbook = xlsx.readFile(inputFile);
     const golfersWorksheet = workbook.Sheets[golfersSheetName];
     const contestantWorksheet = workbook.Sheets[contestantsSheetName];
 
+    const options = {
+      shouldSort: true,
+      tokenize: true,
+      threshold: 0.4,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 1,
+      keys: ['athlete.displayName']
+    };
+
+    const espnFuse = new Fuse(espnData.json.competitions[0].competitors, options);
+
     const golferConfig = tierStartingPositions
-        .map((position, tierIndex) => createGolferConfig(golfersWorksheet, position, tierIndex))
+        .map((position, tierIndex) => createGolferConfig(golfersWorksheet, position, tierIndex, espnFuse))
         .reduce((prev, next) => prev.concat(next));
 
-    const titleId = createTitleId(contestantWorksheet);
+
+    const golferNames = golferConfig.map(g => g.name);
+    const duplicates = golferNames.filter((name, index) => {
+       return golferNames.includes(name, index + 1);
+    });
+
+
+    if (duplicates.length > 0) {
+        console.error('Error: Duplicate names - ' + duplicates.join(', '));
+    }
 
     const contestantConfig = createContestantConfig(contestantWorksheet, contestantStartCellAddress, golferConfig);
 
-    writeConfig(golferConfig, titleId, contestantConfig);
+    writeConfig(golferConfig, contestantConfig, espnData);
 }
 
-function createGolferConfig(worksheet, tierPosition, tierIndex) {
+function createGolferConfig(worksheet, tierPosition, tierIndex, espnFuse) {
     const tierGolfers = [];
 
     while (true) {
         const cellAddress = tierPosition.column + tierPosition.row.toString();
         const targetCell = worksheet[cellAddress];
         if (targetCell) {
-            tierGolfers.push(createGolfer(targetCell.v, tierIndex));
+            tierGolfers.push(createGolfer(targetCell.v, tierIndex, espnFuse));
         } else {
             break;
         }
@@ -60,27 +95,21 @@ function createGolferConfig(worksheet, tierPosition, tierIndex) {
     return tierGolfers;
 }
 
-function createGolfer(cellValue, tierIndex) {
+function createGolfer(cellValue, tierIndex, espnFuse) {
     const tier = tiers[tierIndex];
 
-    const name = cellValue.trim();
-    const nameMatch = name.match(/^([a-zA-Z,.'-]+) ([a-zA-Z ,.'-]+)$/);
-    const firstName = nameMatch[1];
-    const lastName = nameMatch[2];
+    const spreadsheetName = cellValue.trim();
+    const espnResult = espnFuse.search(spreadsheetName)[0];
+    const name = espnResult ? espnResult.athlete.displayName : spreadsheetName ;
+    const espnId = espnResult ? espnResult.athlete.id : '';
 
-    return { id: golferIdIndex++, firstName, lastName, name, tier };
-}
-
-function createTitleId(worksheet) {
-    const title = worksheet[titleCellAddress].v.trim();
-    const id = worksheet[idCellAddress].w.trim();
-    return { title, id };
+    return { id: golferIdIndex++, name, spreadsheetName, espnId, tier };
 }
 
 function createContestantConfig(worksheet, position, golferConfig) {
     const contestants = [];
 
-    while (true) {
+    while (worksheet) {
         if (worksheet[position.column + position.row]) {
             contestants.push(createContestant(worksheet, position, golferConfig));
             position.row += 7;
@@ -120,19 +149,19 @@ function createEntry(worksheet, position, golferConfig) {
       distance: 100,
       maxPatternLength: 32,
       minMatchCharLength: 1,
-      keys: ['name']
+      keys: ['spreadsheetName']
     };
-    const fuse = new Fuse(golferConfig, options);
+    const entryFuse = new Fuse(golferConfig, options);
    
-    const matchGolfer = (golferName) => {
-        const result = fuse.search(golferName);
-        return result[0];
+    const getGolferId = (golferName) => {
+        const result = entryFuse.search(golferName);
+        return result[0].id;
     }
 
-    const golferId1 = matchGolfer(golfer1Name).id;
-    const golferId2 = matchGolfer(golfer2Name).id;
-    const golferId3 = matchGolfer(golfer3Name).id;
-    const golferId4 = matchGolfer(golfer4Name).id;
+    const golferId1 = getGolferId(golfer1Name);
+    const golferId2 = getGolferId(golfer2Name);
+    const golferId3 = getGolferId(golfer3Name);
+    const golferId4 = getGolferId(golfer4Name);
 
     return [golferId1, golferId2, golferId3, golferId4];
 }
@@ -144,21 +173,24 @@ function incrementColumn(row, delta = 1) {
     return alphabet[index + delta];
 }
 
-function writeConfig(golferConfig, titleId, contestantConfig) {
+function writeConfig(golferConfig, contestantConfig, espnData) {
+    const tourneyTitle = espnData.content.tournamentName;
 
-    const fileName = titleId.title.toLowerCase().replace(/\s/g, '-');
+    const fileName = tourneyTitle.toLowerCase().replace(/\s/g, '-').replace(/\./g, '');
 
     const stream = fs.createWriteStream('config-' + fileName + '.ts');
-
-    stream.write(`const tourneyTitle = \'${titleId.title}\';\n\nconst tourneyId = \'${titleId.id}\';\n\nconst golferData = [\n`);
+    stream.write(`const tourneyTitle = \'${tourneyTitle}\';\n\nconst tourneyId = \'${tourneyId}\';\n\nconst golferData = [\n`);
     let previousTier = 'A';
+
     golferConfig.forEach((g, i) => {
         if (g.tier !== previousTier) {
             previousTier = g.tier;
             stream.write('\n');
         }
 
-        stream.write(`    { id: ${g.id}, firstName: '${g.firstName}', lastName: '${g.lastName}', tier: '${g.tier}' }${i !== golferConfig.length - 1 ? ',' : ''}\n`);
+        const name = g.name.replace(/'/g, '\\\'');
+
+        stream.write(`    { id: ${g.id}, name: '${name}', espnId: '${g.espnId}', tier: '${g.tier}' }${i !== golferConfig.length - 1 ? ',' : ''}\n`);
     });
 
     stream.write('];\n\nconst contestantData = [\n');
@@ -172,4 +204,19 @@ function writeConfig(golferConfig, titleId, contestantConfig) {
 
     stream.write('];\n\nexport default { tourneyTitle, tourneyId, golferData, contestantData };\n');
     stream.end();   
+}
+
+function getEspnData() {
+    return new Promise((resolve, reject) => {
+        http.get({ host, path}, (response)  => {
+            var body = '';
+            response.on('data', function(d) {
+                body += d;
+            });
+            response.on('end', function() {
+                var parsed = JSON.parse(body);
+                resolve(parsed);
+            });
+        });
+    });
 }

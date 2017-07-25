@@ -13,14 +13,14 @@ export class IAppConfig {
     LEADERBOARD_URL: string;
     PLAYER_INFO_URL: string;
     TOURNEY_TITLE: string;
+    TOURNEY_ID: string;
 }
 
 export interface GolferConfig {
     id: number;
-    firstName: string;
-    lastName: string;
-    tier: string
-    isAmateur?: boolean;
+    name: string;
+    tier: string;
+    espnId: string;
 }
 
 export interface ContestantConfig {

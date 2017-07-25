@@ -43,10 +43,6 @@ export class GolfersComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    getName (golferScore: GolferScore): string {
-        return `${golferScore.score.fullName}${golferScore.golferConfig.isAmateur ? ' (A)' : ''}`;
-    }
-
     getMovementClass(golferScore: GolferScore): string {
         return MovementDirection[golferScore.score.movement.direction].toLowerCase();
     }
@@ -63,7 +59,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
             const info: PlayerInfo = new PlayerInfo()
             info.golferId = golferScore.golferConfig.id;
             info.profile = {
-                displayName: `${golferScore.golferConfig.firstName} ${golferScore.golferConfig.lastName}`,
+                displayName: golferScore.golferConfig.name
             };
             const modal = this.modalService.open(InfoModalComponent, { size: 'lg' });
             const infoModalComponent: InfoModalComponent = modal.componentInstance;
