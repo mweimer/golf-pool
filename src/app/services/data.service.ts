@@ -191,7 +191,7 @@ export class DataService {
         score.round2Score = '--';
         score.round3Score = '--';
         score.round4Score = '--';
-        score.fullName = '';
+        score.fullName = `${golferConfig.firstName} ${golferConfig.lastName}`;
         score.shortName = `${golferConfig.firstName[0]}. ${golferConfig.lastName}`;
         score.logoImage = '';
         score.startTime = null;

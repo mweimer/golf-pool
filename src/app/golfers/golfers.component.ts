@@ -44,7 +44,7 @@ export class GolfersComponent implements OnInit, OnDestroy {
     }
 
     getName (golferScore: GolferScore): string {
-        return `${golferScore.golferConfig.firstName} ${golferScore.golferConfig.lastName}${golferScore.golferConfig.isAmateur ? ' (A)' : ''}`;
+        return `${golferScore.score.fullName}${golferScore.golferConfig.isAmateur ? ' (A)' : ''}`;
     }
 
     getMovementClass(golferScore: GolferScore): string {
