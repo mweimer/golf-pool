@@ -25,6 +25,7 @@ export class DataService {
     private selectedContestantId: number = 0;
     private config: IAppConfig;
     private interval: any;
+    private ids = new Map<number, string>();
 
     public constructor(private titleService: Title, private http: Http, private settingsService: SettingsService,
         private notificationService: NotificationService, private configService: ConfigService) {
@@ -143,14 +144,25 @@ export class DataService {
         const fuse = new Fuse(scores, options);
   
         const golferScores: GolferScore[] = this.config.GOLFERS.map(golferConfig => {
-            const result = fuse.search(golferConfig.firstName + ' ' + golferConfig.lastName);
+
+            let score: Score;
+            if (this.ids.has(golferConfig.id)) {
+                const espnId = this.ids.get(golferConfig.id);
+                score = scores.find(s => s.espnId === espnId);
+            } else {
+                const result = fuse.search(golferConfig.firstName + ' ' + golferConfig.lastName);
+                if (result.length > 0) {
+                    score = <Score> result[0];
+                    this.ids.set(golferConfig.id, score.espnId);
+                }
+            }
 
             const golferConfigCopy: GolferConfig = cloneDeep(golferConfig);
             const golferScore: GolferScore = new GolferScore();
             golferScore.golferConfig = golferConfigCopy;
 
-            if (result.length > 0) {
-                golferScore.score = <Score> result[0];
+            if (score) {
+                golferScore.score = score;
             } else {
                 golferScore.score = this.emptyScore(golferConfigCopy);
             }
