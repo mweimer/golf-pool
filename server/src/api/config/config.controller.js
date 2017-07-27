@@ -1,22 +1,22 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
- * GET     /api/configs              ->  index
- * GET     /api/configs/:id          ->  show
+ * GET     /api/config              ->  index
+ * GET     /api/config/:id          ->  show
  */
 
 'use strict';
 
 import jsonpatch from 'fast-json-patch';
-import {Tournament, Entry, Golfer} from '../../sqldb';
+import {Entry, Tournament} from '../../sqldb';
 
 function respondWithResult (res, statusCode) {
   statusCode = statusCode || 200;
   return function (entity) {
     if (entity) {
       if (Array.isArray(entity)) {
-        entity = entity.map(mapConfig);
+        entity = entity.map(mapEntry);
       } else {
-        entity = mapConfig(entity);
+        entity = mapEntry(entity);
       }
 
       return res.status(statusCode).json(entity);
@@ -24,6 +24,7 @@ function respondWithResult (res, statusCode) {
     return null;
   };
 }
+
 
 function handleEntityNotFound (res) {
   return function (entity) {
@@ -42,24 +43,37 @@ function handleError (res, statusCode) {
   };
 }
 
+function mapEntry(e) {
+  return {
+    id: e.id,
+    userId: e.userId,
+    tournamentId: e.tournamentId,
+    golferIds: [[e.golfer1AId, e.golfer1BId, e.golfer1CId, e.golfer1DId], 
+      [e.golfer2AId, e.golfer2BId, e.golfer2CId, e.golfer2DId], 
+      [e.golfer3AId, e.golfer3BId, e.golfer3CId, e.golfer3DId]]
+  };
+}
 
-
-// Gets a list of Configs
+// Gets a list of Entries
 export function index (req, res) {
   return Entry.findAll()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
-// Gets a single Config from the DB
+// Gets a single Entry from the DB
 export function show (req, res) {
   return Entry.find({
     where: {
-      tournamentId: parseInt(req.params.tournamentId, 10)
-    }
+      tournamentId: req.params.tournamentId,
+    },
+    include: [{
+      model: Tournament
+    }]
   })
     .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
+
 
