@@ -17,12 +17,6 @@ function respondWithResult (res, statusCode) {
   statusCode = statusCode || 200;
   return function (entity) {
     if (entity) {
-      if (Array.isArray(entity)) {
-        entity = entity.map(mapTournament);
-      } else {
-        entity = mapTournament(entity);
-      }
-
       return res.status(statusCode).json(entity);
     }
     return null;
@@ -67,16 +61,6 @@ function handleError (res, statusCode) {
   statusCode = statusCode || 500;
   return function (err) {
     res.status(statusCode).send(err);
-  };
-}
-
-function mapTournament(e) {
-  return {
-    id: e.id,
-    userId: e.userId,
-    golferIds: [[e.golfer1AId, e.golfer1BId, e.golfer1CId, e.golfer1DId], 
-      [e.golfer2AId, e.golfer2BId, e.golfer2CId, e.golfer2DId], 
-      [e.golfer3AId, e.golfer3BId, e.golfer3CId, e.golfer3DId]]
   };
 }
 

@@ -74,6 +74,7 @@ function mapEntry(e) {
   return {
     id: e.id,
     userId: e.userId,
+    tournamentId: e.tournamentId,
     golferIds: [[e.golfer1AId, e.golfer1BId, e.golfer1CId, e.golfer1DId], 
       [e.golfer2AId, e.golfer2BId, e.golfer2CId, e.golfer2DId], 
       [e.golfer3AId, e.golfer3BId, e.golfer3CId, e.golfer3DId]]

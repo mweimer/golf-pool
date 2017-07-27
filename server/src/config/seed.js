@@ -200,7 +200,7 @@ export default function seedDatabaseIfNeeded () {
         .catch(err => console.log('error populating users', err)));
 
     Tournament.destroy({ where: {} })
-      .then(() => User.bulkCreate([{
+      .then(() => Tournament.bulkCreate([{
         id: 1,
         name: '2017 The Open',
         espnId: '2710'
