@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/throw';
 import * as jQuery from 'jquery';
 import { cloneDeep, orderBy, sortBy, union } from 'lodash';
 
@@ -323,15 +324,17 @@ export class DataService {
     }
 
     private updateTitle(entries: Entry[] = null) {
-        let positions = null;
-        if (this.selectedContestantId > 0 && entries !== null) {
-            positions = entries.filter(e => e.contestantId === this.selectedContestantId && !e.isDQ)
-                .map(e => e.position)
-                .reduce((c, n) => c !== null ? c + ', ' + n : n , null);
+        if (this.config) {
+            let positions = null;
+            if (this.selectedContestantId > 0 && entries !== null) {
+                positions = entries.filter(e => e.contestantId === this.selectedContestantId && !e.isDQ)
+                    .map(e => e.position)
+                    .reduce((c, n) => c !== null ? c + ', ' + n : n , null);
 
+            }
+            const title = positions ? positions + ' - ' + this.config.TOURNEY_TITLE + ' Player Pool' : this.config.TOURNEY_TITLE + ' Player Pool';
+            this.titleService.setTitle(title);
         }
-        const title = positions ? positions + ' - ' + this.config.TOURNEY_TITLE + ' Player Pool' : this.config.TOURNEY_TITLE + ' Player Pool';
-        this.titleService.setTitle(title);
     }
 
     private setSelected(data: PoolData) {

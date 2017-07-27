@@ -158,6 +158,7 @@ const golferData = [
     { id: 150, name: 'Nick Flanagan', espnId: '1216', tier: 'D' },
     { id: 151, name: 'Roman Robledo', espnId: '11100', tier: 'D' }
 ];
+
 const contestantData = [
     { id: 1, name: 'Adam Weiss', entries: [[1, 11, 39, 95], [2, 15, 43, 95], [6, 13, 34, 73]] },
     { id: 2, name: 'Cameron Weimer', entries: [[2, 20, 35, 82], [1, 15, 34, 95], [6, 12, 33, 75]] },

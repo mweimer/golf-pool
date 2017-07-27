@@ -11,6 +11,8 @@ export default function (app) {
   // Insert routes below
   app.use('/api/golfers', require('./api/golfer'));
   app.use('/api/users', require('./api/user'));
+  app.use('/api/tournaments', require('./api/tournament'));
+  app.use('/api/entries', require('./api/entry'));
 
   app.use('/auth', require('./auth').default);
 

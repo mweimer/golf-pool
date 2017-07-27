@@ -1,22 +1,28 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
- * GET     /api/golfers              ->  index
- * POST    /api/golfers              ->  create
- * GET     /api/golfers/:id          ->  show
- * PUT     /api/golfers/:id          ->  upsert
- * PATCH   /api/golfers/:id          ->  patch
- * DELETE  /api/golfers/:id          ->  destroy
+ * GET     /api/tournaments              ->  index
+ * POST    /api/tournaments              ->  create
+ * GET     /api/tournaments/:id          ->  show
+ * PUT     /api/tournaments/:id          ->  upsert
+ * PATCH   /api/tournaments/:id          ->  patch
+ * DELETE  /api/tournaments/:id          ->  destroy
  */
 
 'use strict';
 
 import jsonpatch from 'fast-json-patch';
-import {Golfer} from '../../sqldb';
+import {Tournament} from '../../sqldb';
 
 function respondWithResult (res, statusCode) {
   statusCode = statusCode || 200;
   return function (entity) {
     if (entity) {
+      if (Array.isArray(entity)) {
+        entity = entity.map(mapTournament);
+      } else {
+        entity = mapTournament(entity);
+      }
+
       return res.status(statusCode).json(entity);
     }
     return null;
@@ -64,16 +70,26 @@ function handleError (res, statusCode) {
   };
 }
 
-// Gets a list of Golfers
+function mapTournament(e) {
+  return {
+    id: e.id,
+    userId: e.userId,
+    golferIds: [[e.golfer1AId, e.golfer1BId, e.golfer1CId, e.golfer1DId], 
+      [e.golfer2AId, e.golfer2BId, e.golfer2CId, e.golfer2DId], 
+      [e.golfer3AId, e.golfer3BId, e.golfer3CId, e.golfer3DId]]
+  };
+}
+
+// Gets a list of Tournaments
 export function index (req, res) {
-  return Golfer.findAll()
+  return Tournament.findAll()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
-// Gets a single Golfer from the DB
+// Gets a single Tournament from the DB
 export function show (req, res) {
-  return Golfer.find({
+  return Tournament.find({
     where: {
       id: req.params.id
     }
@@ -83,20 +99,20 @@ export function show (req, res) {
     .catch(handleError(res));
 }
 
-// Creates a new Golfer in the DB
+// Creates a new Tournament in the DB
 export function create (req, res) {
-  return Golfer.create(req.body)
+  return Tournament.create(req.body)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
 }
 
-// Upserts the given Golfer in the DB at the specified ID
+// Upserts the given Tournament in the DB at the specified ID
 export function upsert (req, res) {
   if (req.body.id) {
     Reflect.deleteProperty(req.body, 'id');
   }
 
-  return Golfer.upsert(req.body, {
+  return Tournament.upsert(req.body, {
     where: {
       id: req.params.id
     }
@@ -105,12 +121,12 @@ export function upsert (req, res) {
     .catch(handleError(res));
 }
 
-// Updates an existing Golfer in the DB
+// Updates an existing Tournament in the DB
 export function patch (req, res) {
   if (req.body.id) {
     Reflect.deleteProperty(req.body, 'id');
   }
-  return Golfer.find({
+  return Tournament.find({
     where: {
       id: req.params.id
     }
@@ -121,9 +137,9 @@ export function patch (req, res) {
     .catch(handleError(res));
 }
 
-// Deletes a Golfer from the DB
+// Deletes a Tournament from the DB
 export function destroy (req, res) {
-  return Golfer.find({
+  return Tournament.find({
     where: {
       id: req.params.id
     }
