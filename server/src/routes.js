@@ -13,6 +13,7 @@ export default function (app) {
   app.use('/api/users', require('./api/user'));
   app.use('/api/tournaments', require('./api/tournament'));
   app.use('/api/entries', require('./api/entry'));
+  app.use('/api/config', require('./api/config'));
 
   app.use('/auth', require('./auth').default);
 
