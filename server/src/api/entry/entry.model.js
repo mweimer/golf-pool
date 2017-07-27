@@ -25,7 +25,7 @@ export default function (sequelize, DataTypes) {
 	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer3C"});
 	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer3D"});
 
-	Entry.belongsTo(sequelize.models.Tournament, {as: "tournament"});
+	sequelize.models.Tournament.hasMany(Entry, {as: "entries", foreignKey: 'tournamentId'});
 
 	return Entry;
 }

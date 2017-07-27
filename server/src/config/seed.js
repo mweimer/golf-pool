@@ -12,6 +12,7 @@ export default function seedDatabaseIfNeeded () {
     let Golfer = sqldb.Golfer;
     let User = sqldb.User;
     let Tournament = sqldb.Tournament;
+    let TournamentGolfer = sqldb.TournamentGolfer;
     let Entry = sqldb.Entry;
 
     Golfer.destroy({ where: {} })
@@ -207,6 +208,13 @@ export default function seedDatabaseIfNeeded () {
       }])
         .then(() => console.log('finished populating tournaments'))
         .catch(err => console.log('error populating tournaments', err)));
+
+    TournamentGolfer.destroy({ where: {} })
+      .then(() => TournamentGolfer.bulkCreate([
+        { tournamentId: 1, golferId: 80, tier: 'A' }
+      ])
+      .then(() => console.log('finished populating tournament golfers'))
+      .catch(err => console.log('error populating tournament golfers', err)));
 
     return Entry.destroy({ where: {} })
       .then(() => Entry.bulkCreate([{

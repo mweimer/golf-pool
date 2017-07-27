@@ -11,6 +11,7 @@
 'use strict';
 
 import jsonpatch from 'fast-json-patch';
+
 import {Tournament} from '../../sqldb';
 
 function respondWithResult (res, statusCode) {
@@ -60,6 +61,7 @@ function handleEntityNotFound (res) {
 function handleError (res, statusCode) {
   statusCode = statusCode || 500;
   return function (err) {
+    console.error(err);
     res.status(statusCode).send(err);
   };
 }
@@ -73,12 +75,14 @@ export function index (req, res) {
 
 // Gets a single Tournament from the DB
 export function show (req, res) {
-  return Tournament.find({
+    return Tournament.find({
     where: {
       id: req.params.id
     }
-  })
+   // include: [{ all: true }]
+    })
     .then(handleEntityNotFound(res))
+   // .then(getGolfers(req.params.id))
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

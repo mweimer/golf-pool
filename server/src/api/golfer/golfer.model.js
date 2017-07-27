@@ -1,7 +1,7 @@
 'use strict';
 
 export default function (sequelize, DataTypes) {
-  return sequelize.define('Golfer', {
+  const Golfer = sequelize.define('Golfer', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -11,4 +11,6 @@ export default function (sequelize, DataTypes) {
     name: DataTypes.STRING,
     espnId: DataTypes.STRING
   });
+
+  return Golfer;
 }
