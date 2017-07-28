@@ -9,6 +9,7 @@ import sqldb from './sqldb';
 import config from './config/environment';
 import http from 'http';
 import seedDatabaseIfNeeded from './config/seed';
+//import './config/test';
 
 // Setup server
 var app = express();

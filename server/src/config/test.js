@@ -1,5 +1,7 @@
+import { concat, uniqWith, uniq, orderBy } from 'lodash';
+
 const golferData1 = [
-    { id: 1, name: 'Dustin Johnson', espnId: '', tier: 'A' },
+    { id: 1, name: 'Dustin Johnson', espnId: '3448', tier: 'A' },
     { id: 2, name: 'Rory McIlroy', espnId: '3470', tier: 'A' },
     { id: 3, name: 'Jordan Spieth', espnId: '5467', tier: 'A' },
     { id: 4, name: 'Hideki Matsuyama', espnId: '5860', tier: 'A' },
@@ -222,3 +224,460 @@ const golferData2 = [
     { id: 118, name: 'Matt Every', espnId: '1411', tier: 'D' },
     { id: 119, name: 'Steven Bowditch', espnId: '1112', tier: 'D' }
 ];
+
+const golferData3 = [
+    { id: 1, name: 'Dustin Johnson', espnId: '3448', tier: 'A' },
+    { id: 2, name: 'Jordan Spieth', espnId: '5467', tier: 'A' },
+    { id: 3, name: 'Rory McIlroy', espnId: '3470', tier: 'A' },
+    { id: 4, name: 'Jason Day', espnId: '1680', tier: 'A' },
+    { id: 5, name: 'Jon Rahm', espnId: '9780', tier: 'A' },
+    { id: 6, name: 'Rickie Fowler', espnId: '3702', tier: 'A' },
+    { id: 7, name: 'Justin Rose', espnId: '569', tier: 'A' },
+    { id: 8, name: 'Sergio Garcia', espnId: '158', tier: 'A' },
+    { id: 9, name: 'Hideki Matsuyama', espnId: '5860', tier: 'A' },
+    { id: 10, name: 'Henrik Stenson', espnId: '576', tier: 'A' },
+
+    { id: 11, name: 'Adam Scott', espnId: '388', tier: 'B' },
+    { id: 12, name: 'Justin Thomas', espnId: '4848', tier: 'B' },
+    { id: 13, name: 'Brooks Koepka', espnId: '6798', tier: 'B' },
+    { id: 14, name: 'Branden Grace', espnId: '4383', tier: 'B' },
+    { id: 15, name: 'Thomas Pieters', espnId: '9031', tier: 'B' },
+    { id: 16, name: 'Paul Casey', espnId: '72', tier: 'B' },
+    { id: 17, name: 'Alex Noren', espnId: '3832', tier: 'B' },
+    { id: 18, name: 'Charl Schwartzel', espnId: '1097', tier: 'B' },
+    { id: 19, name: 'Louis Oosthuizen', espnId: '1293', tier: 'B' },
+    { id: 20, name: 'Jason Dufner', espnId: '110', tier: 'B' },
+    { id: 21, name: 'Matt Kuchar', espnId: '257', tier: 'B' },
+    { id: 22, name: 'Bubba Watson', espnId: '780', tier: 'B' },
+    { id: 23, name: 'Daniel Berger', espnId: '9025', tier: 'B' },
+    { id: 24, name: 'Kevin Chappell', espnId: '3857', tier: 'B' },
+    { id: 25, name: 'Kevin Kisner', espnId: '2552', tier: 'B' },
+    { id: 26, name: 'Martin Kaymer', espnId: '3670', tier: 'B' },
+    { id: 27, name: 'Shane Lowry', espnId: '4587', tier: 'B' },
+    { id: 28, name: 'Patrick Reed', espnId: '5579', tier: 'B' },
+    { id: 29, name: 'Billy Horschel', espnId: '1651', tier: 'B' },
+    { id: 30, name: 'Francesco Molinari', espnId: '1483', tier: 'B' },
+    { id: 31, name: 'Marc Leishman', espnId: '3351', tier: 'B' },
+
+    { id: 32, name: 'Lee Westwood', espnId: '455', tier: 'C' },
+    { id: 33, name: 'Brandt Snedeker', espnId: '1222', tier: 'C' },
+    { id: 34, name: 'Bud Cauley', espnId: '5338', tier: 'C' },
+    { id: 35, name: 'Byeong Hun An', espnId: '5285', tier: 'C' },
+    { id: 36, name: 'Jimmy Walker', espnId: '446', tier: 'C' },
+    { id: 37, name: 'Matthew Fitzpatrick', espnId: '9037', tier: 'C' },
+    { id: 38, name: 'Rafael Cabrera Bello', espnId: '4321', tier: 'C' },
+    { id: 39, name: 'Russell Henley', espnId: '5409', tier: 'C' },
+    { id: 40, name: 'Tyrrell Hatton', espnId: '5553', tier: 'C' },
+    { id: 41, name: 'Adam Hadwin', espnId: '5548', tier: 'C' },
+    { id: 42, name: 'Bernd Wiesberger', espnId: '4317', tier: 'C' },
+    { id: 43, name: 'Brendan Steele', espnId: '3596', tier: 'C' },
+    { id: 44, name: 'Emiliano Grillo', espnId: '5882', tier: 'C' },
+    { id: 45, name: 'Gary Woodland', espnId: '3550', tier: 'C' },
+    { id: 46, name: 'J.B. Holmes', espnId: '1067', tier: 'C' },
+    { id: 47, name: 'Si Woo Kim', espnId: '7081', tier: 'C' },
+    { id: 48, name: 'Steve Stricker', espnId: '412', tier: 'C' },
+    { id: 49, name: 'Tommy Fleetwood', espnId: '5539', tier: 'C' },
+    { id: 50, name: 'Bill Haas', espnId: '774', tier: 'C' },
+    { id: 51, name: 'Brian Harman', espnId: '1225', tier: 'C' },
+    { id: 52, name: 'Charley Hoffman', espnId: '205', tier: 'C' },
+    { id: 53, name: 'Graeme McDowell', espnId: '301', tier: 'C' },
+    { id: 54, name: 'Lucas Glover', espnId: '676', tier: 'C' },
+    { id: 55, name: 'Ross Fisher', espnId: '3462', tier: 'C' },
+    { id: 56, name: 'Russell Knox', espnId: '4483', tier: 'C' },
+    { id: 57, name: 'Stewart Cink', espnId: '78', tier: 'C' },
+    { id: 58, name: 'Webb Simpson', espnId: '1614', tier: 'C' },
+    { id: 59, name: 'Zach Johnson', espnId: '686', tier: 'C' },
+
+    { id: 60, name: 'Pat Perez', espnId: '707', tier: 'D' },
+    { id: 61, name: 'Alexander Levy', espnId: '6041', tier: 'D' },
+    { id: 62, name: 'Daniel Summerhays', espnId: '3452', tier: 'D' },
+    { id: 63, name: 'Danny Willett', espnId: '4304', tier: 'D' },
+    { id: 64, name: 'David Lingmerth', espnId: '5574', tier: 'D' },
+    { id: 65, name: 'Haotong Li', espnId: '5934', tier: 'D' },
+    { id: 66, name: 'Hideto Tanihara', espnId: '1099', tier: 'D' },
+    { id: 67, name: 'Jhonattan Vegas', espnId: '1030', tier: 'D' },
+    { id: 68, name: 'Keegan Bradley', espnId: '4513', tier: 'D' },
+    { id: 69, name: 'Kevin Na', espnId: '318', tier: 'D' },
+    { id: 70, name: 'Martin Laird', espnId: '2571', tier: 'D' },
+    { id: 71, name: 'Peter Uihlein', espnId: '1674', tier: 'D' },
+    { id: 72, name: 'Scott Piercy', espnId: '1037', tier: 'D' },
+    { id: 73, name: 'Sean O\'Hair', espnId: '1359', tier: 'D' },
+    { id: 74, name: 'Wesley Bryan', espnId: '10360', tier: 'D' },
+    { id: 75, name: 'William McGirt', espnId: '3532', tier: 'D' },
+    { id: 76, name: 'Andrew Johnston', espnId: '5838', tier: 'D' },
+    { id: 77, name: 'Jamie Donaldson', espnId: '1451', tier: 'D' },
+    { id: 78, name: 'Bryson DeChambeau', espnId: '10046', tier: 'D' },
+    { id: 79, name: 'C.T. Pan', espnId: '6017', tier: 'D' },
+    { id: 80, name: 'George Coetzee', espnId: '5076', tier: 'D' },
+    { id: 81, name: 'Harris English', espnId: '5408', tier: 'D' },
+    { id: 82, name: 'Jamie Lovemark', espnId: '1676', tier: 'D' },
+    { id: 83, name: 'Jason Kokrak', espnId: '3317', tier: 'D' },
+    { id: 84, name: 'Jeunghun Wang', espnId: '9754', tier: 'D' },
+    { id: 85, name: 'Jim Furyk', espnId: '153', tier: 'D' },
+    { id: 86, name: 'Paul Dunne', espnId: '9589', tier: 'D' },
+    { id: 87, name: 'Bradley Dredge', espnId: '865', tier: 'D' },
+    { id: 88, name: 'Brandon Stone', espnId: '6280', tier: 'D' },
+    { id: 89, name: 'Chan Kim', espnId: '5724', tier: 'D' },
+    { id: 90, name: 'Chez Reavie', espnId: '769', tier: 'D' },
+    { id: 91, name: 'Eddie Pepperell', espnId: '6629', tier: 'D' },
+    { id: 92, name: 'Ernie Els', espnId: '123', tier: 'D' },
+    { id: 93, name: 'JT Poston', espnId: '10505', tier: 'D' },
+    { id: 94, name: 'Joaquin Niemann', espnId: '11099', tier: 'D' },
+    { id: 95, name: 'Jordan Niebrugge', espnId: '9402', tier: 'D' },
+    { id: 96, name: 'Maverick McNealy', espnId: '9530', tier: 'D' },
+    { id: 97, name: 'Richie Ramsay', espnId: '1782', tier: 'D' },
+    { id: 98, name: 'Roberto Castro', espnId: '3740', tier: 'D' },
+    { id: 99, name: 'Ted Potter Jr.', espnId: '2883', tier: 'D' },
+    { id: 100, name: 'Yuta Ikeda', espnId: '4712', tier: 'D' },
+    { id: 101, name: 'Aaron Rai', espnId: '10906', tier: 'D' },
+    { id: 102, name: 'Angel Cabrera', espnId: '65', tier: 'D' },
+    { id: 103, name: 'Jonathan Randolph', espnId: '5578', tier: 'D' },
+    { id: 104, name: 'Whee Kim', espnId: '7082', tier: 'D' },
+    { id: 105, name: 'Kyle Thompson', espnId: '1025', tier: 'D' },
+    { id: 106, name: 'Matt Wallace', espnId: '10548', tier: 'D' },
+    { id: 107, name: 'Satoshi Kodaira', espnId: '9076', tier: 'D' },
+    { id: 108, name: 'Shugo Imahira', espnId: '10630', tier: 'D' },
+    { id: 109, name: 'Thomas Aiken', espnId: '1436', tier: 'D' },
+    { id: 110, name: 'Stephan Jaeger', espnId: '6937', tier: 'D' },
+    { id: 111, name: 'Andres Romero', espnId: '1712', tier: 'D' },
+    { id: 112, name: 'Brad Dalke', espnId: '10488', tier: 'D' },
+    { id: 113, name: 'Brian Stuard', espnId: '3599', tier: 'D' },
+    { id: 114, name: 'Corey Conners', espnId: '9126', tier: 'D' },
+    { id: 115, name: 'Gene Sauers', espnId: '574', tier: 'D' },
+    { id: 116, name: 'Jack Maguire', espnId: '10053', tier: 'D' },
+    { id: 117, name: 'Michael Putnam', espnId: '1423', tier: 'D' },
+    { id: 118, name: 'Oliver Bekker', espnId: '5097', tier: 'D' },
+    { id: 119, name: 'Sam Ryder', espnId: '7001', tier: 'D' },
+    { id: 120, name: 'Scottie Scheffler', espnId: '9478', tier: 'D' },
+    { id: 121, name: 'Talor Gooch', espnId: '9513', tier: 'D' },
+    { id: 122, name: 'Wade Ormsby', espnId: '1489', tier: 'D' },
+    { id: 123, name: 'Xander Schauffele', espnId: '10140', tier: 'D' },
+    { id: 124, name: 'Yusaku Miyazato', espnId: '978', tier: 'D' },
+    { id: 125, name: 'Daniel Chopra', espnId: '1176', tier: 'D' },
+    { id: 126, name: 'Joel Stalter', espnId: '9132', tier: 'D' },
+    { id: 127, name: 'Ben Kohles', espnId: '6922', tier: 'D' },
+    { id: 128, name: 'Brice Garnett', espnId: '2283', tier: 'D' },
+    { id: 129, name: 'Derek Barron', espnId: '10103', tier: 'D' },
+    { id: 130, name: 'John Oda', espnId: '6642', tier: 'D' },
+    { id: 131, name: 'Ryan Brehm', espnId: '1548', tier: 'D' },
+    { id: 132, name: 'Scott Gregory', espnId: '10629', tier: 'D' },
+    { id: 133, name: 'Stewart Hagestad', espnId: '11000', tier: 'D' },
+    { id: 134, name: 'Troy Merritt', espnId: '3970', tier: 'D' },
+    { id: 135, name: 'Andy Pope', espnId: '4827', tier: 'D' },
+    { id: 136, name: 'Trey Mullinax', espnId: '9626', tier: 'D' },
+    { id: 137, name: 'Alex Smalley', espnId: '9484', tier: 'D' },
+    { id: 138, name: 'Christopher Crawford', espnId: '10576', tier: 'D' },
+    { id: 139, name: 'Daniel Miernicki', espnId: '5569', tier: 'D' },
+    { id: 140, name: 'Garrett Osborn', espnId: '3594', tier: 'D' },
+    { id: 141, name: 'Sahith Theegala', espnId: '10980', tier: 'D' },
+    { id: 142, name: 'Scott Harvey', espnId: '9942', tier: 'D' },
+    { id: 143, name: 'Matt Campbell', espnId: '11097', tier: 'D' },
+    { id: 144, name: 'Tyson Alexander', espnId: '4633', tier: 'D' },
+    { id: 145, name: 'Walker Lee', espnId: '11102', tier: 'D' },
+    { id: 146, name: 'Cameron Champ', espnId: '11098', tier: 'D' },
+    { id: 147, name: 'Kevin Dougherty', espnId: '10929', tier: 'D' },
+    { id: 148, name: 'Mason Andersen', espnId: '11096', tier: 'D' },
+    { id: 149, name: 'Max Greyserman', espnId: '11101', tier: 'D' },
+    { id: 150, name: 'Nick Flanagan', espnId: '1216', tier: 'D' },
+    { id: 151, name: 'Roman Robledo', espnId: '11100', tier: 'D' }
+];
+
+const golferData4 = [
+    { id: 1, name: 'Dustin Johnson', espnId: '3448', tier: 'A' },
+    { id: 2, name: 'Jordan Spieth', espnId: '5467', tier: 'A' },
+    { id: 3, name: 'Rickie Fowler', espnId: '3702', tier: 'A' },
+    { id: 4, name: 'Jon Rahm', espnId: '9780', tier: 'A' },
+    { id: 5, name: 'Sergio Garcia', espnId: '158', tier: 'A' },
+    { id: 6, name: 'Justin Rose', espnId: '569', tier: 'A' },
+    { id: 7, name: 'Rory McIlroy', espnId: '3470', tier: 'A' },
+    { id: 8, name: 'Hideki Matsuyama', espnId: '5860', tier: 'A' },
+    { id: 9, name: 'Tommy Fleetwood', espnId: '5539', tier: 'A' },
+    { id: 10, name: 'Henrik Stenson', espnId: '576', tier: 'A' },
+    { id: 11, name: 'Adam Scott', espnId: '388', tier: 'A' },
+
+    { id: 12, name: 'Brooks Koepka', espnId: '6798', tier: 'B' },
+    { id: 13, name: 'Jason Day', espnId: '1680', tier: 'B' },
+    { id: 14, name: 'Paul Casey', espnId: '72', tier: 'B' },
+    { id: 15, name: 'Alex Noren', espnId: '3832', tier: 'B' },
+    { id: 16, name: 'Phil Mickelson', espnId: '308', tier: 'B' },
+    { id: 17, name: 'Louis Oosthuizen', espnId: '1293', tier: 'B' },
+    { id: 18, name: 'Branden Grace', espnId: '4383', tier: 'B' },
+    { id: 19, name: 'Marc Leishman', espnId: '3351', tier: 'B' },
+    { id: 20, name: 'Justin Thomas', espnId: '4848', tier: 'B' },
+    { id: 21, name: 'Matt Kuchar', espnId: '257', tier: 'B' },
+    { id: 22, name: 'Thomas Pieters', espnId: '9031', tier: 'B' },
+    { id: 23, name: 'Padraig Harrington', espnId: '186', tier: 'B' },
+    { id: 24, name: 'Rafael Cabrera Bello', espnId: '4321', tier: 'B' },
+    { id: 25, name: 'Patrick Reed', espnId: '5579', tier: 'B' },
+    { id: 26, name: 'Shane Lowry', espnId: '4587', tier: 'B' },
+    { id: 27, name: 'Charl Schwartzel', espnId: '1097', tier: 'B' },
+    { id: 28, name: 'Brandt Snedeker', espnId: '1222', tier: 'B' },
+    { id: 29, name: 'Ian Poulter', espnId: '619', tier: 'B' },
+    { id: 30, name: 'Lee Westwood', espnId: '455', tier: 'B' },
+    { id: 31, name: 'Daniel Berger', espnId: '9025', tier: 'B' },
+    { id: 32, name: 'Matthew Fitzpatrick', espnId: '9037', tier: 'B' },
+
+    { id: 33, name: 'Andy Sullivan', espnId: '5956', tier: 'C' },
+    { id: 34, name: 'Ross Fisher', espnId: '3462', tier: 'C' },
+    { id: 35, name: 'Zach Johnson', espnId: '686', tier: 'C' },
+    { id: 36, name: 'Martin Kaymer', espnId: '3670', tier: 'C' },
+    { id: 37, name: 'Francesco Molinari', espnId: '1483', tier: 'C' },
+    { id: 38, name: 'Tyrrell Hatton', espnId: '5553', tier: 'C' },
+    { id: 39, name: 'Bernd Wiesberger', espnId: '4317', tier: 'C' },
+    { id: 40, name: 'Chris Wood', espnId: '3839', tier: 'C' },
+    { id: 41, name: 'Steve Stricker', espnId: '412', tier: 'C' },
+    { id: 42, name: 'Kevin Kisner', espnId: '2552', tier: 'C' },
+    { id: 43, name: 'Bill Haas', espnId: '774', tier: 'C' },
+    { id: 44, name: 'Brian Harman', espnId: '1225', tier: 'C' },
+    { id: 45, name: 'J.B. Holmes', espnId: '1067', tier: 'C' },
+    { id: 46, name: 'Jason Dufner', espnId: '110', tier: 'C' },
+    { id: 47, name: 'Soren Kjeldsen', espnId: '547', tier: 'C' },
+    { id: 48, name: 'Bryson DeChambeau', espnId: '10046', tier: 'C' },
+    { id: 49, name: 'Byeong Hun An', espnId: '5285', tier: 'C' },
+    { id: 50, name: 'Charley Hoffman', espnId: '205', tier: 'C' },
+    { id: 51, name: 'Peter Uihlein', espnId: '1674', tier: 'C' },
+    { id: 52, name: 'Russell Henley', espnId: '5409', tier: 'C' },
+    { id: 53, name: 'Thorbjorn Olesen', espnId: '5140', tier: 'C' },
+    { id: 54, name: 'Tony Finau', espnId: '2230', tier: 'C' },
+    { id: 55, name: 'Andrew Johnston', espnId: '5838', tier: 'C' },
+    { id: 56, name: 'Bubba Watson', espnId: '780', tier: 'C' },
+    { id: 57, name: 'Ryan Fox', espnId: '4251', tier: 'C' },
+    { id: 58, name: 'Brendan Steele', espnId: '3596', tier: 'C' },
+    { id: 59, name: 'Emiliano Grillo', espnId: '5882', tier: 'C' },
+    { id: 60, name: 'Hideto Tanihara', espnId: '1099', tier: 'C' },
+    { id: 61, name: 'Jimmy Walker', espnId: '446', tier: 'C' },
+    { id: 62, name: 'Kevin Chappell', espnId: '3857', tier: 'C' },
+    { id: 63, name: 'Kyle Stanley', espnId: '1778', tier: 'C' },
+    { id: 64, name: 'Si Woo Kim', espnId: '7081', tier: 'C' },
+    { id: 65, name: 'Charles Howell III', espnId: '208', tier: 'C' },
+    { id: 66, name: 'Martin Laird', espnId: '2571', tier: 'C' },
+    { id: 67, name: 'Webb Simpson', espnId: '1614', tier: 'C' },
+    { id: 68, name: 'Billy Horschel', espnId: '1651', tier: 'C' },
+    { id: 69, name: 'Xander Schauffele', espnId: '10140', tier: 'C' },
+    { id: 70, name: 'Adam Hadwin', espnId: '5548', tier: 'C' },
+    { id: 71, name: 'Richie Ramsay', espnId: '1782', tier: 'C' },
+    { id: 72, name: 'Russell Knox', espnId: '4483', tier: 'C' },
+    { id: 73, name: 'Joost Luiten', espnId: '4831', tier: 'C' },
+
+    { id: 74, name: 'Anirban Lahiri', espnId: '4989', tier: 'D' },
+    { id: 75, name: 'Gary Woodland', espnId: '3550', tier: 'D' },
+    { id: 76, name: 'Alexander Levy', espnId: '6041', tier: 'D' },
+    { id: 77, name: 'Callum Shinkwin', espnId: '9258', tier: 'D' },
+    { id: 78, name: 'Cameron Smith', espnId: '9131', tier: 'D' },
+    { id: 79, name: 'Jamie Lovemark', espnId: '1676', tier: 'D' },
+    { id: 80, name: 'Matthew Southgate', espnId: '5852', tier: 'D' },
+    { id: 81, name: 'Pat Perez', espnId: '707', tier: 'D' },
+    { id: 82, name: 'Ryan Moore', espnId: '809', tier: 'D' },
+    { id: 83, name: 'Stewart Cink', espnId: '78', tier: 'D' },
+    { id: 84, name: 'Wesley Bryan', espnId: '10360', tier: 'D' },
+    { id: 85, name: 'Pablo Larrazabal', espnId: '3829', tier: 'D' },
+    { id: 86, name: 'Robert Streb', espnId: '5619', tier: 'D' },
+    { id: 87, name: 'Sean O\'Hair', espnId: '1359', tier: 'D' },
+    { id: 88, name: 'Danny Willett', espnId: '4304', tier: 'D' },
+    { id: 89, name: 'Haotong Li', espnId: '5934', tier: 'D' },
+    { id: 90, name: 'William McGirt', espnId: '3532', tier: 'D' },
+    { id: 91, name: 'Dylan Frittelli', espnId: '5167', tier: 'D' },
+    { id: 92, name: 'Ernie Els', espnId: '123', tier: 'D' },
+    { id: 93, name: 'Fabrizio Zanotti', espnId: '1770', tier: 'D' },
+    { id: 94, name: 'Kevin Na', espnId: '318', tier: 'D' },
+    { id: 95, name: 'Brandon Stone', espnId: '6280', tier: 'D' },
+    { id: 96, name: 'Alexander Bjork', espnId: '9469', tier: 'D' },
+    { id: 97, name: 'Andrew Dodt', espnId: '3639', tier: 'D' },
+    { id: 98, name: 'David Horsey', espnId: '3825', tier: 'D' },
+    { id: 99, name: 'Sung-hoon Kang', espnId: '4449', tier: 'D' },
+    { id: 100, name: 'Thongchai Jaidee', espnId: '222', tier: 'D' },
+    { id: 101, name: 'Paul Waring', espnId: '3474', tier: 'D' },
+    { id: 102, name: 'Julian Suri', espnId: '10195', tier: 'D' },
+    { id: 103, name: 'David Drysdale', espnId: '1453', tier: 'D' },
+    { id: 104, name: 'David Lipsky', espnId: '6701', tier: 'D' },
+    { id: 105, name: 'Matthieu Pavon', espnId: '10596', tier: 'D' },
+    { id: 106, name: 'Richard Bland', espnId: '1441', tier: 'D' },
+    { id: 107, name: 'Scott Hend', espnId: '1178', tier: 'D' },
+    { id: 108, name: 'Jeunghun Wang', espnId: '9754', tier: 'D' },
+    { id: 109, name: 'Jhonattan Vegas', espnId: '1030', tier: 'D' },
+    { id: 110, name: 'Michael Lorenzo-Vera', espnId: '4272', tier: 'D' },
+    { id: 111, name: 'Roberto Castro', espnId: '3740', tier: 'D' },
+    { id: 112, name: 'Aaron Baddeley', espnId: '16', tier: 'D' },
+    { id: 113, name: 'Kyung-tae Kim', espnId: '8858', tier: 'D' },
+    { id: 114, name: 'Maverick McNealy', espnId: '9530', tier: 'D' },
+    { id: 115, name: 'Yusaku Miyazato', espnId: '978', tier: 'D' },
+    { id: 116, name: 'Paul Lawrie', espnId: '265', tier: 'D' },
+    { id: 117, name: 'Sebastian Munoz', espnId: '10404', tier: 'D' },
+    { id: 118, name: 'Shiv Kapur', espnId: '1583', tier: 'D' },
+    { id: 119, name: 'Austin Connelly', espnId: '10017', tier: 'D' },
+    { id: 120, name: 'Jbe\' Kruger', espnId: '4993', tier: 'D' },
+    { id: 121, name: 'Phachara Khongwatmai', espnId: '9852', tier: 'D' },
+    { id: 122, name: 'Prayad Marksaeng', espnId: '3687', tier: 'D' },
+    { id: 123, name: 'Young-han Song', espnId: '10422', tier: 'D' },
+    { id: 124, name: 'Yuta Ikeda', espnId: '4712', tier: 'D' },
+    { id: 125, name: 'Darren Fichardt', espnId: '868', tier: 'D' },
+    { id: 126, name: 'Mark Foster', espnId: '1087', tier: 'D' },
+    { id: 127, name: 'Mike Hendry', espnId: '4252', tier: 'D' },
+    { id: 128, name: 'Yi Keun Chang', espnId: '11175', tier: 'D' },
+    { id: 129, name: 'Tom Lehman', espnId: '268', tier: 'D' },
+    { id: 130, name: 'Adam Bland', espnId: '1688', tier: 'D' },
+    { id: 131, name: 'Alfie Plant', espnId: '11177', tier: 'D' },
+    { id: 132, name: 'Ashley Hall', espnId: '11176', tier: 'D' },
+    { id: 133, name: 'Chan Kim', espnId: '5724', tier: 'D' },
+    { id: 134, name: 'Connor Syme', espnId: '10983', tier: 'D' },
+    { id: 135, name: 'Gi-Whan Kim', espnId: '6706', tier: 'D' },
+    { id: 136, name: 'Harry Ellis', espnId: '11174', tier: 'D' },
+    { id: 137, name: 'Haydn McCullen', espnId: '11148', tier: 'D' },
+    { id: 138, name: 'John Daly', espnId: '97', tier: 'D' },
+    { id: 139, name: 'Kent Bulle', espnId: '6180', tier: 'D' },
+    { id: 140, name: 'Luca Cianchetti', espnId: '10227', tier: 'D' },
+    { id: 141, name: 'Matthew Griffin', espnId: '4219', tier: 'D' },
+    { id: 142, name: 'Paul Broadhurst', espnId: '1280', tier: 'D' },
+    { id: 143, name: 'Robert Dinwiddie', espnId: '1797', tier: 'D' },
+    { id: 144, name: 'Shaun Norris', espnId: '5057', tier: 'D' },
+    { id: 145, name: 'Toby Tree', espnId: '9821', tier: 'D' },
+    { id: 146, name: 'Darren Clarke', espnId: '82', tier: 'D' },
+    { id: 147, name: 'Joseph Dean', espnId: '6970', tier: 'D' },
+    { id: 148, name: 'Laurie Canter', espnId: '5550', tier: 'D' },
+    { id: 149, name: 'David Duval', espnId: '115', tier: 'D' },
+    { id: 150, name: 'Adam Hodkinson', espnId: '11147', tier: 'D' },
+    { id: 151, name: 'Mark O\'Meara', espnId: '325', tier: 'D' },
+    { id: 152, name: 'Ryan McCarthy', espnId: '7026', tier: 'D' },
+    { id: 153, name: 'Nick McCarthy', espnId: '5827', tier: 'D' },
+    { id: 154, name: 'Sandy Lyle', espnId: '281', tier: 'D' },
+    { id: 155, name: 'Todd Hamilton', espnId: '1090', tier: 'D' }
+];
+
+const contestantData1 = [
+    { id: 1, name: 'Alex Duff', entries: [[2, 11, 37, 62], [5, 19, 47, 65], [7, 27, 39, 63]] },
+    { id: 2, name: 'Alex Prevo', entries: [[1, 15, 34, 68], [3, 12, 53, 65], [5, 29, 54, 66]] },
+    { id: 3, name: 'Bob Kelly', entries: [[3, 16, 39, 62], [5, 12, 33, 67], [6, 14, 53, 65]] },
+    { id: 4, name: 'Cameron Weimer', entries: [[7, 13, 34, 66], [3, 24, 40, 66], [2, 11, 41, 64]] },
+    { id: 5, name: 'Drew Serruto', entries: [[4, 15, 33, 62], [6, 11, 39, 65], [5, 28, 45, 68]] },
+    { id: 6, name: 'Ian Horwich', entries: [[6, 15, 53, 76], [4, 12, 33, 83], [5, 29, 39, 62]] },
+    { id: 7, name: 'Joey Graham', entries: [[2, 16, 47, 76], [3, 11, 35, 67], [6, 15, 58, 68]] },
+    { id: 8, name: 'Kevin Donoher', entries: [[7, 14, 43, 67], [2, 23, 41, 66], [3, 22, 34, 62]] },
+    { id: 9, name: 'Kevin O\'Brien', entries: [[4, 16, 36, 65], [6, 12, 32, 61], [2, 14, 34, 68]] },
+    { id: 10, name: 'Matt Dorow', entries: [[9, 28, 41, 67], [5, 14, 39, 67], [3, 15, 43, 61]] },
+    { id: 11, name: 'Matt Kilianski', entries: [[3, 12, 35, 67], [3, 28, 41, 68], [2, 11, 33, 67]] },
+    { id: 12, name: 'Matt Walker', entries: [[2, 15, 38, 64], [3, 14, 32, 64], [6, 11, 32, 64]] },
+    { id: 13, name: 'Matt Weimer', entries: [[3, 28, 49, 69], [2, 17, 45, 62], [6, 15, 41, 63]] },
+    { id: 14, name: 'Nick Royer', entries: [[3, 12, 33, 67], [3, 13, 37, 67], [2, 12, 33, 67]] },
+    { id: 15, name: 'Rob Stoecklein', entries: [[6, 12, 42, 63], [3, 16, 33, 76], [8, 17, 39, 62]] },
+    { id: 16, name: 'Ryan Boudouris', entries: [[2, 11, 37, 62], [5, 14, 35, 64], [4, 15, 39, 65]] },
+    { id: 17, name: 'Ryan Buckle', entries: [[3, 11, 33, 70], [6, 12, 36, 65], [2, 17, 54, 64]] },
+    { id: 18, name: 'Tony Drake', entries: [[9, 19, 53, 70], [3, 16, 34, 62], [3, 26, 47, 67]] }
+];
+
+
+const contestantData2 = [
+    { id: 1, name: 'Kevin O\'Brien', entries: [[1, 18, 36, 77], [4, 27, 44, 89], [3, 19, 53, 105]] },
+    { id: 2, name: 'Matt Kilianski', entries: [[1, 18, 44, 71], [1, 26, 53, 73], [4, 15, 36, 77]] },
+    { id: 3, name: 'Matt Weimer', entries: [[8, 32, 51, 81], [4, 32, 63, 66], [7, 11, 33, 67]] },
+    { id: 4, name: 'Nate Heckmann', entries: [[1, 12, 35, 77], [2, 16, 33, 80], [8, 12, 33, 67]] },
+    { id: 5, name: 'Ryan Boudouris', entries: [[8, 13, 35, 67], [1, 12, 39, 87], [4, 12, 37, 107]] }
+];
+
+const contestantData3 = [
+    { id: 1, name: 'Adam Weiss', entries: [[1, 11, 39, 95], [2, 15, 43, 95], [6, 13, 34, 73]] },
+    { id: 2, name: 'Cameron Weimer', entries: [[2, 20, 35, 82], [1, 15, 34, 95], [6, 12, 33, 75]] },
+    { id: 3, name: 'Drew Serruto', entries: [[1, 12, 46, 68], [6, 11, 32, 62], [3, 20, 50, 69]] },
+    { id: 4, name: 'Jon Frantz', entries: [[2, 21, 33, 63], [6, 20, 32, 68], [1, 31, 47, 69]] },
+    { id: 5, name: 'Kevin Donoher', entries: [[1, 11, 36, 60], [5, 16, 43, 61], [6, 19, 50, 71]] },
+    { id: 6, name: 'Kyle Bivenour', entries: [[2, 20, 32, 68], [1, 20, 58, 68], [6, 11, 33, 69]] },
+    { id: 7, name: 'Matt Kilianski', entries: [[3, 12, 40, 64], [1, 27, 33, 68], [6, 27, 48, 62]] },
+    { id: 8, name: 'Matt Weimer', entries: [[2, 12, 32, 95], [6, 13, 40, 62], [1, 20, 33, 75]] },
+    { id: 9, name: 'Nate Heckmann', entries: [[4, 27, 50, 75], [6, 12, 47, 69], [2, 14, 33, 69]] },
+    { id: 10, name: 'Neil Thompson', entries: [[1, 13, 46, 71], [2, 12, 34, 71], [3, 17, 34, 71]] },
+    { id: 11, name: 'Ryan Boudouris', entries: [[4, 11, 48, 60], [3, 13, 38, 85], [1, 15, 32, 62]] },
+    { id: 12, name: 'Nick Royer', entries: [[1, 11, 37, 62], [1, 15, 43, 74], [7, 15, 33, 62]] },
+    { id: 13, name: 'Ryan Romes', entries: [[4, 25, 39, 62], [6, 15, 41, 60], [7, 18, 33, 75]] },
+    { id: 14, name: 'Sean Buckle', entries: [[1, 12, 33, 67], [3, 11, 36, 68], [6, 12, 45, 75]] },
+    { id: 15, name: 'Ian Horwich', entries: [[1, 17, 32, 71], [6, 25, 40, 61], [4, 16, 42, 94]] },
+    { id: 16, name: 'David Prevo', entries: [[2, 20, 36, 77], [4, 22, 39, 68], [3, 13, 34, 69]] }
+];
+
+const contestantData4 = [
+    { id: 1, name: 'Kevin Donoher', entries: [[2, 13, 41, 86], [4, 16, 37, 74], [6, 30, 33, 88]] },
+    { id: 2, name: 'Kyle Bivenour', entries: [[3, 13, 43, 90], [2, 12, 35, 94], [10, 28, 46, 88]] },
+    { id: 3, name: 'Matt Kilianski', entries: [[3, 16, 36, 80], [7, 13, 50, 75], [8, 16, 35, 86]] },
+    { id: 4, name: 'Matt Weimer', entries: [[3, 21, 50, 75], [3, 20, 46, 79], [6, 23, 38, 90]] },
+    { id: 5, name: 'Nate Heckmann', entries: [[3, 30, 51, 90], [9, 26, 43, 94], [6, 25, 38, 79]] },
+    { id: 6, name: 'Ryan Boudouris', entries: [[5, 16, 35, 75], [11, 12, 37, 75], [7, 13, 36, 78]] },
+    { id: 7, name: 'Cameron Weimer', entries: [[2, 12, 37, 79], [5, 14, 45, 90], [6, 17, 50, 94]] },
+    { id: 8, name: 'Sean Buckle', entries: [[3, 14, 36, 79], [2, 12, 39, 84], [1, 20, 50, 94]] },
+    { id: 9, name: 'Ryan Romes', entries: [[2, 14, 37, 81], [3, 19, 35, 82], [4, 20, 42, 84]] }
+];
+
+golferData1.forEach(g => g.tournamentId = 1);
+golferData2.forEach(g => g.tournamentId = 2);
+golferData3.forEach(g => g.tournamentId = 3);
+golferData4.forEach(g => g.tournamentId = 4);
+const allGolfers = concat(golferData1, golferData2, golferData3, golferData4).map(g => ({ 
+    name: g.name, 
+    espnId: g.espnId, 
+    sortId: parseInt(g.espnId), 
+    tournamentId: g.tournamentId,
+    tier: g.tier,
+    oldId: g.id 
+}));
+const uniqueGolfers = uniqWith(allGolfers, (a, b) => a.espnId === b.espnId).map(g => ({
+    name: g.name, 
+    espnId: g.espnId, 
+    sortId: g.sortId
+}));
+const orderedGolfers = orderBy(uniqueGolfers, ['sortId'], ['asc'])
+orderedGolfers.forEach((u, i) => u.id = i + 1);
+
+
+
+contestantData1.forEach(g => g.tournamentId = 1);
+contestantData2.forEach(g => g.tournamentId = 2);
+contestantData3.forEach(g => g.tournamentId = 3);
+contestantData4.forEach(g => g.tournamentId = 4);
+const allContestants = concat(contestantData1, contestantData2, contestantData3, contestantData4);
+const uniqueContestants = uniqWith(allContestants, (a, b) => a.name === b.name).map(c => ({name: c.name}));
+const orderedContestants = orderBy(uniqueContestants, ['name'], ['asc'])
+orderedContestants.forEach((u, i) => u.id = i + 1);
+
+
+
+const tournamentGolfers = allGolfers.map((g, i) => {
+    const newGolfer = uniqueGolfers.find(u => u.espnId === g.espnId);
+    return { tournamentId: g.tournamentId, golferId: newGolfer.id, tier: g.tier };
+});
+
+tournamentGolfers.forEach(g => {
+    console.log(`{ tournamentId: ${g.tournamentId}, golferId: ${g.golferId}, tier: '${g.tier}' },`);
+})
+
+const entries = allContestants.forEach((c,i) => {
+    const oldGolfer1 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[0][0]);
+    const oldGolfer2 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[0][1]);
+    const oldGolfer3 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[0][2]);
+    const oldGolfer4 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[0][3]);
+    const oldGolfer5 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[1][0]);
+    const oldGolfer6 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[1][1]);
+    const oldGolfer7 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[1][2]);
+    const oldGolfer8 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[1][3]);
+    const oldGolfer9 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[2][0]);
+    const oldGolfer10 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[2][1]);
+    const oldGolfer11 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[2][2]);
+    const oldGolfer12 = allGolfers.find(g => g.tournamentId === c.tournamentId && g.oldId == c.entries[2][3]);
+
+    const g1A = orderedGolfers.find(o => o.espnId == oldGolfer1.espnId);
+    const g1B = orderedGolfers.find(o => o.espnId == oldGolfer2.espnId);
+    const g1C = orderedGolfers.find(o => o.espnId == oldGolfer3.espnId);
+    const g1D = orderedGolfers.find(o => o.espnId == oldGolfer4.espnId);
+    const g2A = orderedGolfers.find(o => o.espnId == oldGolfer5.espnId);
+    const g2B = orderedGolfers.find(o => o.espnId == oldGolfer6.espnId);
+    const g2C = orderedGolfers.find(o => o.espnId == oldGolfer7.espnId);
+    const g2D = orderedGolfers.find(o => o.espnId == oldGolfer8.espnId);
+    const g3A = orderedGolfers.find(o => o.espnId == oldGolfer9.espnId);
+    const g3B = orderedGolfers.find(o => o.espnId == oldGolfer10.espnId);
+    const g3C = orderedGolfers.find(o => o.espnId == oldGolfer11.espnId);
+    const g3D = orderedGolfers.find(o => o.espnId == oldGolfer12.espnId);
+
+    const user = orderedContestants.find(o => o.name === c.name);
+    return { id: i+1, userId: user.id, tournamentId: c.tournamentId, g1AId: g1A.id, g1BId: g1B.id, g1CId: g1C.id, g1DId: g1D.id, g2AId: g2A.id, g2BId: g2B.id, g2CId: g2C.id, g2DId: g2D.id, g3AId: g3A.id, g3BId: g3B.id, g3CId: g3C.id, g3DId: g3D.id };
+})
+
+
+
+
+

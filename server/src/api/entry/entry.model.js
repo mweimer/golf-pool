@@ -12,18 +12,18 @@ export default function (sequelize, DataTypes) {
 
 	Entry.belongsTo(sequelize.models.User, {as: "user"});
 
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer1A"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer1B"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer1C"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer1D"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer2A"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer2B"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer2C"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer2D"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer3A"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer3B"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer3C"});
-	Entry.belongsTo(sequelize.models.Golfer, {as: "golfer3D"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g1A"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g1B"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g1C"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g1D"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g2A"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g2B"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g2C"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g2D"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g3A"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g3B"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g3C"});
+	Entry.belongsTo(sequelize.models.Golfer, {as: "g3D"});
 
 	sequelize.models.Tournament.hasMany(Entry, {as: "entries", foreignKey: 'tournamentId'});
 

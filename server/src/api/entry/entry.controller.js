@@ -76,9 +76,7 @@ export function mapEntry(e) {
     id: e.id,
     userId: e.userId,
     tournamentId: e.tournamentId,
-    golferIds: [[e.golfer1AId, e.golfer1BId, e.golfer1CId, e.golfer1DId], 
-      [e.golfer2AId, e.golfer2BId, e.golfer2CId, e.golfer2DId], 
-      [e.golfer3AId, e.golfer3BId, e.golfer3CId, e.golfer3DId]]
+    golferIds: [[e.g1AId, e.g1BId, e.g1CId, e.g1DId], [e.g2AId, e.g2BId, e.g2CId, e.g2DId], [e.g3AId, e.g3BId, e.g3CId, e.g3DId]]
   };
 }
 
