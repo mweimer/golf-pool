@@ -15,10 +15,10 @@ import entrySeed from './entry';
 
 export default function seedDatabaseIfNeeded () {
     if (config.seedDB) {
-        userSeed();
-        golferSeed();
-        tournamentSeed();
-        tournamentGolferSeed();
-        entrySeed();
+        return userSeed()
+            .then(() => golferSeed())
+            .then(() => tournamentSeed())
+            .then(() => tournamentGolferSeed())
+            .then(() => entrySeed());
     }
 }

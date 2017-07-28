@@ -71,7 +71,7 @@ function handleError (res, statusCode) {
   };
 }
 
-export function mapEntry(e) {
+function mapEntry(e) {
   return {
     id: e.id,
     userId: e.userId,

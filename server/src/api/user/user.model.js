@@ -1,221 +1,165 @@
 'use strict';
 
 import crypto from 'crypto';
-var authTypes = ['github', 'twitter', 'facebook', 'google'];
-
-var validatePresenceOf = function (value) {
-  return value && value.length;
-};
 
 export default function (sequelize, DataTypes) {
-  var User = sequelize.define('User', {
+    var User = sequelize.define('User', {
 
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    name: DataTypes.STRING,
-    email: {
-      type: DataTypes.STRING,
-      unique: {
-        msg: 'The specified email address is already in use.'
-      },
-      validate: {
-        isEmail: true
-      }
-    },
-    role: {
-      type: DataTypes.STRING,
-      defaultValue: 'user'
-    },
-    password: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true
-      }
-    },
-    provider: DataTypes.STRING,
-    salt: DataTypes.STRING,
-    facebook: DataTypes.JSON,
-    twitter: DataTypes.JSON,
-    google: DataTypes.JSON,
-    github: DataTypes.JSON
-
-  }, {
-
-    /**
-     * Virtual Getters
-     */
-    getterMethods: {
-      // Public profile information
-      profile () {
-        return {
-          name: this.name,
-          role: this.role
-        };
-      },
-
-      // Non-sensitive info we'll be putting in the token
-      token () {
-        return {
-          id: this.id,
-          role: this.role
-        };
-      }
-    },
-
-    /**
-     * Pre-save hooks
-     */
-    hooks: {
-      beforeBulkCreate (users, fields) {
-        var totalUpdated = 0;
-        users.forEach(user => {
-          user.updatePassword(err => {
-            if (err) {
-              throw new Error(err)
+        id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        name: DataTypes.STRING,
+        email: {
+            type: DataTypes.STRING,
+            unique: {
+                msg: 'The specified email address is already in use.'
+            },
+            validate: {
+                isEmail: true
             }
-            totalUpdated += 1;
-          });
+        },
+        role: {
+            type: DataTypes.STRING,
+            defaultValue: 'user'
+        },
+        password: {
+            type: DataTypes.STRING,
+            validate: {
+              notEmpty: true
+            }
+        },
+        provider: DataTypes.STRING,
+        salt: DataTypes.STRING
+    }, {
+
+        /**
+         * Virtual Getters
+         */
+        getterMethods: {
+            // Public profile information
+            profile () {
+                return {
+                    name: this.name,
+                    ole: this.role
+                };
+            },
+
+          // Non-sensitive info we'll be putting in the token
+            token () {
+                return {
+                    id: this.id,
+                    role: this.role
+                };
+            }
+        },
+
+        /**
+        * Pre-save hooks
+        */
+        hooks: {
+            beforeBulkCreate (users, fields) {
+                return new Promise((resolve, reject) => {
+                    const numUsers = users.length;
+                    users.forEach((user, index) =>  {
+                        if (index === numUsers - 1) {
+                            user.hashPassword().then(() => resolve());
+                        } else {
+                            user.hashPassword();
+                        }
+                    });
+                });
+            },
+            beforeCreate (user, fields) {
+                return user.hashPassword();
+            },
+            beforeUpdate (user, fields) {
+                if (user.changed('password')) {
+                    return user.hashPassword();
+                }
+            }
+        }
+    });
+
+    /**
+    * Authenticate - check if the passwords are the same
+    *
+    * @param {String} password
+    * @return {Boolean}
+    * @api public
+    */
+    User.prototype.authenticate = function(password) {
+        return new Promise((resolve, reject) => {
+            generateHash(password, this.salt).then(hash =>{
+                resolve(hash === this.password);
+            }).catch(err => reject(err));
         });
-      },
-      beforeCreate (user, fields) {
-        user.updatePassword(() => {});
-      },
-      beforeUpdate (user, fields) {
-        if (user.changed('password')) {
-          return user.updatePassword(() => {});
-        }
-      }
-    }
-  });
-
-  /**
-   * Make salt
-   *
-   * @param {Number} [byteSize] - Optional salt byte size, default to 16
-   * @param {Function} callback
-   * @return {String}
-   * @api public
-  */
-  User.prototype.makeSalt = function(...args) {
-    let byteSize;
-    let callback;
-    let defaultByteSize = 16;
-
-    if (typeof arguments[0] === 'function') {
-      callback = arguments[0];
-      byteSize = defaultByteSize;
-    } else if (typeof arguments[1] === 'function') {
-      callback = arguments[1];
-    } else {
-      throw new Error('Missing Callback');
     }
 
-    if (!byteSize) {
-      byteSize = defaultByteSize;
+
+    /**
+    * Update password field
+    *
+    * @return {String}
+    * @api public
+    */
+    User.prototype.hashPassword = function() {
+        return new Promise((resolve, reject) => {
+            makeSalt().then(salt => {
+                this.salt = salt;
+                generateHash(this.password, salt).then(hashedPassword => {
+                    this.password = hashedPassword;
+                    resolve();
+                })
+                .catch(err => reject(err));
+            })
+            .catch(err => reject(err));
+        });
     }
 
-    return crypto.randomBytes(byteSize, function (err, salt) {
-      if (err) {
-        callback(err);
-      }
-      return callback(null, salt.toString('base64'));
-    });
-  }
-
-  /**
-  * Authenticate - check if the passwords are the same
-  *
-  * @param {String} password
-  * @param {Function} callback
-  * @return {Boolean}
-  * @api public
-  */
-  User.prototype.authenticate = function(password, callback) {
-    if (!callback) {
-      return this.password === this.encryptPassword(password);
+    /**
+    * Make salt
+    *
+    * @param {Number} [byteSize] - Optional salt byte size, default to 16
+    * @return {String}
+    * @api public
+    */
+    function makeSalt(byteSize = 16) {
+        return new Promise((resolve, reject) => {
+            crypto.randomBytes(byteSize, (err, salt) => {
+                if (err) {
+                    reject(err);
+                }
+                return resolve(salt.toString('base64'));
+            });
+        });
     }
 
-    var _this = this;
-    this.encryptPassword(password, function (err, pwdGen) {
-      if (err) {
-        callback(err);
-      }
+    /**
+    * Generate hash
+    *
+    * @param {String} password
+    * @return {String}
+    * @api public
+    */
+    function generateHash(password, salt) {
+        return new Promise((resolve, reject) => {
+            const defaultIterations = 10000;
+            const defaultKeyLength = 64;
+            const saltBase64 = Buffer.from(salt, 'base64');
+            const digest = 'sha512';
 
-      if (_this.password === pwdGen) {
-        callback(null, true);
-      } else {
-        callback(null, false);
-      }
-    });
-  }
+            crypto.pbkdf2(password, saltBase64, defaultIterations, defaultKeyLength, digest, (err, key) => {
+                if (err) {
+                    reject(err);
+                }
 
-  /**
-   * Encrypt password
-   *
-   * @param {String} password
-   * @param {Function} callback
-   * @return {String}
-   * @api public
-   */
-  User.prototype.encryptPassword = function(password, callback) {
-    if (!password || !this.salt) {
-      return callback ? callback(null) : null;
+                resolve(key.toString('base64'))
+            });
+        });
     }
 
-    var defaultIterations = 10000;
-    var defaultKeyLength = 64;
-    var salt = Buffer.from(this.salt, 'base64');
-    var digest = 'sha512';
-
-    if (!callback) {
-      // eslint-disable-next-line no-sync
-      return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength, digest)
-        .toString('base64');
-    }
-
-    return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, digest,
-      function (err, key) {
-        if (err) {
-          callback(err);
-        }
-        return callback(null, key.toString('base64'));
-      });
-  }
-
-  /**
-   * Update password field
-   *
-   * @param {Function} fn
-   * @return {String}
-   * @api public
-   */
-  User.prototype.updatePassword = function(fn) {
-    // Handle new/update passwords
-    if (!this.password) return fn(null);
-
-    if (!validatePresenceOf(this.password) && authTypes.indexOf(this.provider) === -1) {
-      fn(new Error('Invalid password'));
-    }
-
-    // Make salt with a callback
-    this.makeSalt((saltErr, salt) => {
-      if (saltErr) {
-        return fn(saltErr);
-      }
-      this.salt = salt;
-      this.encryptPassword(this.password, (encryptErr, hashedPassword) => {
-        if (encryptErr) {
-          fn(encryptErr);
-        }
-        this.password = hashedPassword;
-        fn(null);
-      });
-    });
-  }
-
-  return User;
+    return User;
 }
