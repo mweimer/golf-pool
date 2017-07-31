@@ -1,19 +1,23 @@
 // Configuration models
 
 export interface Config {
-    tourneyTitle: string;
-    tourneyId: string;
-    golferData: GolferConfig[];
-    contestantData: ContestantConfig[];
+    tournament: {
+        id: number;
+        name: string;
+        espnId: string;
+    }
+   
+    golfers: GolferConfig[];
+    contestantEntries: ContestantEntriesConfig[];
 }
 
 export class IAppConfig {
     GOLFERS: GolferConfig[];
-    CONTESTANTS: ContestantConfig[];
+    CONTESTANT_ENTRIES: ContestantEntriesConfig[];
     LEADERBOARD_URL: string;
     PLAYER_INFO_URL: string;
-    TOURNEY_TITLE: string;
-    TOURNEY_ID: string;
+    TOURNAMENT_NAME: string;
+    TOURNAMENT_ESPNID: string;
 }
 
 export interface GolferConfig {
@@ -23,18 +27,17 @@ export interface GolferConfig {
     espnId: string;
 }
 
-export interface ContestantConfig {
+export interface ContestantEntriesConfig {
     id: number;
-    name: string;
+    userName: string;
     entries: number[][];
 }
 
 export interface EntryConfig {
+    contestantEntriesId: number;
     name: string;
     golferIds: number[];
-    contestantId: number;
 }
-
 
 // Models for pool and golfer leaderboards
 
@@ -57,7 +60,7 @@ export class Entry {
     overallToPar: string;
     isDQ: boolean;
     isSelected: boolean;
-    contestantId: number;
+    contestantEntriesId: number;
     position: string;
     positionNumber: number;
 }

@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng build --watch --op='../server/client'",
+    "start": "ng build --watch",
     "build": "ng build --prod",
     "lint": "ng lint"
   },

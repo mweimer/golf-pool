@@ -17,7 +17,7 @@ import { IAppConfig } from '../models/models';
 export class SettingsComponent implements OnInit, OnDestroy {
 
     contestants: Array<any>;
-    selectedContestantId: string;
+    selectedContestantEntriesId: string;
     notificationStatus: NotificationStatus = new NotificationStatus();
     configs: IAppConfig[];
     selectedConfigIndex: string;
@@ -34,12 +34,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
             this.notificationStatus = status;
         });
 
-        this.settingsSubscription = this.settingsService.getSelectedContestantId().subscribe(selectedContestantId => {
-            this.selectedContestantId = selectedContestantId.toString();
+        this.settingsSubscription = this.settingsService.getSelectedContestantEntriesId().subscribe(selectedContestantId => {
+            this.selectedContestantEntriesId = selectedContestantId.toString();
         });
 
         this.configSubscription = this.configService.config.subscribe((config: IAppConfig) => {
-            this.contestants = concat([{name: 'none', id: 0}], config.CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
+            this.contestants = concat([{name: 'none', id: 0}], config.CONTESTANT_ENTRIES.map(c => ({ name: c.userName, id: c.id })));
             this.selectedConfigIndex = this.configService.selectedConfigIndex.toString();
         });
 
@@ -53,8 +53,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
 
     contestantSelected() {
-        const value = parseInt(this.selectedContestantId, 10);
-        this.settingsService.setSelectedContestantId(value);
+        const value = parseInt(this.selectedContestantEntriesId, 10);
+        this.settingsService.setSelectedContestantEntriesId(value);
     }
 
     configSelected() {

@@ -7,10 +7,8 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
-import { Config, IAppConfig, GolferConfig } from '../models/models';
+import { Config, IAppConfig } from '../models/models';
 import { AppConfig } from './app.config';
-
-import config from './config-2017-the-open';
 
 @Injectable()
 export class ConfigService {
@@ -21,8 +19,6 @@ export class ConfigService {
     private selectedIndex: number;
 
     constructor(private http: Http) {
-        this.allConfigs = [];
-
         this.selectedIndex = 0;
         this.init();
     }
@@ -37,14 +33,12 @@ export class ConfigService {
 
     setConfig(index: number) {
         this.selectedIndex = index;
-        this.configObservable.next(this.allConfigs[this.selectedIndex]);
     }
 
     private init() {
-        this.http.get('/api/golfers')
+        this.http.get('/api/config/4')
             .map((res: Response) => {
-                const golfers: GolferConfig[] = res.json();
-                config.golferData = golfers;
+                const config: Config = res.json();
                 const appConfig : AppConfig = new AppConfig(config);
                 return appConfig;
             })

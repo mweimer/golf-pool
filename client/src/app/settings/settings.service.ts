@@ -11,36 +11,36 @@ import { IAppConfig } from '../models/models';
 export class SettingsService {
 
     private hasLocalStorage: boolean = typeof(Storage) !== 'undefined';
-    private selectedContestantKey: string;
-    private selectedContestantIdObservable: ReplaySubject<number> = new ReplaySubject<number>(1);
+    private selectedContestantEntriesKey: string;
+    private selectedContestantEntriesIdObservable: ReplaySubject<number> = new ReplaySubject<number>(1);
 
     constructor(private configService: ConfigService) {
         this.configService.config.subscribe((config: IAppConfig) => {
-            this.selectedContestantKey = config.TOURNEY_ID + '-selectedContestantId';
+            this.selectedContestantEntriesKey = config.TOURNAMENT_ESPNID + '-selectedContestantEntriesId';
             this.init();
         });
     }
 
-    getSelectedContestantId(): Observable<number> {
-        return this.selectedContestantIdObservable;
+    getSelectedContestantEntriesId(): Observable<number> {
+        return this.selectedContestantEntriesIdObservable;
     }
 
-    setSelectedContestantId(value: number) {
+    setSelectedContestantEntriesId(value: number) {
         if (this.hasLocalStorage) {
-            localStorage.setItem(this.selectedContestantKey, value.toString());
+            localStorage.setItem(this.selectedContestantEntriesKey, value.toString());
         }
-        this.selectedContestantIdObservable.next(value)
+        this.selectedContestantEntriesIdObservable.next(value)
     }
 
     private init() {
-        if (!this.hasLocalStorage || !localStorage.getItem(this.selectedContestantKey)) {
-            this.selectedContestantIdObservable.next(0);
+        if (!this.hasLocalStorage || !localStorage.getItem(this.selectedContestantEntriesKey)) {
+            this.selectedContestantEntriesIdObservable.next(0);
             return;
         }
 
         if (this.hasLocalStorage) {
-            const value = parseInt(localStorage.getItem(this.selectedContestantKey), 10);
-            this.selectedContestantIdObservable.next(value);
+            const value = parseInt(localStorage.getItem(this.selectedContestantEntriesKey), 10);
+            this.selectedContestantEntriesIdObservable.next(value);
         }
     }
 }

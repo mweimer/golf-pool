@@ -22,7 +22,7 @@ export class DataService {
     private entryConfig: EntryConfig[];
     private dataObservable: ReplaySubject<PoolData> = new ReplaySubject<PoolData>(1);
     private cacheData: PoolData = null;
-    private selectedContestantId: number = 0;
+    private selectedContestantEntriesId: number = 0;
     private config: IAppConfig;
     private interval: any;
 
@@ -31,16 +31,15 @@ export class DataService {
 
         this.configService.config.subscribe((config: IAppConfig) => {
             this.config = config;
-            this.entryConfig = config.CONTESTANTS
-                .map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
+            this.entryConfig = config.CONTESTANT_ENTRIES
+                .map(c => c.entries.map((gids, i) => ({ name: c.userName + ' ' + (i + 1), golferIds: gids, contestantEntriesId: c.id})))
                 .reduce((prev, curr) => prev.concat(curr));
 
             this.init();
         });
 
-
-        this.settingsService.getSelectedContestantId().subscribe(selectedContestantId => {
-            this.selectedContestantId = selectedContestantId;
+        this.settingsService.getSelectedContestantEntriesId().subscribe(selectedContestantEntriesId => {
+            this.selectedContestantEntriesId = selectedContestantEntriesId;
 
             if (this.cacheData !== null) {
                 this.updateTitle(this.cacheData.entries);
@@ -297,7 +296,7 @@ export class DataService {
             entry.overallTotalScore = overallTotalScore;
             entry.overallToPar = overallToPar;
             entry.isDQ = isDQ;
-            entry.contestantId = config.contestantId;
+            entry.contestantEntriesId = config.contestantEntriesId;
 
             return entry;
         });
@@ -326,23 +325,23 @@ export class DataService {
     private updateTitle(entries: Entry[] = null) {
         if (this.config) {
             let positions = null;
-            if (this.selectedContestantId > 0 && entries !== null) {
-                positions = entries.filter(e => e.contestantId === this.selectedContestantId && !e.isDQ)
+            if (this.selectedContestantEntriesId > 0 && entries !== null) {
+                positions = entries.filter(e => e.contestantEntriesId === this.selectedContestantEntriesId && !e.isDQ)
                     .map(e => e.position)
                     .reduce((c, n) => c !== null ? c + ', ' + n : n , null);
 
             }
-            const title = positions ? positions + ' - ' + this.config.TOURNEY_TITLE + ' Player Pool' : this.config.TOURNEY_TITLE + ' Player Pool';
+            const title = positions ? positions + ' - ' + this.config.TOURNAMENT_NAME + ' Player Pool' : this.config.TOURNAMENT_NAME + ' Player Pool';
             this.titleService.setTitle(title);
         }
     }
 
     private setSelected(data: PoolData) {
-        if (this.selectedContestantId !== data.selectedContestantId) {
-            data.selectedContestantId = this.selectedContestantId;
+        if (this.selectedContestantEntriesId !== data.selectedContestantId) {
+            data.selectedContestantId = this.selectedContestantEntriesId;
             let selectedGolferIds: number[] = [];
             data.entries.forEach((entry: Entry) => {
-                entry.isSelected = entry.contestantId === this.selectedContestantId;
+                entry.isSelected = entry.contestantEntriesId === this.selectedContestantEntriesId;
                 if (entry.isSelected) {
                     selectedGolferIds = union(selectedGolferIds, entry.golferScores.map(golferScore => golferScore.golferConfig.id));
                 }
