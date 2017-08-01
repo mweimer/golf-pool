@@ -15,6 +15,7 @@ import { GolfersComponent } from './golfers/golfers.component';
 import { PoolComponent } from './pool/pool.component';
 import { SettingsComponent } from './settings/settings.component';
 import { InfoModalComponent } from './info-modal/info-modal.component';
+import { LoginComponent } from './auth/login/login.component';
 
 import { DataService } from './services/data.service';
 import { SettingsService } from './settings/settings.service';
@@ -22,7 +23,7 @@ import { GotoService } from './services/goto.service';
 import { NotificationService } from './services/notification.service';
 import { ConfigService } from './config/config.service';
 import { UpdateService } from './services/update.service';
-
+import { AuthService } from './auth/auth.service';
 
 @NgModule({
     imports: [
@@ -39,6 +40,10 @@ import { UpdateService } from './services/update.service';
             {
                 path: 'settings',
                 component: SettingsComponent
+            },
+            {
+                path: 'login',
+                component: LoginComponent
             }
         ]),
         HttpModule,
@@ -54,7 +59,8 @@ import { UpdateService } from './services/update.service';
         PoolComponent,
         GolfersComponent,
         SettingsComponent,
-        InfoModalComponent
+        InfoModalComponent,
+        LoginComponent
     ],
     entryComponents: [
         InfoModalComponent
@@ -69,7 +75,8 @@ import { UpdateService } from './services/update.service';
         GotoService,
         NotificationService,
         ConfigService,
-        UpdateService
+        UpdateService,
+        AuthService
     ],
     bootstrap: [AppComponent]
 })

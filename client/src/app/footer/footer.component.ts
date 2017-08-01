@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -20,7 +21,7 @@ export class FooterComponent implements OnInit, OnDestroy {
     refreshTime: string;
     timeStamp: Date;
 
-    constructor(private dataService: DataService, private configService: ConfigService) {}
+    constructor(private router: Router, private dataService: DataService, private configService: ConfigService) {}
 
     ngOnInit(): void {
         this.dataSubscription = this.dataService.get().subscribe((data: PoolData) => {
@@ -35,5 +36,9 @@ export class FooterComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.dataSubscription.unsubscribe();
         this.configSubscription.unsubscribe();
+    }
+
+    show() {
+        return this.router.url === '/' || this.router.url === '/golfers';
     }
 }

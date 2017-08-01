@@ -31,7 +31,7 @@ export function isAuthenticated () {
     .use(function (req, res, next) {
       User.find({
         where: {
-          _id: req.user._id
+          id: req.user._id
         }
       })
         .then(user => {
