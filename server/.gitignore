@@ -8,3 +8,11 @@ dist
 /server/config/local.env.js
 npm-debug.log
 coverage
+
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
