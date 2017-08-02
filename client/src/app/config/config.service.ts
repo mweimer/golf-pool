@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers} from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -9,6 +9,7 @@ import 'rxjs/add/observable/throw';
 
 import { Config, IAppConfig } from '../models/models';
 import { AppConfig } from './app.config';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class ConfigService {
@@ -17,9 +18,13 @@ export class ConfigService {
 
     private configObservable: ReplaySubject<IAppConfig> = new ReplaySubject<IAppConfig>(1);
     private selectedIndex: number;
+    private token: string;
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private authService: AuthService) {
         this.selectedIndex = 0;
+        this.authService.token.subscribe((token: string) => {
+            this.token = token;
+        })
         this.init();
     }
 
@@ -35,8 +40,12 @@ export class ConfigService {
         this.selectedIndex = index;
     }
 
-    private init() {
-        this.http.get('/api/config/4')
+    private init() {    
+        const headers = new Headers();
+        headers.append('Authorization', `Bearer ${this.token}`);
+        const options = this.token ? { headers } : {};
+
+        this.http.get('/api/config/4', options)
             .map((res: Response) => {
                 const config: Config = res.json();
                 const appConfig : AppConfig = new AppConfig(config);
