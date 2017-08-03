@@ -5,7 +5,7 @@ import expressJwt from 'express-jwt';
 import compose from 'composable-middleware';
 import {User} from '../sqldb';
 
-var validateJwt = expressJwt({
+const validateJwt = expressJwt({
     secret: config.secrets.session
 });
 
@@ -63,8 +63,8 @@ export function hasRole(roleRequired) {
 /**
  * Returns a jwt token signed by the app secret
  */
-export function signToken(id, role) {
-    return jwt.sign({ id: id, role }, config.secrets.session, {
+export function signToken(id, role, name) {
+    return jwt.sign({ id, role, name }, config.secrets.session, {
         expiresIn: 60 * 60 * 5
     });
 }
@@ -76,7 +76,7 @@ export function setTokenCookie(req, res) {
     if(!req.user) {
         return res.status(404).send('It looks like you aren\'t logged in, please try again.');
     }
-    var token = signToken(req.user.id, req.user.role);
+    var token = signToken(req.user.id, req.user.role, req.user.name);
     res.cookie('token', token);
     res.redirect('/');
 }

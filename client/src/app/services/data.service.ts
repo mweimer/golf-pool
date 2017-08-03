@@ -10,8 +10,8 @@ import 'rxjs/add/observable/throw';
 import * as jQuery from 'jquery';
 import { cloneDeep, orderBy, sortBy, union } from 'lodash';
 
-import { GolferConfig, EntryConfig, PoolData, Entry, GolferScore, Score, MovementDirection, PlayerInfo, IAppConfig } from '../models/models';
-import { SettingsService } from '../settings/settings.service';
+import { GolferConfig, EntryConfig, PoolData, Entry, GolferScore, Score, MovementDirection, PlayerInfo, IAppConfig, User } from '../models/models';
+import { AuthService } from '../auth/auth.service';
 import { NotificationService } from '../services/notification.service';
 import { ConfigService } from '../config/config.service';
 import { Constants } from '../config/constants';
@@ -22,24 +22,24 @@ export class DataService {
     private entryConfig: EntryConfig[];
     private dataObservable: ReplaySubject<PoolData> = new ReplaySubject<PoolData>(1);
     private cacheData: PoolData = null;
-    private selectedContestantEntriesId: number = 0;
+    private user: User;
     private config: IAppConfig;
     private interval: any;
 
-    public constructor(private titleService: Title, private http: Http, private settingsService: SettingsService,
+    public constructor(private titleService: Title, private http: Http, private authService: AuthService,
         private notificationService: NotificationService, private configService: ConfigService) {
 
         this.configService.config.subscribe((config: IAppConfig) => {
             this.config = config;
             this.entryConfig = config.CONTESTANT_ENTRIES
-                .map(c => c.entries.map((gids, i) => ({ name: c.userName + ' ' + (i + 1), golferIds: gids, contestantEntriesId: c.id})))
+                .map(c => c.entries.map((gids, i) => ({ name: c.userName + ' ' + (i + 1), golferIds: gids, userId: c.userId})))
                 .reduce((prev, curr) => prev.concat(curr));
 
             this.init();
         });
 
-        this.settingsService.getSelectedContestantEntriesId().subscribe(selectedContestantEntriesId => {
-            this.selectedContestantEntriesId = selectedContestantEntriesId;
+        this.authService.user.subscribe((user: User) => {
+            this.user = user;
 
             if (this.cacheData !== null) {
                 this.updateTitle(this.cacheData.entries);
@@ -296,7 +296,7 @@ export class DataService {
             entry.overallTotalScore = overallTotalScore;
             entry.overallToPar = overallToPar;
             entry.isDQ = isDQ;
-            entry.contestantEntriesId = config.contestantEntriesId;
+            entry.userId = config.userId;
 
             return entry;
         });
@@ -325,8 +325,8 @@ export class DataService {
     private updateTitle(entries: Entry[] = null) {
         if (this.config) {
             let positions = null;
-            if (this.selectedContestantEntriesId > 0 && entries !== null) {
-                positions = entries.filter(e => e.contestantEntriesId === this.selectedContestantEntriesId && !e.isDQ)
+            if (this.user && entries !== null) {
+                positions = entries.filter(e => e.userId === this.user.id && !e.isDQ)
                     .map(e => e.position)
                     .reduce((c, n) => c !== null ? c + ', ' + n : n , null);
 
@@ -337,11 +337,11 @@ export class DataService {
     }
 
     private setSelected(data: PoolData) {
-        if (this.selectedContestantEntriesId !== data.selectedContestantId) {
-            data.selectedContestantId = this.selectedContestantEntriesId;
+        if (this.user && this.user.id !== data.selectedUserId) {
+            data.selectedUserId = this.user.id;
             let selectedGolferIds: number[] = [];
             data.entries.forEach((entry: Entry) => {
-                entry.isSelected = entry.contestantEntriesId === this.selectedContestantEntriesId;
+                entry.isSelected = entry.userId === this.user.id;
                 if (entry.isSelected) {
                     selectedGolferIds = union(selectedGolferIds, entry.golferScores.map(golferScore => golferScore.golferConfig.id));
                 }

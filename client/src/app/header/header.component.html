@@ -19,8 +19,14 @@
             </li>
         </ul>
         <ul class="navbar-nav">
-            <li class="nav-item">
+            <li *ngIf="!user" class="nav-item">
                 <a class="nav-link" routerLink="/login">Login</a>
+            </li>
+            <li *ngIf="!!user" class="nav-item">
+                Welcome {{user.name}}
+            </li>
+            <li *ngIf="!!user" class="nav-item">
+                <a class="nav-link" routerLink="/login">Logout</a>
             </li>
         </ul>
     </div>

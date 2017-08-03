@@ -9,39 +9,59 @@ import 'rxjs/add/observable/throw';
 import { isUndefined } from 'lodash';
 import * as Cookies from 'js-cookie';
 
+import { User } from '../models/models';
+
 @Injectable()
 export class AuthService {
 
-    private tokenObservable: ReplaySubject<string> = new ReplaySubject<string>(1);
+    private userObservable: ReplaySubject<User> = new ReplaySubject<User>(1);
 
     constructor(private http: Http) {
-        const token = Cookies.get('token');
-        if (token) {
-            this.tokenObservable.next(token);
-        } else {
-            this.tokenObservable.next('');
-        }
+        this.init();
     }
 
-    get token(): Observable<string> {
-        return this.tokenObservable;
+    get user(): Observable<User> {
+        return this.userObservable;
     }
 
     login(email: string, password: string): Observable<string> {
         return this.http.post('/auth/local', { email, password })
-        .map(this.parseToken)
-        .map((token) => this.storeToken(token))
+        .map((res: Response) => this.parseToken(res))
+        .map((token: string) => this.storeToken(token))
+        .map((token: string) => this.parseUser(token))
+        .map((user: User) => this.userObservable.next(user))
         .catch(this.handleError)
     }
 
-    private storeToken(token: string) {
+    private init() {
+        const token = Cookies.get('token');
+        if (token) {
+            const user = this.parseUser(token);
+            const now = new Date();
+            if (now > user.expirationTime) {
+                Cookies.remove('token');
+            } else {
+                this.userObservable.next(user);
+            }
+        }
+    }
+
+    private storeToken(token: string): string {
         Cookies.set('token', token);
-        this.tokenObservable.next(token);
+        return token;
     }
 
     private parseToken(res: Response): string {
         const token: string = res.json().token;
         return token;
+    }
+
+    private parseUser(token: string): User {
+        const parts = token.split('.');
+        const userString: string = atob(parts[1]);
+        const userInfo = JSON.parse(userString);
+        const user = new User(userInfo.id, userInfo.name, userInfo.role, userInfo.iat, userInfo.exp);
+        return user;
     }
 
     private handleError (error: Response | any) {
@@ -56,6 +76,4 @@ export class AuthService {
         console.error(errMsg);
         return Observable.throw(errMsg);
     }
-
-   
 }

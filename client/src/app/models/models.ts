@@ -30,13 +30,30 @@ export interface GolferConfig {
 export interface ContestantEntriesConfig {
     id: number;
     userName: string;
+    userId: number;
     entries: number[][];
 }
 
 export interface EntryConfig {
-    contestantEntriesId: number;
+    userId: number;
     name: string;
     golferIds: number[];
+}
+
+export class User {
+    id: number;
+    name: string;
+    role: string;
+    issuedAt: Date;
+    expirationTime: Date;
+
+    constructor(id: number, name: string, role: string, iat: number, exp: number) {
+        this.id = id;
+        this.name = name;
+        this.role = role;
+        this.issuedAt = new Date(iat * 1000);
+        this.expirationTime = new Date(exp * 1000);
+    }
 }
 
 // Models for pool and golfer leaderboards
@@ -48,7 +65,7 @@ export class PoolData {
         value: number;
         type: string;
     };
-    selectedContestantId = 0;
+    selectedUserId = 0;
     timeStamp: Date;
 }
 
@@ -60,7 +77,7 @@ export class Entry {
     overallToPar: string;
     isDQ: boolean;
     isSelected: boolean;
-    contestantEntriesId: number;
+    userId: number;
     position: string;
     positionNumber: number;
 }

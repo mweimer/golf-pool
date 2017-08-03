@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription'
 
 import { UpdateService } from '../services/update.service';
+import { AuthService } from '../auth/auth.service';
+import { User } from '../models/models';
 
 @Component({
     selector: 'app-header',
@@ -15,18 +17,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     isOpen = false;
     showAlert = false;
-    private subscription: Subscription;
+    user: User;
+    private updateSubscription: Subscription;
+    private authSubscription: Subscription;
 
-    constructor(private router: Router, private updateService: UpdateService) {}
+    constructor(private router: Router, private updateService: UpdateService, private authService: AuthService) {}
 
     ngOnInit() {
-        this.subscription = this.updateService.status.subscribe((status: boolean) => {
+        this.updateSubscription = this.updateService.status.subscribe((status: boolean) => {
             this.showAlert = status;
         });
+
+        this.authSubscription = this.authService.user.subscribe((user: User) => {
+            this.user = user;
+        })
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        this.updateSubscription.unsubscribe();
+        this.authSubscription.unsubscribe();
     }
 
     currentRoute(): string {

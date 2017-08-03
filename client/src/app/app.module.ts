@@ -18,7 +18,6 @@ import { InfoModalComponent } from './info-modal/info-modal.component';
 import { LoginComponent } from './auth/login/login.component';
 
 import { DataService } from './services/data.service';
-import { SettingsService } from './settings/settings.service';
 import { GotoService } from './services/goto.service';
 import { NotificationService } from './services/notification.service';
 import { ConfigService } from './config/config.service';
@@ -71,7 +70,6 @@ import { AuthService } from './auth/auth.service';
         Title,
         DatePipe,
         DataService,
-        SettingsService,
         GotoService,
         NotificationService,
         ConfigService,

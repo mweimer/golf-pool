@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
-import { SettingsService } from '../settings/settings.service'
-import { Entry } from '../models/models';
+import { AuthService } from '../auth/auth.service'
+import { Entry, User } from '../models/models';
 
 @Injectable()
 export class NotificationService {
@@ -15,16 +15,16 @@ export class NotificationService {
     };
 
     private statusObservable: ReplaySubject<NotificationStatus> = new ReplaySubject<NotificationStatus>(1);
-    private selectedContestantEntriesId: number = 0;
+    private user: User;
 
-    constructor(private settingsService: SettingsService) {
+    constructor(private authService: AuthService) {
         this.statusObservable.next(this.status);
         if (this.status.supported) {
             this.requestPermission();
         }
 
-        this.settingsService.getSelectedContestantEntriesId().subscribe(selectedContestantEntriesId => {
-            this.selectedContestantEntriesId = selectedContestantEntriesId;
+        this.authService.user.subscribe(user => {
+            this.user = user;
         });
     }
 
@@ -33,12 +33,12 @@ export class NotificationService {
     }
 
     update(previousEntries: Entry[], currentEntries: Entry[]) {
-        if (!this.status.supported || this.selectedContestantEntriesId <= 0 || !previousEntries) {
+        if (!this.status.supported || this.user || !previousEntries) {
             return;
         }
 
-        const previousPositions: number[] = previousEntries.filter(e => e.contestantEntriesId === this.selectedContestantEntriesId).map(e => e.positionNumber);
-        const currentPositions: number[] = currentEntries.filter(e => e.contestantEntriesId === this.selectedContestantEntriesId).map(e => e.positionNumber);
+        const previousPositions: number[] = previousEntries.filter(e => e.userId === this.user.id).map(e => e.positionNumber);
+        const currentPositions: number[] = currentEntries.filter(e => e.userId === this.user.id).map(e => e.positionNumber);
 
         if (previousPositions.some(p => p === 1 || p === 2) && !currentPositions.some(p => p === 1 || p === 2)) {
             this.showNotification(false);

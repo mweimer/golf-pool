@@ -49,6 +49,7 @@ function mapConfig(entity) {
     const contestantEntries = entity.entries.map(e => ({
       id: e.id,
       userName: e.user.name,
+      userId: e.user.id,
       entries: [[e.g1AId, e.g1BId, e.g1CId, e.g1DId], [e.g2AId, e.g2BId, e.g2CId, e.g2DId], [e.g3AId, e.g3BId, e.g3CId, e.g3DId]]
     }));
 

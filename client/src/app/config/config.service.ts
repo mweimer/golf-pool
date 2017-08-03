@@ -9,7 +9,6 @@ import 'rxjs/add/observable/throw';
 
 import { Config, IAppConfig } from '../models/models';
 import { AppConfig } from './app.config';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class ConfigService {
@@ -18,11 +17,9 @@ export class ConfigService {
 
     private configObservable: ReplaySubject<IAppConfig> = new ReplaySubject<IAppConfig>(1);
     private selectedIndex: number;
-    private token: string;
 
-    constructor(private http: Http, private authService: AuthService) {
+    constructor(private http: Http) {
         this.selectedIndex = 0;
-        this.authService.token.subscribe((token: string) => this.token = token);
         this.init();
     }
 
@@ -38,15 +35,8 @@ export class ConfigService {
         this.selectedIndex = index;
     }
 
-    private getOptions() {
-        const headers = new Headers();
-        headers.append('Authorization', `Bearer ${this.token}`);
-        const options = this.token ? { headers } : {};
-        return options
-    }
-
     private init() {    
-        this.http.get('/api/config/4', this.getOptions())
+        this.http.get('/api/config/4')
             .map((res: Response) => {
                 const config: Config = res.json();
                 const appConfig : AppConfig = new AppConfig(config);
