@@ -22,9 +22,7 @@ export class ConfigService {
 
     constructor(private http: Http, private authService: AuthService) {
         this.selectedIndex = 0;
-        this.authService.token.subscribe((token: string) => {
-            this.token = token;
-        })
+        this.authService.token.subscribe((token: string) => this.token = token);
         this.init();
     }
 
@@ -40,12 +38,15 @@ export class ConfigService {
         this.selectedIndex = index;
     }
 
-    private init() {    
+    private getOptions() {
         const headers = new Headers();
         headers.append('Authorization', `Bearer ${this.token}`);
         const options = this.token ? { headers } : {};
+        return options
+    }
 
-        this.http.get('/api/config/4', options)
+    private init() {    
+        this.http.get('/api/config/4', this.getOptions())
             .map((res: Response) => {
                 const config: Config = res.json();
                 const appConfig : AppConfig = new AppConfig(config);
