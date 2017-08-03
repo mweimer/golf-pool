@@ -16,6 +16,7 @@ import { PoolComponent } from './pool/pool.component';
 import { SettingsComponent } from './settings/settings.component';
 import { InfoModalComponent } from './info-modal/info-modal.component';
 import { LoginComponent } from './auth/login/login.component';
+import { SignupComponent } from './auth/signup/signup.component';
 
 import { DataService } from './services/data.service';
 import { GotoService } from './services/goto.service';
@@ -43,6 +44,10 @@ import { AuthService } from './auth/auth.service';
             {
                 path: 'login',
                 component: LoginComponent
+            },
+            {
+                path: 'signup',
+                component: SignupComponent
             }
         ]),
         HttpModule,
@@ -59,7 +64,8 @@ import { AuthService } from './auth/auth.service';
         GolfersComponent,
         SettingsComponent,
         InfoModalComponent,
-        LoginComponent
+        LoginComponent,
+        SignupComponent
     ],
     entryComponents: [
         InfoModalComponent

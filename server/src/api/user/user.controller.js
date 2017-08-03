@@ -48,7 +48,7 @@ export function create (req, res) {
   newUser.setDataValue('role', 'user');
   return newUser.save()
     .then(function (user) {
-      var token = jwt.sign({ id: user.id }, config.secrets.session, {
+      var token = jwt.sign({ id: user.id, role: user.role, name: user.name }, config.secrets.session, {
         expiresIn: 60 * 60 * 5
       });
       res.json({ token });

@@ -57,4 +57,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     closeAlert() {
         this.showAlert = false;
     }
+
+    logout() {
+        this.authService.logout();
+    }
 }

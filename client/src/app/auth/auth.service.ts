@@ -29,8 +29,22 @@ export class AuthService {
         .map((res: Response) => this.parseToken(res))
         .map((token: string) => this.storeToken(token))
         .map((token: string) => this.parseUser(token))
-        .map((user: User) => this.userObservable.next(user))
+        .map((user: User) => this.updateUser(user))
         .catch(this.handleError)
+    }
+
+    signup(name: string, email: string, password: string) {
+        return this.http.post('/api/users', { name, email, password })
+        .map((res: Response) => this.parseToken(res))
+        .map((token: string) => this.storeToken(token))
+        .map((token: string) => this.parseUser(token))
+        .map((user: User) => this.updateUser(user))
+        .catch(this.handleError);
+    }
+
+    logout() {
+        Cookies.remove('token')
+        this.updateUser();
     }
 
     private init() {
@@ -41,9 +55,14 @@ export class AuthService {
             if (now > user.expirationTime) {
                 Cookies.remove('token');
             } else {
-                this.userObservable.next(user);
+                this.updateUser(user);
             }
         }
+    }
+
+    private updateUser(user: User = null) {
+        this.userObservable.next(user);
+        return user;
     }
 
     private storeToken(token: string): string {

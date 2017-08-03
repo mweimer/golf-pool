@@ -33,7 +33,7 @@ export class NotificationService {
     }
 
     update(previousEntries: Entry[], currentEntries: Entry[]) {
-        if (!this.status.supported || this.user || !previousEntries) {
+        if (!this.status.supported || !this.user || !previousEntries) {
             return;
         }
 

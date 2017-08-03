@@ -4,8 +4,13 @@
     .navbar-brand img {
 	    height: 25px;
 	}
+
+    .dropdown-toggle, .dropdown-item {
+        cursor: pointer;
+    }
 }
 
 .alert {
     margin: 0 15px 0 15px;
 }
+
