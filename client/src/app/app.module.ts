@@ -24,6 +24,9 @@ import { NotificationService } from './services/notification.service';
 import { ConfigService } from './config/config.service';
 import { UpdateService } from './services/update.service';
 import { AuthService } from './auth/auth.service';
+import { EntryComponent } from './entry/entry.component';
+import { TournamentComponent } from './tournament/tournament.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
     imports: [
@@ -31,11 +34,23 @@ import { AuthService } from './auth/auth.service';
         RouterModule.forRoot([
             {
                 path: '',
+                component: HomeComponent
+            },
+            {
+                path: 'pool',
                 component: PoolComponent
             },
             {
                 path: 'golfers',
                 component: GolfersComponent
+            },
+            {
+                path: 'entry',
+                component: EntryComponent
+            },
+            {
+                path: 'tournament',
+                component: TournamentComponent
             },
             {
                 path: 'settings',
@@ -65,7 +80,10 @@ import { AuthService } from './auth/auth.service';
         SettingsComponent,
         InfoModalComponent,
         LoginComponent,
-        SignupComponent
+        SignupComponent,
+        EntryComponent,
+        TournamentComponent,
+        HomeComponent
     ],
     entryComponents: [
         InfoModalComponent

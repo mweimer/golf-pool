@@ -40,9 +40,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     currentRoute(): string {
         if (this.router.url === '/') {
+            return 'home';
+        } else if (this.router.url === '/pool') {
             return 'pool';
         } else if (this.router.url === '/golfers') {
             return 'golfers';
+        } else if (this.router.url === '/entry') {
+            return 'entry';
+        } else if (this.router.url === '/tournament') {
+            return 'tournament';
         } else if (this.router.url === '/settings') {
             return 'settings';
         }

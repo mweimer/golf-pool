@@ -9,10 +9,16 @@
     <div class="navbar-collapse" [ngbCollapse]="!isOpen">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item" [ngClass]="{'active': currentRoute() === 'pool'}">
-                <a class="nav-link" routerLink="">Pool</a>
+                <a class="nav-link" routerLink="/pool">Pool</a>
             </li>
             <li class="nav-item" [ngClass]="{'active': currentRoute() === 'golfers'}">
                 <a class="nav-link" routerLink="/golfers">Golfers</a>
+            </li>
+            <li class="nav-item" [ngClass]="{'active': currentRoute() === 'entry'}">
+                <a class="nav-link" routerLink="/entry">Entry</a>
+            </li>
+            <li class="nav-item" [ngClass]="{'active': currentRoute() === 'tournament'}">
+                <a class="nav-link" routerLink="/tournament">Tournament</a>
             </li>
             <li class="nav-item" [ngClass]="{'active': currentRoute() === 'settings'}">
                 <a class="nav-link" routerLink="/settings">Settings</a>

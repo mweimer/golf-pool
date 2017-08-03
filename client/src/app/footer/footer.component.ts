@@ -39,6 +39,6 @@ export class FooterComponent implements OnInit, OnDestroy {
     }
 
     show() {
-        return this.router.url === '/' || this.router.url === '/golfers';
+        return this.router.url === '/pool' || this.router.url === '/golfers';
     }
 }
