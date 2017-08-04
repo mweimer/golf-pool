@@ -9,7 +9,8 @@ export default function (sequelize, DataTypes) {
 		  autoIncrement: true
 		},
 		name: DataTypes.STRING,
-    	espnId: DataTypes.STRING
+    	espnId: DataTypes.STRING,
+    	current: DataTypes.BOOLEAN
 	});
 
 	const TournamentGolfer = sequelize.define('TournamentGolfer', {

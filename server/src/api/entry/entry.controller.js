@@ -107,12 +107,9 @@ export function create (req, res) {
 }
 
 // Upserts the given Entry in the DB at the specified ID
-export function upsert (req, res) {
-  if (req.body.id) {
-    Reflect.deleteProperty(req.body, 'id');
-  }
+export function update (req, res) {
 
-  return Entry.upsert(req.body, {
+  return Entry.update(req.body, {
     where: {
       id: req.params.id
     }

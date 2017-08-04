@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
+import { IAppConfig, User } from '../models/models';
+import { ConfigService } from '../config/config.service';
+import { AuthService } from '../auth/auth.service';
+
+import { concat } from 'lodash';
+
 @Component({
   selector: 'app-entry',
   templateUrl: './entry.component.html',
@@ -7,9 +13,53 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EntryComponent implements OnInit {
 
-  constructor() { }
+    golferIds = ['', '', '', '', '', '', '', '', '', '', '', ''];
 
-  ngOnInit() {
-  }
+    private config: IAppConfig;
+    private user: User;
+    private userEntryId = 0;
 
+    constructor(private configService: ConfigService, private authService: AuthService) { }
+
+    ngOnInit() {
+        this.configService.config.subscribe((config: IAppConfig) => {
+            this.config = config;
+            if (this.user) {
+                const userEntry = config.CONTESTANT_ENTRIES.find(e => e.userId === this.user.id);
+                if (userEntry) {
+                    this.golferIds = concat(userEntry.entries[0], userEntry.entries[1], userEntry.entries[2])
+                        .map(id => id.toString());
+                    this.userEntryId = userEntry.id;
+                }
+            }
+        });
+
+        this.authService.user.subscribe((user: User) => {
+            this.user = user;
+        })
+    }
+
+    getGolfers(tier: string) {
+        if (this.config) {
+            return this.config.GOLFERS.filter(g => g.tier === tier);
+        }
+
+        return [];
+    }
+
+    submit() {
+        const ids = this.golferIds.map(id => {
+            const numId = parseInt(id);
+            if (isNaN(numId)) {
+                return 0;
+            }
+
+            return numId;
+        });
+
+        if (ids.every(id => id > 0)) {
+            this.configService.publishEntry(ids, this.userEntryId);
+        }
+
+    }
 }

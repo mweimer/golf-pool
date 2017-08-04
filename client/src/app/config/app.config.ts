@@ -12,6 +12,8 @@ export class AppConfig implements IAppConfig {
 
     public PLAYER_INFO_URL = `http://site.api.espn.com/apis/site/v2/sports/golf/pga/leaderboard/${this.config.tournament.espnId}/playersummary?player=`;
 
+    public TOURNAMENT_ID = this.config.tournament.id;
+
     public TOURNAMENT_NAME = this.config.tournament.name;
 
     public TOURNAMENT_ESPNID = this.config.tournament.espnId;

@@ -7,19 +7,18 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
-import { Config, IAppConfig } from '../models/models';
+import { Config, IAppConfig, User, EntryConfig, ContestantEntriesConfig } from '../models/models';
 import { AppConfig } from './app.config';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class ConfigService {
 
-    allConfigs: IAppConfig[]; 
-
     private configObservable: ReplaySubject<IAppConfig> = new ReplaySubject<IAppConfig>(1);
-    private selectedIndex: number;
+    private appConfig: AppConfig;
+    private user: User;
 
-    constructor(private http: Http) {
-        this.selectedIndex = 0;
+    constructor(private http: Http, private authService: AuthService) {
         this.init();
     }
 
@@ -27,16 +26,60 @@ export class ConfigService {
         return this.configObservable;
     }
 
-    get selectedConfigIndex(): number {
-        return this.selectedIndex;
-    }
+    publishEntry(golferIds: number[], id: number = 0) {
+        if (!this.appConfig || !this.appConfig.TOURNAMENT_ID || !this.user || !this.user.id) {
+            return;
+        }
 
-    setConfig(index: number) {
-        this.selectedIndex = index;
+        const entry = {
+            userId: this.user.id,
+            tournamentId: this.appConfig.TOURNAMENT_ID,
+            g1AId: golferIds[0],
+            g1BId: golferIds[1],
+            g1CId: golferIds[2],
+            g1DId: golferIds[3],
+            g2AId: golferIds[4],
+            g2BId: golferIds[5],
+            g2CId: golferIds[6],
+            g2DId: golferIds[7],
+            g3AId: golferIds[8],
+            g3BId: golferIds[9],
+            g3CId: golferIds[10],
+            g3DId: golferIds[11],
+        }
+
+        const method = id > 0 ? this.http.put(`/api/entries/${id}`, entry) : this.http.post('/api/entries', entry);
+
+        return method
+            .map((res: Response) => {
+                const newEntry = res.json();
+                return newEntry;   
+            })
+            .map((newEntry) => {
+                const ce: ContestantEntriesConfig = {
+                    id: newEntry.id,
+                    userName: this.user.name,
+                    userId: this.user.id,
+                    entries: newEntry.golferIds
+                }
+                if (id === 0) {
+                    this.appConfig.CONTESTANT_ENTRIES.push(ce); 
+                } else {
+                    const index = this.appConfig.CONTESTANT_ENTRIES.findIndex(e => e.id == ce.id);
+                    this.appConfig.CONTESTANT_ENTRIES[index] = ce;
+                }
+                this.configObservable.next(this.appConfig);
+            })
+            .catch(this.handleError)
+            .subscribe(res => { console.log(res) });
     }
 
     private init() {    
-        this.http.get('/api/config/4')
+        this.authService.user.subscribe((user: User) => {
+            this.user = user;
+        });
+
+        this.http.get('/api/config/current')
             .map((res: Response) => {
                 const config: Config = res.json();
                 const appConfig : AppConfig = new AppConfig(config);
@@ -44,7 +87,8 @@ export class ConfigService {
             })
             .catch(this.handleError)
             .subscribe((appConfig: AppConfig) => {
-                 this.configObservable.next(appConfig);
+                this.appConfig = appConfig;
+                this.configObservable.next(appConfig);
             });
     }
 

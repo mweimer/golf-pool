@@ -1,3 +1,97 @@
-<p>
-  entry works!
-</p>
+<div class="container">
+    <form class="form-inline">
+        <div class="row">
+            <div class="form-group">
+                <label for="golfer1ADropdown">Tier A:&nbsp;</label>
+                <select id="golfer1ADropdown" class="form-control" [(ngModel)]="golferIds[0]" name="golfer1A">
+                    <option *ngFor="let golfer of getGolfers('A')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group ml-2">
+                <label for="golfer1BDropdown">Tier B:&nbsp;</label>
+                <select id="golfer1BDropdown" class="form-control" [(ngModel)]="golferIds[1]" name="golfer1B">
+                    <option *ngFor="let golfer of getGolfers('B')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group ml-2">
+                <label for="golfer1CDropdown">Tier C:&nbsp;</label>
+                <select id="golferC1Dropdown" class="form-control" [(ngModel)]="golferIds[2]" name="golfer1C">
+                    <option *ngFor="let golfer of getGolfers('C')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group ml-2">
+                <label for="golfer1DDropdown">Tier D:&nbsp;</label>
+                <select id="golfer1DDropdown" class="form-control" [(ngModel)]="golferIds[3]" name="golfer1D">
+                    <option *ngFor="let golfer of getGolfers('D')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="form-group">
+                <label for="golfer2ADropdown">Tier A:&nbsp;</label>
+                <select id="golfer2ADropdown" class="form-control" [(ngModel)]="golferIds[4]" name="golfer2A">
+                    <option *ngFor="let golfer of getGolfers('A')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group ml-2">
+                <label for="golfer2BDropdown">Tier B:&nbsp;</label>
+                <select id="golfer2BDropdown" class="form-control" [(ngModel)]="golferIds[5]" name="golfer2B">
+                    <option *ngFor="let golfer of getGolfers('B')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group ml-2">
+                <label for="golfer2CDropdown">Tier C:&nbsp;</label>
+                <select id="golfer2CDropdown" class="form-control" [(ngModel)]="golferIds[6]" name="golfer2C">
+                    <option *ngFor="let golfer of getGolfers('C')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group ml-2">
+                <label for="golfer2DDropdown">Tier D:&nbsp;</label>
+                <select id="golfer2DDropdown" class="form-control" [(ngModel)]="golferIds[7]" name="golfer2D">
+                    <option *ngFor="let golfer of getGolfers('D')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="form-group">
+                <label for="golfer3ADropdown">Tier A:&nbsp;</label>
+                <select id="golfer3ADropdown" class="form-control" [(ngModel)]="golferIds[8]" name="golfer3A">
+                    <option *ngFor="let golfer of getGolfers('A')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group ml-2">
+                <label for="golfer3BDropdown">Tier B:&nbsp;</label>
+                <select id="golfer3BDropdown" class="form-control" [(ngModel)]="golferIds[9]" name="golfer3B">
+                    <option *ngFor="let golfer of getGolfers('B')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group ml-2">
+                <label for="golfer3CDropdown">Tier C:&nbsp;</label>
+                <select id="golfer3CDropdown" class="form-control" [(ngModel)]="golferIds[10]" name="golfer3C">
+                    <option *ngFor="let golfer of getGolfers('C')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group ml-2">
+                <label for="golfer3DDropdown">Tier D:&nbsp;</label>
+                <select id="golfer3DDropdown" class="form-control" [(ngModel)]="golferIds[11]" name="golfer3D">
+                    <option *ngFor="let golfer of getGolfers('D')" [value]="golfer.id">{{golfer.name}}</option>
+                </select>
+            </div>
+        </div>
+        
+    </form>
+    <div class="row mt-3">
+        <button type="submit" class="btn btn-primary" (click)="submit()">Submit</button>
+    </div>
+</div>

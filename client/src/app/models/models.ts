@@ -16,6 +16,7 @@ export class IAppConfig {
     CONTESTANT_ENTRIES: ContestantEntriesConfig[];
     LEADERBOARD_URL: string;
     PLAYER_INFO_URL: string;
+    TOURNAMENT_ID: number;
     TOURNAMENT_NAME: string;
     TOURNAMENT_ESPNID: string;
 }

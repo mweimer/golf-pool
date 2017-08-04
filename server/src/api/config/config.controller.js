@@ -94,4 +94,21 @@ export function show (req, res) {
     .catch(handleError(res));
 }
 
+// Gets current Entry from the DB
+export function current (req, res) {
+  return Tournament.find({
+    where: {
+      current: true
+    },
+    include: [
+      { model: Golfer, as: 'golfers' }, 
+      { model:Entry, as:'entries', include: [{model:User, as:'user', attributes:['id','name']}]}
+    ]
+  })
+    .then(handleEntityNotFound(res))
+    .then(mapConfig)
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
 
