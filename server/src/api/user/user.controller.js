@@ -1,8 +1,8 @@
 'use strict';
 
-import {User} from '../../sqldb';
-import config from '../../config/environment';
-import jwt from 'jsonwebtoken';
+const {User} = require('../../sqldb');
+const config = require('../../config/environment');
+const jwt = require('jsonwebtoken');
 
 function validationError (res, statusCode) {
   statusCode = statusCode || 422;
@@ -23,7 +23,7 @@ function handleError (res, statusCode) {
  * Get list of users
  * restriction: 'admin'
  */
-export function index (req, res) {
+module.exports.index = function(req, res) {
   return User.findAll({
     attributes: [
       'id',
@@ -42,7 +42,7 @@ export function index (req, res) {
 /**
  * Creates a new user
  */
-export function create (req, res) {
+module.exports.create = function(req, res) {
   var newUser = User.build(req.body);
   newUser.setDataValue('provider', 'local');
   newUser.setDataValue('role', 'user');
@@ -59,7 +59,7 @@ export function create (req, res) {
 /**
  * Get a single user
  */
-export function show (req, res, next) {
+module.exports.show = function(req, res, next) {
   var userId = req.params.id;
 
   return User.find({
@@ -80,7 +80,7 @@ export function show (req, res, next) {
  * Deletes a user
  * restriction: 'admin'
  */
-export function destroy (req, res) {
+module.exports.destroy = function(req, res) {
   return User.destroy({ where: { id: req.params.id } })
     .then(function () {
       res.status(204).end();
@@ -91,7 +91,7 @@ export function destroy (req, res) {
 /**
  * Change a users password
  */
-export function changePassword (req, res) {
+module.exports.changePassword = function(req, res) {
   var userId = req.user.id;
   var oldPass = String(req.body.oldPassword);
   var newPass = String(req.body.newPassword);
@@ -118,7 +118,7 @@ export function changePassword (req, res) {
 /**
  * Get my info
  */
-export function me (req, res, next) {
+module.exports.me = function(req, res, next) {
   var userId = req.user.id;
 
   return User.find({
@@ -145,6 +145,6 @@ export function me (req, res, next) {
 /**
  * Authentication callback
  */
-export function authCallback (req, res) {
+module.exports.authCallback = function(req, res) {
   res.redirect('/');
 }

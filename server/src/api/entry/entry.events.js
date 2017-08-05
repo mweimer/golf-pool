@@ -4,9 +4,9 @@
 
 'use strict';
 
-import {EventEmitter} from 'events';
-var Entry = require('../../sqldb').Entry;
-var EntryEvents = new EventEmitter();
+const {EventEmitter} = require('events');
+const Entry = require('../../sqldb').Entry;
+const EntryEvents = new EventEmitter();
 
 // Set max event listeners (0 == unlimited)
 EntryEvents.setMaxListeners(0);

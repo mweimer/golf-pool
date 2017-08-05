@@ -1,8 +1,8 @@
 'use strict';
 
-import sqldb from '../../sqldb';
+const sqldb = require('../../sqldb');
 
-export default function seed () {
+module.exports = function seed () {
     let User = sqldb.User;
 
     return User.destroy({ where: {} })

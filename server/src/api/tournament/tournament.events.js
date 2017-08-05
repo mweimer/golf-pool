@@ -4,9 +4,9 @@
 
 'use strict';
 
-import {EventEmitter} from 'events';
-var Tournament = require('../../sqldb').Tournament;
-var TournamentEvents = new EventEmitter();
+const {EventEmitter} = require('events');
+const Tournament = require('../../sqldb').Tournament;
+const TournamentEvents = new EventEmitter();
 
 // Set max event listeners (0 == unlimited)
 TournamentEvents.setMaxListeners(0);

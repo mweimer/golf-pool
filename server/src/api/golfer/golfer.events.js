@@ -4,9 +4,9 @@
 
 'use strict';
 
-import {EventEmitter} from 'events';
-var Golfer = require('../../sqldb').Golfer;
-var GolferEvents = new EventEmitter();
+const {EventEmitter} = require('events');
+const Golfer = require('../../sqldb').Golfer;
+const GolferEvents = new EventEmitter();
 
 // Set max event listeners (0 == unlimited)
 GolferEvents.setMaxListeners(0);

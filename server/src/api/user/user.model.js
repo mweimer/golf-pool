@@ -1,8 +1,8 @@
 'use strict';
 
-import crypto from 'crypto';
+const crypto = require('crypto');
 
-export default function (sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
     var User = sequelize.define('User', {
 
         id: {

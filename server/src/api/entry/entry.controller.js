@@ -10,8 +10,8 @@
 
 'use strict';
 
-import jsonpatch from 'fast-json-patch';
-import {Entry} from '../../sqldb';
+const jsonpatch = require('fast-json-patch');
+const {Entry} = require('../../sqldb');
 
 function respondWithResult (res, statusCode) {
   statusCode = statusCode || 200;
@@ -26,30 +26,6 @@ function respondWithResult (res, statusCode) {
       return res.status(statusCode).json(entity);
     }
     return null;
-  };
-}
-
-function patchUpdates (patches) {
-  return function (entity) {
-    try {
-      // eslint-disable-next-line prefer-reflect
-      jsonpatch.apply(entity, patches, /* validate */ true);
-    } catch (err) {
-      return Promise.reject(err);
-    }
-
-    return entity.save();
-  };
-}
-
-function removeEntity (res) {
-  return function (entity) {
-    if (entity) {
-      return entity.destroy()
-        .then(() => {
-          res.status(204).end();
-        });
-    }
   };
 }
 
@@ -80,68 +56,51 @@ function mapEntry(e) {
   };
 }
 
-// Gets a list of Entries
-export function index (req, res) {
-  return Entry.findAll()
-    .then(respondWithResult(res))
-    .catch(handleError(res));
+function mapToEntry(e) {
+  const entry = {
+    userId: e.userId,
+    tournamentId: e.tournamentId,
+    g1AId: e.golferIds[0][0],
+    g1BId: e.golferIds[0][1],
+    g1CId: e.golferIds[0][2],
+    g1DId: e.golferIds[0][3],
+    g2AId: e.golferIds[1][0],
+    g2BId: e.golferIds[1][1],
+    g2CId: e.golferIds[1][2],
+    g2DId: e.golferIds[1][3],
+    g3AId: e.golferIds[2][0],
+    g3BId: e.golferIds[2][1],
+    g3CId: e.golferIds[2][2],
+    g3DId: e.golferIds[2][3],
+  };
+
+  if (e.id) {
+    entry.id = e.id;
+  }
+
+  return entry;
 }
 
-// Gets a single Entry from the DB
-export function show (req, res) {
-  return Entry.find({
-    where: {
-      id: req.params.id
-    }
-  })
-    .then(handleEntityNotFound(res))
-    .then(respondWithResult(res))
-    .catch(handleError(res));
-}
 
 // Creates a new Entry in the DB
-export function create (req, res) {
-  return Entry.create(req.body)
+module.exports.create = function(req, res) {
+  const entry = mapToEntry(req.body);
+  return Entry.create(entry)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
 }
 
-// Upserts the given Entry in the DB at the specified ID
-export function update (req, res) {
-
-  return Entry.update(req.body, {
+// Updates the given Entry in the DB at the specified ID
+module.exports.update = function(req, res) {
+  const entry = mapToEntry(req.body);
+  return Entry.update(entry, {
     where: {
       id: req.params.id
     }
   })
-    .then(respondWithResult(res))
-    .catch(handleError(res));
+  .then(respondWithResult(res))
+  .catch(handleError(res));
 }
 
-// Updates an existing Entry in the DB
-export function patch (req, res) {
-  if (req.body.id) {
-    Reflect.deleteProperty(req.body, 'id');
-  }
-  return Entry.find({
-    where: {
-      id: req.params.id
-    }
-  })
-    .then(handleEntityNotFound(res))
-    .then(patchUpdates(req.body))
-    .then(respondWithResult(res))
-    .catch(handleError(res));
-}
 
-// Deletes a Entry from the DB
-export function destroy (req, res) {
-  return Entry.find({
-    where: {
-      id: req.params.id
-    }
-  })
-    .then(handleEntityNotFound(res))
-    .then(removeEntity(res))
-    .catch(handleError(res));
-}
+

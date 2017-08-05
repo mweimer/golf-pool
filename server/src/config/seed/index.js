@@ -5,15 +5,15 @@
 
 'use strict';
 
-import config from '../environment/';
-import userSeed from './user';
-import golferSeed from './golfer';
-import tournamentSeed from './tournament';
-import tournamentGolferSeed from './tournamentGolfer';
-import entrySeed from './entry';
+const config = require('../environment/');
+const userSeed = require( './user');
+const golferSeed = require( './golfer');
+const tournamentSeed = require( './tournament');
+const tournamentGolferSeed = require( './tournamentGolfer');
+const entrySeed = require( './entry');
 
 
-export default function seedDatabaseIfNeeded () {
+module.exports = function seedDatabaseIfNeeded () {
     if (config.seedDB) {
         return userSeed()
             .then(() => golferSeed())

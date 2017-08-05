@@ -1,8 +1,8 @@
 'use strict';
 
-import sqldb from '../../sqldb';
+const sqldb = require('../../sqldb');
 
-export default function seedDatabaseIfNeeded () {
+module.exports = function seedDatabaseIfNeeded () {
     let TournamentGolfer = sqldb.TournamentGolfer;
 
     return TournamentGolfer.destroy({ where: {} })

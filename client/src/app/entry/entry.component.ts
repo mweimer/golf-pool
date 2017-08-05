@@ -13,7 +13,7 @@ import { concat } from 'lodash';
 })
 export class EntryComponent implements OnInit {
 
-    golferIds = ['', '', '', '', '', '', '', '', '', '', '', ''];
+    golferIds = [['', '', '', ''], ['', '', '', ''], ['', '', '', '']];
 
     private config: IAppConfig;
     private user: User;
@@ -27,8 +27,7 @@ export class EntryComponent implements OnInit {
             if (this.user) {
                 const userEntry = config.CONTESTANT_ENTRIES.find(e => e.userId === this.user.id);
                 if (userEntry) {
-                    this.golferIds = concat(userEntry.entries[0], userEntry.entries[1], userEntry.entries[2])
-                        .map(id => id.toString());
+                    this.golferIds = userEntry.entries.map(entry => entry.map(id => id.toString()));
                     this.userEntryId = userEntry.id;
                 }
             }
@@ -48,16 +47,18 @@ export class EntryComponent implements OnInit {
     }
 
     submit() {
-        const ids = this.golferIds.map(id => {
-            const numId = parseInt(id);
-            if (isNaN(numId)) {
-                return 0;
-            }
+        const ids = this.golferIds.map(gids => {
+            return gids.map(id => {
+                const numId = parseInt(id);
+                if (isNaN(numId)) {
+                    return 0;
+                }
 
-            return numId;
+                return numId;
+            });
         });
 
-        if (ids.every(id => id > 0)) {
+        if (ids.every(gids => gids.every(id => id > 0))) {
             this.configService.publishEntry(ids, this.userEntryId);
         }
 

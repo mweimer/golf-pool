@@ -4,23 +4,23 @@
 
 'use strict';
 
-import express from 'express';
-import favicon from 'serve-favicon';
-import morgan from 'morgan';
-import shrinkRay from 'shrink-ray';
-import bodyParser from 'body-parser';
-import methodOverride from 'method-override';
-import cookieParser from 'cookie-parser';
-import errorHandler from 'errorhandler';
-import path from 'path';
-import config from './environment';
-import passport from 'passport';
-import session from 'express-session';
-import sqldb from '../sqldb';
-import expressSequelizeSession from 'express-sequelize-session';
+const express = require('express');
+const favicon = require('serve-favicon');
+const morgan = require('morgan');
+const shrinkRay = require('shrink-ray');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
+const cookieParser = require('cookie-parser');
+const errorHandler = require('errorhandler');
+const path = require('path');
+const config = require('./environment');
+const passport = require('passport');
+const session = require('express-session');
+const sqldb = require('../sqldb');
+const expressSequelizeSession = require('express-sequelize-session');
 var Store = expressSequelizeSession(session.Store);
 
-export default function (app) {
+module.exports = function (app) {
   var env = app.get('env');
 
   if (env === 'development' || env === 'test') {

@@ -26,7 +26,7 @@ export class ConfigService {
         return this.configObservable;
     }
 
-    publishEntry(golferIds: number[], id: number = 0) {
+    publishEntry(golferIds: number[][], id: number = 0) {
         if (!this.appConfig || !this.appConfig.TOURNAMENT_ID || !this.user || !this.user.id) {
             return;
         }
@@ -34,18 +34,7 @@ export class ConfigService {
         const entry = {
             userId: this.user.id,
             tournamentId: this.appConfig.TOURNAMENT_ID,
-            g1AId: golferIds[0],
-            g1BId: golferIds[1],
-            g1CId: golferIds[2],
-            g1DId: golferIds[3],
-            g2AId: golferIds[4],
-            g2BId: golferIds[5],
-            g2CId: golferIds[6],
-            g2DId: golferIds[7],
-            g3AId: golferIds[8],
-            g3BId: golferIds[9],
-            g3CId: golferIds[10],
-            g3DId: golferIds[11],
+            golferIds
         }
 
         const method = id > 0 ? this.http.put(`/api/entries/${id}`, entry) : this.http.post('/api/entries', entry);
@@ -60,7 +49,7 @@ export class ConfigService {
                     id: newEntry.id,
                     userName: this.user.name,
                     userId: this.user.id,
-                    entries: newEntry.golferIds
+                    entries: entry.golferIds
                 }
                 if (id === 0) {
                     this.appConfig.CONTESTANT_ENTRIES.push(ce); 

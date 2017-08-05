@@ -6,9 +6,9 @@
 
 'use strict';
 
-import jsonpatch from 'fast-json-patch';
+const jsonpatch = require('fast-json-patch');
 
-import {Entry, Tournament, User, Golfer} from '../../sqldb';
+const {Entry, Tournament, User, Golfer} = require('../../sqldb');
 
 function respondWithResult (res, statusCode) {
   statusCode = statusCode || 200;
@@ -65,7 +65,7 @@ function mapConfig(entity) {
 }
 
 // Gets a list of Entries
-export function index (req, res) {
+module.exports.index = function(req, res) {
   return Tournament.findAll({
     include: [
       { model: Golfer, as: 'golfers' }, 
@@ -78,7 +78,7 @@ export function index (req, res) {
 }
 
 // Gets a single Entry from the DB
-export function show (req, res) {
+module.exports.show = function(req, res) {
   return Tournament.find({
     where: {
       id: req.params.tournamentId,
@@ -95,7 +95,7 @@ export function show (req, res) {
 }
 
 // Gets current Entry from the DB
-export function current (req, res) {
+module.exports.current = function(req, res) {
   return Tournament.find({
     where: {
       current: true

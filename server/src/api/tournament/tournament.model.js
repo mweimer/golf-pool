@@ -1,6 +1,6 @@
 'use strict';
 
-export default function (sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
 	const Tournament = sequelize.define('Tournament', {
 		id: {
 		  type: DataTypes.INTEGER,

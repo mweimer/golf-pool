@@ -10,8 +10,8 @@
 
 'use strict';
 
-import jsonpatch from 'fast-json-patch';
-import {Golfer} from '../../sqldb';
+const jsonpatch = require('fast-json-patch');
+const {Golfer} = require('../../sqldb');
 
 function respondWithResult (res, statusCode) {
   statusCode = statusCode || 200;
@@ -66,14 +66,14 @@ function handleError (res, statusCode) {
 }
 
 // Gets a list of Golfers
-export function index (req, res) {
+module.exports.index = function(req, res) {
   return Golfer.findAll()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
 // Gets a single Golfer from the DB
-export function show (req, res) {
+module.exports.show = function(req, res) {
   return Golfer.find({
     where: {
       id: req.params.id
@@ -85,14 +85,14 @@ export function show (req, res) {
 }
 
 // Creates a new Golfer in the DB
-export function create (req, res) {
+module.exports.create = function(req, res) {
   return Golfer.create(req.body)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
 }
 
 // Upserts the given Golfer in the DB at the specified ID
-export function upsert (req, res) {
+module.exports.upsert = function(req, res) {
   if (req.body.id) {
     Reflect.deleteProperty(req.body, 'id');
   }
@@ -107,7 +107,7 @@ export function upsert (req, res) {
 }
 
 // Updates an existing Golfer in the DB
-export function patch (req, res) {
+module.exports.patch = function(req, res) {
   if (req.body.id) {
     Reflect.deleteProperty(req.body, 'id');
   }
@@ -123,7 +123,7 @@ export function patch (req, res) {
 }
 
 // Deletes a Golfer from the DB
-export function destroy (req, res) {
+module.exports.destroy = function(req, res) {
   return Golfer.find({
     where: {
       id: req.params.id

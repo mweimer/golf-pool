@@ -10,9 +10,9 @@
 
 'use strict';
 
-import jsonpatch from 'fast-json-patch';
+const jsonpatch = require('fast-json-patch');
 
-import {Tournament} from '../../sqldb';
+const {Tournament} = require('../../sqldb');
 
 function respondWithResult (res, statusCode) {
   statusCode = statusCode || 200;
@@ -67,14 +67,14 @@ function handleError (res, statusCode) {
 }
 
 // Gets a list of Tournaments
-export function index (req, res) {
+module.exports.index = function(req, res) {
   return Tournament.findAll()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
 // Gets a single Tournament from the DB
-export function show (req, res) {
+module.exports.show = function(req, res) {
     return Tournament.find({
     where: {
       id: req.params.id
@@ -88,14 +88,14 @@ export function show (req, res) {
 }
 
 // Creates a new Tournament in the DB
-export function create (req, res) {
+module.exports.create = function(req, res) {
   return Tournament.create(req.body)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
 }
 
 // Upserts the given Tournament in the DB at the specified ID
-export function upsert (req, res) {
+module.exports.upsert = function(req, res) {
   if (req.body.id) {
     Reflect.deleteProperty(req.body, 'id');
   }
@@ -110,7 +110,7 @@ export function upsert (req, res) {
 }
 
 // Updates an existing Tournament in the DB
-export function patch (req, res) {
+module.exports.patch = function(req, res) {
   if (req.body.id) {
     Reflect.deleteProperty(req.body, 'id');
   }
@@ -126,7 +126,7 @@ export function patch (req, res) {
 }
 
 // Deletes a Tournament from the DB
-export function destroy (req, res) {
+module.exports.destroy = function(req, res) {
   return Tournament.find({
     where: {
       id: req.params.id

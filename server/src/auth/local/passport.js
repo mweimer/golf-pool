@@ -1,5 +1,5 @@
-import passport from 'passport';
-import {Strategy as LocalStrategy} from 'passport-local';
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 function localAuthenticate (User, email, password, done) {
     return User.find({
@@ -24,7 +24,7 @@ function localAuthenticate (User, email, password, done) {
     .catch(err => done(err));
 }
 
-export function setup (User/*, config */) {
+module.exports.setup = function(User/*, config */) {
     passport.use(new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password' // this is the virtual field on the model

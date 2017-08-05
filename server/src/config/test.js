@@ -1,4 +1,4 @@
-import { concat, uniqWith, uniq, orderBy } from 'lodash';
+const { concat, uniqWith, uniq, orderBy } = require('lodash');
 
 const golferData1 = [
     { id: 1, name: 'Dustin Johnson', espnId: '3448', tier: 'A' },

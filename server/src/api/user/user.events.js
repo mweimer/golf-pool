@@ -4,9 +4,9 @@
 
 'use strict';
 
-import {EventEmitter} from 'events';
-import {User} from '../../sqldb';
-var UserEvents = new EventEmitter();
+const {EventEmitter} = require('events');
+const {User} = require('../../sqldb');
+const UserEvents = new EventEmitter();
 
 // Set max event listeners (0 == unlimited)
 UserEvents.setMaxListeners(0);
