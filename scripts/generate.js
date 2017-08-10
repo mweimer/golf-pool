@@ -84,7 +84,6 @@ function createGolferConfig(worksheet, tierPosition, tierIndex, espnFuse) {
     while (true) {
         const cellAddress = tierPosition.column + tierPosition.row.toString();
         const targetCell = worksheet[cellAddress];
-        console.log(targetCell)
         if (targetCell) {
             tierGolfers.push(createGolfer(targetCell.v, tierIndex, espnFuse));
         } else {

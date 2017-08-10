@@ -1,4 +1,4 @@
-const tourneyTitle = '2017 PGA Championship';
+const tourneyTitle = 'PGA Championship';
 
 const tourneyId = '2712';
 
@@ -58,7 +58,7 @@ const golferData = [
     { id: 51, name: 'Bernd Wiesberger', espnId: '4317', tier: 'C' },
     { id: 52, name: 'Bryson DeChambeau', espnId: '10046', tier: 'C' },
     { id: 53, name: 'Charles Howell III', espnId: '208', tier: 'C' },
-    { id: 54, name: 'Harris English', espnId: '', tier: 'C' },
+    { id: 54, name: 'Padraig Harrington', espnId: '186', tier: 'C' },
     { id: 55, name: 'James Hahn', espnId: '5025', tier: 'C' },
     { id: 56, name: 'Keegan Bradley', espnId: '4513', tier: 'C' },
     { id: 57, name: 'Lee Westwood', espnId: '455', tier: 'C' },
@@ -80,7 +80,7 @@ const golferData = [
     { id: 73, name: 'Matthew Fitzpatrick', espnId: '9037', tier: 'C' },
     { id: 74, name: 'Peter Uihlein', espnId: '1674', tier: 'C' },
     { id: 75, name: 'Ross Fisher', espnId: '3462', tier: 'C' },
-    { id: 76, name: 'Scott Piercy', espnId: '', tier: 'C' },
+    { id: 76, name: 'Scott Hebert', espnId: '3383', tier: 'C' },
     { id: 77, name: 'Tyrrell Hatton', espnId: '5553', tier: 'C' },
     { id: 78, name: 'Pat Perez', espnId: '707', tier: 'C' },
     { id: 79, name: 'Graeme McDowell', espnId: '301', tier: 'C' },
@@ -99,10 +99,10 @@ const golferData = [
     { id: 91, name: 'Chris Stroud', espnId: '1352', tier: 'D' },
     { id: 92, name: 'Alexander Levy', espnId: '6041', tier: 'D' },
     { id: 93, name: 'Anirban Lahiri', espnId: '4989', tier: 'D' },
-    { id: 94, name: 'Bernhard Langer', espnId: '', tier: 'D' },
+    { id: 94, name: 'Xander Schauffele', espnId: '10140', tier: 'D' },
     { id: 95, name: 'Bud Cauley', espnId: '5338', tier: 'D' },
     { id: 96, name: 'Cameron Smith', espnId: '9131', tier: 'D' },
-    { id: 97, name: 'Chris Kirk', espnId: '', tier: 'D' },
+    { id: 97, name: 'Chris Stroud', espnId: '1352', tier: 'D' },
     { id: 98, name: 'Chris Wood', espnId: '3839', tier: 'D' },
     { id: 99, name: 'Grayson Murray', espnId: '5462', tier: 'D' },
     { id: 100, name: 'Hideto Tanihara', espnId: '1099', tier: 'D' },
