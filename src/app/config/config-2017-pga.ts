@@ -102,7 +102,7 @@ const golferData = [
     { id: 94, name: 'Bernhard Langer', espnId: '', tier: 'D' },
     { id: 95, name: 'Bud Cauley', espnId: '5338', tier: 'D' },
     { id: 96, name: 'Cameron Smith', espnId: '9131', tier: 'D' },
-    { id: 97, name: 'Chris Kirk', espnId: '', tier: 'D' },
+    { id: 97, name: 'Chris Kirk', espnId: '3449', tier: 'D' },
     { id: 98, name: 'Chris Wood', espnId: '3839', tier: 'D' },
     { id: 99, name: 'Grayson Murray', espnId: '5462', tier: 'D' },
     { id: 100, name: 'Hideto Tanihara', espnId: '1099', tier: 'D' },
