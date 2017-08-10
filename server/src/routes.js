@@ -12,7 +12,7 @@ module.exports = function (app) {
   app.use('/api/golfers', require('./api/golfer'));
   app.use('/api/users', require('./api/user'));
   app.use('/api/tournaments', require('./api/tournament'));
-  app.use('/api/entries', require('./api/entry'));
+  app.use('/api/selections', require('./api/selection'));
   app.use('/api/config', require('./api/config'));
 
   app.use('/auth', require('./auth'));

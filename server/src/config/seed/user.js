@@ -23,7 +23,7 @@ module.exports = function seed () {
         { id: 14, provider: 'local', name: 'Matt Dorow', email: 'user14@test.com', password: 'pass@word1' },
         { id: 15, provider: 'local', name: 'Matt Kilianski', email: 'user15@test.com', password: 'pass@word1' },
         { id: 16, provider: 'local', name: 'Matt Walker', email: 'user16@test.com', password: 'pass@word1' },
-        { id: 17, provider: 'local', name: 'Matt Weimer', email: 'user17@test.com', password: 'pass@word1' },
+        { id: 17, provider: 'local', name: 'Matt Weimer', email: 'user17@test.com', password: 'pass@word1', role: 'admin' },
         { id: 18, provider: 'local', name: 'Nate Heckmann', email: 'user18@test.com', password: 'pass@word1' },
         { id: 19, provider: 'local', name: 'Neil Thompson', email: 'user19@test.com', password: 'pass@word1' },
         { id: 20, provider: 'local', name: 'Nick Royer', email: 'user20@test.com', password: 'pass@word1' },

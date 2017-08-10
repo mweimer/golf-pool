@@ -7,7 +7,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
-import { Config, IAppConfig, User, EntryConfig, ContestantEntriesConfig } from '../models/models';
+import { Config, IAppConfig, User, EntryConfig, Selection } from '../models/models';
 import { AppConfig } from './app.config';
 import { AuthService } from '../auth/auth.service';
 
@@ -26,41 +26,54 @@ export class ConfigService {
         return this.configObservable;
     }
 
-    publishEntry(golferIds: number[][], id: number = 0) {
-        if (!this.appConfig || !this.appConfig.TOURNAMENT_ID || !this.user || !this.user.id) {
+    createSelection(entries: number[][]) {
+        if (!this.appConfig || !this.user) {
             return;
         }
 
         const entry = {
             userId: this.user.id,
             tournamentId: this.appConfig.TOURNAMENT_ID,
-            golferIds
+            entries
         }
 
-        const method = id > 0 ? this.http.put(`/api/entries/${id}`, entry) : this.http.post('/api/entries', entry);
-
-        return method
+        this.http.post('/api/selections', entry)
             .map((res: Response) => {
-                const newEntry = res.json();
-                return newEntry;   
+                const newSelection = res.json();
+                newSelection.userName = this.user.name;
+                return newSelection;   
             })
-            .map((newEntry) => {
-                const ce: ContestantEntriesConfig = {
-                    id: newEntry.id,
-                    userName: this.user.name,
-                    userId: this.user.id,
-                    entries: entry.golferIds
-                }
-                if (id === 0) {
-                    this.appConfig.CONTESTANT_ENTRIES.push(ce); 
-                } else {
-                    const index = this.appConfig.CONTESTANT_ENTRIES.findIndex(e => e.id == ce.id);
-                    this.appConfig.CONTESTANT_ENTRIES[index] = ce;
-                }
+            .map((newSelection) => {
+                this.appConfig.SELECTIONS.push(newSelection);
                 this.configObservable.next(this.appConfig);
             })
             .catch(this.handleError)
             .subscribe(res => { console.log(res) });
+    }
+
+    updateSelection(entries: number[][], id: number) {
+         if (!this.appConfig || !this.user) {
+            return;
+        }
+
+        const entry = {
+            id,
+            userId: this.user.id,
+            tournamentId: this.appConfig.TOURNAMENT_ID,
+            entries
+        }
+
+        this.http.put(`/api/selections/${id}`, entry)
+            .map((res: Response) => {
+                return res.text();
+            })
+            .map((count) => {
+                const index = this.appConfig.SELECTIONS.findIndex(s => s.id == id);
+                this.appConfig.SELECTIONS[index].entries = entries;
+                this.configObservable.next(this.appConfig);
+            })
+            .catch(this.handleError)
+            .subscribe(res => { console.log(res) });            
     }
 
     private init() {    

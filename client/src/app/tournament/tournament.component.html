@@ -1,3 +1,24 @@
-<p>
-  tournament works!
-</p>
+<form>
+    <div class="row">
+        <div class="col-1">
+            <label for="espnIdInput">ESPN ID</label>
+        </div>
+        <div class="col-5">
+            <input type="text" class="form-control" id="espnIdInput" placeholder="ESPN ID" [(ngModel)]="espnId" (ngModelChange)="espnIdChange()" name="espnId">
+        </div>
+        <div class="col-1"><i class="fa fa-check"></i></div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-1">
+            <label for="tierAGolfersInput">Tier A Golfers</label>
+        </div>
+        <div class="col-5">
+            <textarea class="form-control" rows="10" id="tierAGolfersInput" [(ngModel)]="tierAGolfers" (ngModelChange)="golfersChanges('A')" name="tierAGolfers"></textarea>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="offset-5 col-2">
+        <button type="submit" class="btn btn-primary" (click)="submit()">Submit</button>
+        </div>
+    </div>
+</form>

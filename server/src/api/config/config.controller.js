@@ -8,7 +8,7 @@
 
 const jsonpatch = require('fast-json-patch');
 
-const {Entry, Tournament, User, Golfer} = require('../../sqldb');
+const {Selection, Tournament, User, Golfer} = require('../../sqldb');
 
 function respondWithResult (res, statusCode) {
   statusCode = statusCode || 200;
@@ -46,7 +46,7 @@ function mapConfig(entity) {
       tier: g.TournamentGolfer.tier
     }));
 
-    const contestantEntries = entity.entries.map(e => ({
+    const selections = entity.selections.map(e => ({
       id: e.id,
       userName: e.user.name,
       userId: e.user.id,
@@ -60,16 +60,16 @@ function mapConfig(entity) {
         espnId: entity.espnId
       },
       golfers,
-      contestantEntries 
+      selections 
     }
 }
 
-// Gets a list of Entries
+// Gets a list of Selections
 module.exports.index = function(req, res) {
   return Tournament.findAll({
     include: [
       { model: Golfer, as: 'golfers' }, 
-      { model:Entry, as:'entries', include: [{model:User, as:'user', attributes:['id','name']}]}
+      { model:Selection, as:'selections', include: [{model:User, as:'user', attributes:['id','name']}]}
     ]
   })
     .then((entity) => entity.map(mapConfig))
@@ -77,7 +77,7 @@ module.exports.index = function(req, res) {
     .catch(handleError(res));
 }
 
-// Gets a single Entry from the DB
+// Gets a single Selection from the DB
 module.exports.show = function(req, res) {
   return Tournament.find({
     where: {
@@ -85,7 +85,7 @@ module.exports.show = function(req, res) {
     },
     include: [
       { model: Golfer, as: 'golfers' }, 
-      { model:Entry, as:'entries', include: [{model:User, as:'user', attributes:['id','name']}]}
+      { model:Selection, as:'selections', include: [{model:User, as:'user', attributes:['id','name']}]}
     ]
   })
     .then(handleEntityNotFound(res))
@@ -94,7 +94,7 @@ module.exports.show = function(req, res) {
     .catch(handleError(res));
 }
 
-// Gets current Entry from the DB
+// Gets current Selection from the DB
 module.exports.current = function(req, res) {
   return Tournament.find({
     where: {
@@ -102,7 +102,7 @@ module.exports.current = function(req, res) {
     },
     include: [
       { model: Golfer, as: 'golfers' }, 
-      { model:Entry, as:'entries', include: [{model:User, as:'user', attributes:['id','name']}]}
+      { model:Selection, as:'selections', include: [{model:User, as:'user', attributes:['id','name']}]}
     ]
   })
     .then(handleEntityNotFound(res))

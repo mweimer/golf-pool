@@ -8,12 +8,12 @@ export interface Config {
     }
    
     golfers: GolferConfig[];
-    contestantEntries: ContestantEntriesConfig[];
+    selections: Selection[];
 }
 
 export class IAppConfig {
     GOLFERS: GolferConfig[];
-    CONTESTANT_ENTRIES: ContestantEntriesConfig[];
+    SELECTIONS: Selection[];
     LEADERBOARD_URL: string;
     PLAYER_INFO_URL: string;
     TOURNAMENT_ID: number;
@@ -28,7 +28,7 @@ export interface GolferConfig {
     espnId: string;
 }
 
-export interface ContestantEntriesConfig {
+export interface Selection {
     id: number;
     userName: string;
     userId: number;

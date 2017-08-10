@@ -24,9 +24,10 @@ import { NotificationService } from './services/notification.service';
 import { ConfigService } from './config/config.service';
 import { UpdateService } from './services/update.service';
 import { AuthService } from './auth/auth.service';
-import { EntryComponent } from './entry/entry.component';
+import { SelectionComponent } from './selection/selection.component';
 import { TournamentComponent } from './tournament/tournament.component';
 import { HomeComponent } from './home/home.component';
+import { TournamentService } from './tournament/tournament.service'
 
 @NgModule({
     imports: [
@@ -45,8 +46,8 @@ import { HomeComponent } from './home/home.component';
                 component: GolfersComponent
             },
             {
-                path: 'entry',
-                component: EntryComponent
+                path: 'selection',
+                component: SelectionComponent
             },
             {
                 path: 'tournament',
@@ -81,7 +82,7 @@ import { HomeComponent } from './home/home.component';
         InfoModalComponent,
         LoginComponent,
         SignupComponent,
-        EntryComponent,
+        SelectionComponent,
         TournamentComponent,
         HomeComponent
     ],
@@ -98,7 +99,8 @@ import { HomeComponent } from './home/home.component';
         NotificationService,
         ConfigService,
         UpdateService,
-        AuthService
+        AuthService,
+        TournamentService
     ],
     bootstrap: [AppComponent]
 })

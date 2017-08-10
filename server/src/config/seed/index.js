@@ -10,7 +10,7 @@ const userSeed = require( './user');
 const golferSeed = require( './golfer');
 const tournamentSeed = require( './tournament');
 const tournamentGolferSeed = require( './tournamentGolfer');
-const entrySeed = require( './entry');
+const selectionSeed = require( './selection');
 
 
 module.exports = function seedDatabaseIfNeeded () {
@@ -19,6 +19,6 @@ module.exports = function seedDatabaseIfNeeded () {
             .then(() => golferSeed())
             .then(() => tournamentSeed())
             .then(() => tournamentGolferSeed())
-            .then(() => entrySeed());
+            .then(() => selectionSeed());
     }
 }

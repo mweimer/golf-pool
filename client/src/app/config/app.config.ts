@@ -1,4 +1,5 @@
 import { Config, IAppConfig } from '../models/models';
+import { Constants } from './constants'
 
 export class AppConfig implements IAppConfig {
 
@@ -6,9 +7,9 @@ export class AppConfig implements IAppConfig {
 
     public GOLFERS = this.config.golfers;
 
-    public CONTESTANT_ENTRIES = this.config.contestantEntries;
+    public SELECTIONS = this.config.selections;
 
-    public LEADERBOARD_URL = `http://www.espn.com/golf/leaderboard?tournamentId=${this.config.tournament.espnId}`;
+    public LEADERBOARD_URL = Constants.LEADERBOARD_URL_TEMPLATE.replace('${espnId}', this.config.tournament.espnId);
 
     public PLAYER_INFO_URL = `http://site.api.espn.com/apis/site/v2/sports/golf/pga/leaderboard/${this.config.tournament.espnId}/playersummary?player=`;
 

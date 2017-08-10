@@ -45,8 +45,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
             return 'pool';
         } else if (this.router.url === '/golfers') {
             return 'golfers';
-        } else if (this.router.url === '/entry') {
-            return 'entry';
+        } else if (this.router.url === '/selection') {
+            return 'selection';
         } else if (this.router.url === '/tournament') {
             return 'tournament';
         } else if (this.router.url === '/settings') {

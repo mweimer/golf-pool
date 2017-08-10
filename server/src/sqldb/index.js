@@ -18,6 +18,6 @@ db.User = db.sequelize.import('../api/user/user.model');
 const tournamentModels = db.sequelize.import('../api/tournament/tournament.model');
 db.Tournament = tournamentModels.Tournament;
 db.TournamentGolfer = tournamentModels.TournamentGolfer;
-db.Entry = db.sequelize.import('../api/entry/entry.model');
+db.Selection = db.sequelize.import('../api/selection/selection.model');
 
 module.exports = db;

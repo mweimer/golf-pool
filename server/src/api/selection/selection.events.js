@@ -1,15 +1,15 @@
 /**
- * Entry model events
+ * Selection model events
  */
 
 'use strict';
 
 const {EventEmitter} = require('events');
-const Entry = require('../../sqldb').Entry;
-const EntryEvents = new EventEmitter();
+const Selection = require('../../sqldb').Selection;
+const SelectionEvents = new EventEmitter();
 
 // Set max event listeners (0 == unlimited)
-EntryEvents.setMaxListeners(0);
+SelectionEvents.setMaxListeners(0);
 
 // Model events
 var events = {
@@ -19,20 +19,20 @@ var events = {
 };
 
 // Register the event emitter to the model events
-function registerEvents (Entry) {
+function registerEvents (Selection) {
   for (var e in events) {
     let event = events[e];
-    Entry.hook(e, emitEvent(event));
+    Selection.hook(e, emitEvent(event));
   }
 }
 
 function emitEvent (event) {
   return function (doc, options, done) {
-    EntryEvents.emit(`${event}:${doc.id}`, doc);
-    EntryEvents.emit(event, doc);
+    SelectionEvents.emit(`${event}:${doc.id}`, doc);
+    SelectionEvents.emit(event, doc);
     done(null);
   };
 }
 
-registerEvents(Entry);
-export default EntryEvents;
+registerEvents(Selection);
+export default SelectionEvents;

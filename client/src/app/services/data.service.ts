@@ -31,7 +31,7 @@ export class DataService {
 
         this.configService.config.subscribe((config: IAppConfig) => {
             this.config = config;
-            this.entryConfig = config.CONTESTANT_ENTRIES
+            this.entryConfig = config.SELECTIONS
                 .map(c => c.entries.map((gids, i) => ({ name: c.userName + ' ' + (i + 1), golferIds: gids, userId: c.userId})))
                 .reduce((prev, curr) => prev.concat(curr), []);
 

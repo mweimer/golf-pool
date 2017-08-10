@@ -3,10 +3,10 @@
 const sqldb = require('../../sqldb');
 
 module.exports = function seed () {
-    let Entry = sqldb.Entry;
+    let Selection = sqldb.Selection;
 
-    return Entry.destroy({ where: {} })
-    .then(() => Entry.bulkCreate([
+    return Selection.destroy({ where: {} })
+    .then(() => Selection.bulkCreate([
         { id: 1, userId: 2, tournamentId: 1, g1AId: 122, g1BId: 166, g1CId: 125, g1DId: 95, g2AId: 133, g2BId: 185, g2CId: 10, g2DId: 35, g3AId: 242, g3BId: 183, g3CId: 48, g3DId: 124 },
         { id: 2, userId: 3, tournamentId: 1, g1AId: 118, g1BId: 52, g1CId: 51, g1DId: 8, g2AId: 180, g2BId: 33, g2CId: 13, g2DId: 35, g3AId: 133, g3BId: 21, g3CId: 29, g3DId: 140 },
         { id: 3, userId: 4, tournamentId: 1, g1AId: 180, g1BId: 77, g1CId: 48, g1DId: 95, g2AId: 133, g2BId: 33, g2CId: 65, g2DId: 62, g3AId: 99, g3BId: 14, g3CId: 13, g3DId: 35 },
@@ -56,6 +56,6 @@ module.exports = function seed () {
         { id: 47, userId: 25, tournamentId: 4, g1AId: 133, g1BId: 3, g1CId: 131, g1DId: 98, g2AId: 180, g2BId: 209, g2CId: 152, g2DId: 255, g3AId: 118, g3BId: 166, g3CId: 17, g3DId: 29 },
         { id: 48, userId: 24, tournamentId: 4, g1AId: 180, g1BId: 3, g1CId: 89, g1DId: 49, g2AId: 133, g2BId: 116, g2CId: 48, g2DId: 54, g3AId: 242, g3BId: 166, g3CId: 112, g3DId: 255 }
         ])
-    .then(() => console.log('finished populating entries'))
-    .catch(err => console.log('error populating entries', err)));
+    .then(() => console.log('finished populating selections'))
+    .catch(err => console.log('error populating selections', err)));
 }
