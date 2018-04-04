@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
-
-
 import { ConfigService } from '../config/config.service';
 import { IAppConfig } from '../models/models';
 

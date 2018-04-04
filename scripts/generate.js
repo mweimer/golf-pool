@@ -10,7 +10,7 @@ if (process.argv.length < 3 || (process.argv.length >= 3 && !/\.xlsx$/.test(proc
 
 const inputFile = process.argv[2];
 
-if (process.argv.length < 4 || (process.argv.length >= 4 && !/^[0-9]{4}$/.test(process.argv[3])))  {
+if (process.argv.length < 4 || (process.argv.length >= 4 && !/^[0-9]{4,9}$/.test(process.argv[3])))  {
     console.log('Please specify tourneyId');
     return;
 }
