@@ -116,7 +116,8 @@ const contestantData = [
     { id: 18, name: 'Ryan Aguiar', entries: [[7, 12, 31, 54], [2, 17, 28, 60], [1, 14, 38, 55]] },
     { id: 19, name: 'Matt Kilianski', entries: [[5, 15, 31, 60], [1, 14, 30, 61], [7, 11, 34, 55]] },
     { id: 20, name: 'Brendan McCausland', entries: [[9, 11, 27, 60], [6, 17, 38, 62], [1, 16, 37, 63]] },
-    { id: 21, name: 'Kevin O\'Brien', entries: [[3, 13, 49, 63], [2, 11, 27, 66], [5, 22, 27, 62]] }
+    { id: 21, name: 'Kevin O\'Brien', entries: [[3, 13, 49, 63], [2, 11, 27, 66], [5, 22, 27, 62]] },
+    { id: 22, name: 'Cameron Weimer', entries: [[1, 11, 31, 55], [3, 12, 29, 56], [7, 15, 38, 62]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
