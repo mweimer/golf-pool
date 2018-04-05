@@ -118,7 +118,9 @@ const contestantData = [
     { id: 20, name: 'Brendan McCausland', entries: [[9, 11, 27, 60], [6, 17, 38, 62], [1, 16, 37, 63]] },
     { id: 21, name: 'Kevin O\'Brien', entries: [[3, 13, 49, 63], [2, 11, 27, 66], [5, 22, 27, 62]] },
     { id: 22, name: 'Cameron Weimer', entries: [[1, 11, 31, 55], [3, 12, 29, 56], [7, 15, 38, 62]] },
-    { id: 23, name: 'Cameron Anderson', entries: [[7, 12, 29, 66], [2, 12, 29, 66], [7, 14, 30, 66]] }
+    { id: 23, name: 'Cameron Anderson', entries: [[7, 12, 29, 66], [2, 12, 29, 66], [7, 14, 30, 66]] },
+    { id: 24, name: 'Andrew Kubaszewski', entries: [[5, 16, 36, 66], [3, 11, 42, 56], [10, 13, 29, 62]] },
+    { id: 25, name: 'Sean Buckle', entries: [[5, 17, 30, 56], [7, 14, 43, 62], [6, 13, 31, 54]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
