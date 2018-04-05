@@ -271,7 +271,7 @@ export class DataService {
 
             if (!isDQ) {
                 const worstGolferScores: GolferScore[] = orderBy(entryGolferScores,
-                    ['score.relativeScore', 'score.totalScore', 'golfer.id'], ['desc', 'desc', 'desc']);
+                    ['score.relativeScore', 'score.totalScore', 'golferConfig.tier', 'golferConfig.id'], ['desc', 'desc', 'desc', 'desc']);
                 worstGolferScores[0].throwaway = true;
 
                 overallRelativeScore = entryGolferScores
