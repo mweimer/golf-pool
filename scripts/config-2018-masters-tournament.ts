@@ -1,4 +1,4 @@
-const tourneyTitle = '2018 Masters Tournament';
+const tourneyTitle = '2018 Masters';
 
 const tourneyId = '401025221';
 
@@ -106,9 +106,14 @@ const contestantData = [
     { id: 8, name: 'Ian Horwich', entries: [[2, 13, 42, 61], [5, 12, 29, 56], [10, 17, 46, 57]] },
     { id: 9, name: 'Nate Heckmann', entries: [[4, 12, 41, 56], [3, 14, 37, 60], [7, 12, 34, 58]] },
     { id: 10, name: 'Ryan Romes', entries: [[5, 17, 31, 60], [1, 13, 27, 59], [9, 11, 30, 62]] },
-    { id: 11, name: 'Dan Godshall', entries: [[2, 12, 29, 66], [4, 11, 33, 62], [5, 14, 29, 71]] },
+    { id: 11, name: 'Dan Godshall', entries: [[2, 12, 29, 66], [4, 11, 29, 62], [5, 25, 30, 71]] },
     { id: 12, name: 'Drew Serruto', entries: [[3, 13, 42, 64], [1, 14, 29, 56], [5, 21, 36, 64]] },
-    { id: 13, name: 'Matt Weimer', entries: [[3, 11, 29, 55], [2, 14, 33, 68], [1, 17, 34, 56]] }
+    { id: 13, name: 'Matt Weimer', entries: [[3, 11, 29, 55], [2, 14, 33, 68], [1, 17, 34, 56]] },
+    { id: 14, name: 'Nick Royer', entries: [[2, 17, 36, 66], [7, 17, 38, 66], [7, 25, 31, 57]] },
+    { id: 15, name: 'Kendall Kadish', entries: [[5, 11, 31, 54], [2, 13, 33, 56], [4, 12, 36, 66]] },
+    { id: 16, name: 'Lorenzo Washington', entries: [[7, 12, 31, 59], [3, 13, 53, 61], [2, 17, 29, 60]] },
+    { id: 17, name: 'Matt Bobson', entries: [[3, 12, 34, 55], [7, 15, 34, 57], [4, 12, 31, 55]] },
+    { id: 18, name: 'Ryan Aguiar', entries: [[7, 12, 31, 54], [2, 17, 28, 60], [1, 14, 38, 55]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
