@@ -166,7 +166,7 @@ const golferData = [
 const contestantData = [
     { id: 1, name: 'Matt Weimer', entries: [[3, 27, 37, 98], [5, 17, 37, 89], [8, 27, 49, 71]] },
     { id: 2, name: 'Kevin Donoher', entries: [[1, 13, 41, 69], [5, 16, 58, 81], [8, 32, 36, 98]] },
-    { id: 3, name: 'Ryan Boodouris', entries: [[1, 13, 36, 83], [6, 15, 41, 72], [7, 16, 37, 69]] },
+    { id: 3, name: 'Ryan Boudouris', entries: [[1, 13, 36, 83], [6, 15, 41, 72], [7, 16, 37, 69]] },
     { id: 4, name: 'David Prevo', entries: [[1, 17, 50, 146], [7, 14, 38, 78], [4, 18, 65, 100]] },
     { id: 5, name: 'Lorenzo Washington', entries: [[9, 20, 36, 78], [8, 29, 46, 81], [4, 14, 44, 84]] },
     { id: 6, name: 'Matt Scharrer', entries: [[12, 17, 40, 80], [6, 30, 51, 72], [5, 20, 67, 98]] },
