@@ -146,6 +146,9 @@ export class DataService {
                 if (possibleScores.length > 0) {
                     score = possibleScores.find(s => s.fullName === golferConfig.name);
                 }
+                if (score) {
+                    score.espnId = golferConfig.espnId;
+                }
             }
 
             if (score) {
