@@ -177,7 +177,7 @@ const contestantData = [
     { id: 10, name: 'Nick Brohas', entries: [[6, 20, 51, 69], [12, 31, 36, 69], [2, 32, 36, 69]] },
     { id: 11, name: 'Andrew Kaczala', entries: [[1, 15, 46, 84], [3, 13, 38, 71], [8, 19, 66, 113]] },
     { id: 12, name: 'Nick Royer', entries: [[6, 13, 36, 79], [1, 14, 35, 80], [8, 13, 36, 102]] },
-    { id: 13, name: 'Nate Heckmann', entries: [[1, 20, 40, 83], [6, 29, 36, 89], [12, 21, 41, 69]] },
+    { id: 13, name: 'Nate Heckmann', entries: [[1, 20, 40, 83], [6, 29, 34, 75], [12, 21, 41, 69]] },
     { id: 14, name: 'Steven Laake', entries: [[6, 28, 66, 75], [1, 23, 41, 79], [4, 20, 34, 71]] },
     { id: 15, name: 'Drew Serruto', entries: [[1, 14, 38, 69], [8, 17, 39, 80], [7, 13, 35, 70]] },
     { id: 16, name: 'Matt Bobson', entries: [[1, 17, 36, 76], [6, 13, 41, 71], [5, 13, 36, 70]] },
