@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Generate config file",
             "program": "${workspaceRoot}/generate.js",
-            "args": ["the-open.xlsx", "2710"]
+            "args": ["us-open-2018.xlsx", "401025255"]
         }
     ]
 }
