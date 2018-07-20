@@ -115,7 +115,7 @@ const golferData = [
     { id: 107, name: 'Gavin Kyle Green', espnId: '5271', tier: 'D' },
     { id: 108, name: 'Grant Forrest', espnId: '6958', tier: 'D' },
     { id: 109, name: 'Jack Senior', espnId: '6221', tier: 'D' },
-    { id: 110, name: 'Jazz Wattananond', espnId: '4357760', tier: 'D' },
+    { id: 110, name: 'Jazz Janewattananond', espnId: '4357760', tier: 'D' },
     { id: 111, name: 'Jovan Rebula', espnId: '10944', tier: 'D' },
     { id: 112, name: 'Kodai Ichihara', espnId: '4318', tier: 'D' },
     { id: 113, name: 'Lin Yuxin', espnId: '11455', tier: 'D' },
