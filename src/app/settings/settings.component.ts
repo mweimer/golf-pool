@@ -1,56 +1,43 @@
-import { Component, OnInit, OnDestroy  } from '@angular/core';
-
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { concat } from 'lodash';
-import { Subscription } from 'rxjs/Subscription';
-
+import { Observable } from 'rxjs/Observable';
+import { take } from 'rxjs/operators/take';
+import { map } from 'rxjs/operators/map';
 import { SettingsService } from './settings.service';
-import { NotificationService, NotificationStatus } from '../services/notification.service';
 import { ConfigService } from '../config/config.service';
-import { IAppConfig } from '../models/models';
+import { IAppConfig, NotificationStatus } from '../models/models';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  styleUrls: ['./settings.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SettingsComponent implements OnInit, OnDestroy {
+export class SettingsComponent implements OnInit {
 
-    contestants: Array<any>;
-    selectedContestantId: string;
-    notificationStatus: NotificationStatus = new NotificationStatus();
-    configs: IAppConfig[];
+    contestants: Observable<{name: string, id: number}[]> = this.configService.current
+        .pipe(map(config => concat([{name: 'none', id: 0}], config.CONTESTANTS.map(c => ({ name: c.name, id: c.id })))))
+   
+    configs: IAppConfig[] = this.configService.allConfigs;
+    
     selectedConfigIndex: string;
+    selectedContestantId: string;
 
-    private statusSubscription: Subscription;
-    private settingsSubscription: Subscription;
-    private configSubscription: Subscription;
 
-    constructor(private settingsService: SettingsService, private notificationService: NotificationService, 
-        private configService: ConfigService) {}
+    constructor(private settingsService: SettingsService,
+                private configService: ConfigService) {}
 
-    ngOnInit(): void {
-        this.statusSubscription = this.notificationService.getStatus().subscribe((status: NotificationStatus) => {
-            this.notificationStatus = status;
-        });
-
-        this.settingsSubscription = this.settingsService.getSelectedContestantId().subscribe(selectedContestantId => {
+    ngOnInit() {
+        this.settingsService.selectedContestantId.pipe(take(1)).subscribe(selectedContestantId => {
             this.selectedContestantId = selectedContestantId.toString();
         });
 
-        this.configSubscription = this.configService.config.subscribe((config: IAppConfig) => {
-            this.contestants = concat([{name: 'none', id: 0}], config.CONTESTANTS.map(c => ({ name: c.name, id: c.id })));
-            this.selectedConfigIndex = this.configService.selectedConfigIndex.toString();
+        this.configService.selectedIndex.pipe(take(1)).subscribe((selectedIndex: number) => {
+            this.selectedConfigIndex = selectedIndex.toString();
         });
-
-        this.configs = this.configService.allConfigs;
     }
 
-    ngOnDestroy() {
-        this.statusSubscription.unsubscribe();
-        this.settingsSubscription.unsubscribe();
-        this.configSubscription.unsubscribe();
-    }
 
     contestantSelected() {
         const value = parseInt(this.selectedContestantId, 10);

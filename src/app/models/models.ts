@@ -7,7 +7,7 @@ export interface Config {
     contestantData: ContestantConfig[];
 }
 
-export class IAppConfig {
+export interface IAppConfig {
     GOLFERS: GolferConfig[];
     CONTESTANTS: ContestantConfig[];
     LEADERBOARD_URL: string;
@@ -38,18 +38,18 @@ export interface EntryConfig {
 
 // Models for pool and golfer leaderboards
 
-export class PoolData {
+export interface LiveData {
     entries: Entry[];
     golfersScores: GolferScore[];
     cutline?: {
         value: number;
         type: string;
     };
-    selectedContestantId = 0;
+    selectedContestantId: number;
     timeStamp: Date;
 }
 
-export class Entry {
+export interface Entry {
     name: string;
     golferScores: GolferScore[];
     overallRelativeScore: number;
@@ -62,15 +62,15 @@ export class Entry {
     positionNumber: number;
 }
 
-export class GolferScore {
+export interface GolferScore {
     golferConfig: GolferConfig;
     score: Score;
-    throwaway = false;
-    entryCount = 0;
-    isSelected = false;
+    throwaway: boolean;
+    entryCount: number;
+    isSelected: boolean;
 }
 
-export class Score {
+export interface Score {
     index: number;
     isDNF: boolean
     toPar: string;
@@ -101,7 +101,7 @@ export enum MovementDirection {
     None
 }
 
-export class PlayerInfo {
+export interface PlayerInfo {
     golferId: number;
     profile: {
         age?: number;
@@ -113,7 +113,7 @@ export class PlayerInfo {
         headshot?: string;
         link?: string;
     };
-    rounds: {
+    rounds?: {
         courseId: number;
         currentPosition: number;
         displayValue: string;
@@ -137,6 +137,11 @@ export class PlayerInfo {
         teeTime: Date;
         value: number;
     }[];
+}
+
+export interface NotificationStatus {
+    supported: boolean;
+    granted: boolean;
 }
 
 

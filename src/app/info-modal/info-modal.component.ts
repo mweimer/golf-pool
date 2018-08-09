@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -7,7 +7,8 @@ import { PlayerInfo } from '../models/models';
 @Component({
     selector: 'app-info-modal',
     templateUrl: './info-modal.component.html',
-    styleUrls: ['./info-modal.component.scss']
+    styleUrls: ['./info-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InfoModalComponent implements OnInit {
 

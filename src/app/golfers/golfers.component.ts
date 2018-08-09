@@ -1,47 +1,58 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { SimplePageScrollService } from 'ng2-simple-page-scroll';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { map } from 'rxjs/operators/map';
+import { tap } from 'rxjs/operators/tap';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
 import { InfoModalComponent } from '../info-modal/info-modal.component'
-import { PoolData, GolferScore, MovementDirection, PlayerInfo } from '../models/models';
+import { LiveData, GolferScore, MovementDirection, PlayerInfo } from '../models/models';
 
 @Component({
     selector: 'app-golfers',
     templateUrl: './golfers.component.html',
-    styleUrls: ['./golfers.component.scss']
+    styleUrls: ['./golfers.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
+export class GolfersComponent {
 
-export class GolfersComponent implements OnInit, OnDestroy {
+    golferScores: Observable<GolferScore[]> = this.dataService.liveData.pipe(
+        map((data: LiveData) => data.golfersScores),
+        tap(() => {
+            const golferId: number = this.gotoService.gotoGolferId;
+            if (golferId > 0) {
+                this.highlightedGolferId.next(golferId)
+                setTimeout(() => this.simplePageScrollService.scrollToElement('#golfer-' + golferId, 0), 10);
+                setTimeout(() => this.highlightedGolferId.next(null), 3000);
+            }
+        })
+    );
 
-    golferScores: GolferScore[];
-    highlightedGolferId: number;
-    lastInIndex: number;
-    cutline: any;
-    cutlineDisplay: string;
+    cutline: Observable<{ value: number, type: string }> = this.dataService.liveData.pipe(map((data: LiveData) => data.cutline));
 
-    private subscription: Subscription;
-    
+    lastInIndex: Observable<number> = combineLatest(this.golferScores, this.cutline, (golferScores, cutline) => {
+        if (cutline && cutline.type === 'projected') {
+            return golferScores.findIndex(gs => gs.score.relativeScore  >= cutline.value + 1) - 1;
+        }
+    });
 
-    constructor(private dataService: DataService, private simplePageScrollService: SimplePageScrollService,
-        private gotoService: GotoService, private modalService: NgbModal) {}
+    cutlineDisplay: Observable<string> = this.cutline.pipe(map((cutline) => {
+        if (cutline && cutline.type === 'projected') {
+            return cutline.value > 0 ? '+' + cutline.value.toString() : cutline.value.toString();
+        }
+    }));
 
-    ngOnInit(): void {
-        this.subscription = this.dataService.get()
-            .subscribe((data: PoolData) => {
-                this.golferScores = data.golfersScores;
-                this.cutline = data.cutline;
-                this.checkForProjectedCutline();
-                this.checkForGotoGolfer();
-            });
-    }
+    highlightedGolferId = new BehaviorSubject<number>(null);
+   
 
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-    }
+    constructor(private dataService: DataService,
+                private simplePageScrollService: SimplePageScrollService,
+                private gotoService: GotoService,
+                private modalService: NgbModal) {}
+
 
     getMovementClass(golferScore: GolferScore): string {
         return MovementDirection[golferScore.score.movement.direction].toLowerCase();
@@ -56,31 +67,15 @@ export class GolfersComponent implements OnInit, OnDestroy {
                 infoModalComponent.logoImage = golferScore.score.logoImage;
             });
         } else {
-            const info: PlayerInfo = new PlayerInfo()
-            info.golferId = golferScore.golferConfig.id;
-            info.profile = {
-                displayName: golferScore.golferConfig.name
-            };
+            const info: PlayerInfo =  {
+                golferId: golferScore.golferConfig.id,
+                profile: {
+                    displayName: golferScore.golferConfig.name
+                }
+            }
             const modal = this.modalService.open(InfoModalComponent, { size: 'lg' });
             const infoModalComponent: InfoModalComponent = modal.componentInstance;
             infoModalComponent.info = info;
         }
     }
-
-    private checkForProjectedCutline() {
-        if (this.cutline && this.cutline.type === 'projected') {
-            this.cutlineDisplay = this.cutline.value > 0 ? '+' + this.cutline.value.toString() : this.cutline.value.toString();
-            this.lastInIndex = this.golferScores.findIndex(gs => gs.score.relativeScore  >= this.cutline.value + 1) - 1;
-        }
-    }
-
-    private checkForGotoGolfer() {
-        const golferId: number = this.gotoService.gotoGolferId;
-        if (golferId > 0) {
-            this.highlightedGolferId = golferId
-            setTimeout(() => this.simplePageScrollService.scrollToElement('#golfer-' + golferId, 0), 10);
-            setTimeout(() => this.highlightedGolferId = null, 3000);
-        }
-    }
-
 }

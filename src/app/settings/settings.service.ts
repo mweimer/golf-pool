@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { ConfigService } from '../config/config.service';
 import { IAppConfig } from '../models/models';
@@ -9,35 +9,35 @@ export class SettingsService {
 
     private hasLocalStorage: boolean = typeof(Storage) !== 'undefined';
     private selectedContestantKey: string;
-    private selectedContestantIdObservable: ReplaySubject<number> = new ReplaySubject<number>(1);
+    private _selectedContestantId: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
     constructor(private configService: ConfigService) {
-        this.configService.config.subscribe((config: IAppConfig) => {
+        this.configService.current.subscribe((config: IAppConfig) => {
             this.selectedContestantKey = config.TOURNEY_ID + '-selectedContestantId';
             this.init();
         });
     }
 
-    getSelectedContestantId(): Observable<number> {
-        return this.selectedContestantIdObservable;
+    get selectedContestantId(): Observable<number> {
+        return this._selectedContestantId.asObservable();
     }
 
     setSelectedContestantId(value: number) {
         if (this.hasLocalStorage) {
             localStorage.setItem(this.selectedContestantKey, value.toString());
         }
-        this.selectedContestantIdObservable.next(value)
+        this._selectedContestantId.next(value)
     }
 
     private init() {
         if (!this.hasLocalStorage || !localStorage.getItem(this.selectedContestantKey)) {
-            this.selectedContestantIdObservable.next(0);
+            this._selectedContestantId.next(0);
             return;
         }
 
         if (this.hasLocalStorage) {
             const value = parseInt(localStorage.getItem(this.selectedContestantKey), 10);
-            this.selectedContestantIdObservable.next(value);
+            this._selectedContestantId.next(value);
         }
     }
 }

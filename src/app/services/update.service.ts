@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import 'rxjs/add/operator/toPromise';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import {catchError} from 'rxjs/operators/catchError'
+import {empty} from 'rxjs/observable/empty'
 
 import { IAppConfig } from '../models/models';
 import { Constants } from '../config/constants';
@@ -12,29 +13,33 @@ import { Constants } from '../config/constants';
 @Injectable()
 export class UpdateService {
 
-    private statusObservable: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
+    private _status: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-    constructor(private http: Http) {
-        this.statusObservable.next(false);
-        
+    constructor(private http: HttpClient) {
         setInterval(() => this.checkForUpdate(), Constants.UPDATE_CHECK_INTERVAL);
+    }
+
+    get status(): Observable<boolean> {
+        return this._status.asObservable();
     }
 
     checkForUpdate() {
         const time = (new Date()).getTime();
         const scriptUrl = document.querySelector('script[src*="main"]').getAttribute('src');
         this.http.get(scriptUrl + '?_=' + time)
-            .toPromise()
-            .catch(err  => this.handleError(err));
+            .pipe(catchError(err => this.handleError(err)))
+            .subscribe();
     }
 
-    get status(): ReplaySubject<boolean> {
-        return this.statusObservable;
+    clear() {
+        this._status.next(false);
     }
 
-    private handleError (error: Response) {
+    private handleError (error) {
         if (error.status === 404) {
-            this.statusObservable.next(true);
+            this._status.next(true);
+
         }
+        return empty();
     }
 }

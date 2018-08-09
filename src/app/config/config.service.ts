@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import config9 from './config-2018-pga';
 import config8 from './config-2018-the-open';
 import config7 from './config-2018-us-open';
@@ -16,29 +16,31 @@ import { AppConfig } from './app.config';
 @Injectable()
 export class ConfigService {
 
-    allConfigs: IAppConfig[]; 
+    allConfigs: IAppConfig[];
 
-    private configObservable: ReplaySubject<IAppConfig> = new ReplaySubject<IAppConfig>(1);
-    private selectedIndex: number;
+    private _selectedIndex = new BehaviorSubject<number>(0);
+    private _current: BehaviorSubject<IAppConfig> = new BehaviorSubject<IAppConfig>(this.initConfig());
+    
 
-    constructor() {
-        const configs: Config[] = [config9, config8, config7, config6, config5, config4, config3, config2, config1];
-        this.allConfigs = configs.map(c => new AppConfig(c))
+    constructor() {}
 
-        this.selectedIndex = 0;
-        this.configObservable.next(this.allConfigs[this.selectedIndex]);
+    get current(): Observable<IAppConfig> {
+        return this._current.asObservable();
     }
 
-    get config(): Observable<IAppConfig> {
-        return this.configObservable;
-    }
-
-    get selectedConfigIndex(): number {
-        return this.selectedIndex;
+    get selectedIndex(): Observable<number> {
+        return this._selectedIndex.asObservable();
     }
 
     setConfig(index: number) {
-        this.selectedIndex = index;
-        this.configObservable.next(this.allConfigs[this.selectedIndex]);
+        this._selectedIndex.next(index);
+        this._current.next(this.allConfigs[index]);
+    }
+
+    private initConfig(): IAppConfig {
+        const configs: Config[] = [config9, config8, config7, config6, config5, config4, config3, config2, config1];
+        this.allConfigs = configs.map(c => new AppConfig(c))
+
+        return this.allConfigs[this._selectedIndex.getValue()];
     }
 }

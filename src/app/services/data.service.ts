@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Http, Response } from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators/map';
+import { tap } from 'rxjs/operators/tap';
 import * as jQuery from 'jquery';
 import { cloneDeep, orderBy, sortBy, union } from 'lodash';
+import {_throw} from 'rxjs/observable/throw';
 
-import { GolferConfig, EntryConfig, PoolData, Entry, GolferScore, Score, MovementDirection, PlayerInfo, IAppConfig } from '../models/models';
+import { GolferConfig, EntryConfig, LiveData, Entry, GolferScore, Score, MovementDirection, PlayerInfo, IAppConfig } from '../models/models';
 import { SettingsService } from '../settings/settings.service';
-import { NotificationService } from '../services/notification.service';
 import { ConfigService } from '../config/config.service';
 import { Constants } from '../config/constants';
 
@@ -19,16 +19,18 @@ import { Constants } from '../config/constants';
 export class DataService {
 
     private entryConfig: EntryConfig[];
-    private dataObservable: ReplaySubject<PoolData> = new ReplaySubject<PoolData>(1);
-    private cacheData: PoolData = null;
+    private _liveData: ReplaySubject<LiveData> = new ReplaySubject<LiveData>(1);
+    private cacheData: LiveData = null;
     private selectedContestantId: number = 0;
     private config: IAppConfig;
     private interval: any;
 
-    public constructor(private titleService: Title, private http: Http, private settingsService: SettingsService,
-        private notificationService: NotificationService, private configService: ConfigService) {
+    public constructor(private titleService: Title,
+                       private http: HttpClient,
+                       private settingsService: SettingsService,
+                       private configService: ConfigService) {
 
-        this.configService.config.subscribe((config: IAppConfig) => {
+        this.configService.current.subscribe((config: IAppConfig) => {
             this.config = config;
             this.entryConfig = config.CONTESTANTS
                 .map(c => c.entries.map((e, i) => ({ name: c.name + ' ' + (i + 1), golferIds: e, contestantId: c.id})))
@@ -38,7 +40,7 @@ export class DataService {
         });
 
 
-        this.settingsService.getSelectedContestantId().subscribe(selectedContestantId => {
+        this.settingsService.selectedContestantId.subscribe(selectedContestantId => {
             this.selectedContestantId = selectedContestantId;
 
             if (this.cacheData !== null) {
@@ -58,47 +60,46 @@ export class DataService {
 
         this.cacheData = null;
 
-        this.getLiveData()
+        this.updateLiveData()
 
-        this.interval = setInterval(() => this.getLiveData(), Constants.REFRESH_TIME);
+        this.interval = setInterval(() => this.updateLiveData(), Constants.REFRESH_TIME);
     }
 
 
-    get(): Observable<PoolData> {
-        return this.dataObservable;
+    get liveData(): Observable<LiveData> {
+        return this._liveData;
     }
 
     getPlayerInfo(golferScore: GolferScore): Observable<PlayerInfo> {
         return this.http.get(this.config.PLAYER_INFO_URL + golferScore.score.espnId)
-            .map((res: Response) => this.handlePlayerResponse(res, golferScore))
-            .catch(this.handleError);
+           .pipe(map((res: PlayerInfo) => this.handlePlayerResponse(res, golferScore)))
     }
 
-    private handlePlayerResponse(res: Response, golferScore: GolferScore): PlayerInfo {
-        const playerInfo: PlayerInfo = res.json();
+    private handlePlayerResponse(playerInfo: PlayerInfo, golferScore: GolferScore): PlayerInfo {
         playerInfo.golferId = golferScore.golferConfig.id;
         return playerInfo;
     }
 
-    private getLiveData() {
-        this.http.get(this.config.LEADERBOARD_URL)
-            .map((res: Response) => this.convertToData(res))
-            .catch(this.handleError)
-            .subscribe((data: PoolData) => {
-                this.setSelected(data);
-                const previousEntries = this.cacheData ? this.cacheData.entries : null;
+    private updateLiveData() {
+        this.http.get(this.config.LEADERBOARD_URL, {responseType: 'text'})
+            .pipe(
+                map((responseHtml: string) => this.mapLiveData(responseHtml)),
+                tap((data: LiveData) => {
+                    this.setSelected(data);
+                    const previousEntries = this.cacheData ? this.cacheData.entries : null;
 
-                this.cacheData = data;
+                    this.cacheData = data;
 
-                this.updateTitle(data.entries);
-                this.notificationService.update(previousEntries, data.entries);
-                this.dataObservable.next(data);
-            });
+                    this.updateTitle(data.entries);
+                    this._liveData.next(data);
+                })
+            )
+            .subscribe();
     }
 
-    private convertToData(res: Response): PoolData {
+    private mapLiveData(responseHtml: string): LiveData {
         const now = new Date();
-        const scorePage = jQuery(res.text());
+        const scorePage = jQuery(responseHtml);
         const golferRows = scorePage.find('.leaderboard-table .player-overview');
         const scores: Score[] = [];
 
@@ -106,15 +107,20 @@ export class DataService {
             scores.push(this.extractScore(jQuery(row), index));
         });
 
-        const data: PoolData = new PoolData();
-        data.timeStamp = now;
-        data.golfersScores = this.getGolferScores(scores);
-        data.entries = this.getEntries(data.golfersScores);
-        data.cutline = this.getCutline(scorePage);
+        const golfersScores = this.getGolferScores(scores);
+
+        const data: LiveData = {
+            timeStamp: now,
+            golfersScores,
+            entries: this.getEntries(golfersScores),
+            cutline: this.getCutline(scorePage),
+            selectedContestantId: 0
+        }
+
         return data;
     }
 
-    private getCutline(scorePage) {
+    private getCutline(scorePage: jQuery) {
         const cutlineScoreRow = scorePage.find('.leaderboard-table .cutline .cut-score');
         const cutlineMsgRow = scorePage.find('.leaderboard-table .cutline .msg');
         let cutlineValue, cutlineType; 
@@ -132,10 +138,7 @@ export class DataService {
     private getGolferScores(scores: Score[]): GolferScore[] {
         const golferScores: GolferScore[] = this.config.GOLFERS.map(golferConfig => {
 
-            const golferConfigCopy: GolferConfig = cloneDeep(golferConfig);
-            const golferScore: GolferScore = new GolferScore();
-            golferScore.golferConfig = golferConfigCopy;
-
+           
             let score: Score;
             if (golferConfig.espnId) {
                 score = scores.find(s => s.espnId === golferConfig.espnId);
@@ -151,13 +154,14 @@ export class DataService {
                 }
             }
 
-            if (score) {
-                golferScore.score = score;
-            } else {
-                golferScore.score = this.emptyScore(golferConfigCopy);
-            }
-
-            golferScore.entryCount = this.entryConfig.filter((e: EntryConfig) => e.golferIds.includes(golferConfigCopy.id)).length;
+ 
+            const golferScore: GolferScore = {
+                entryCount: this.entryConfig.filter((e: EntryConfig) => e.golferIds.includes(golferConfig.id)).length,
+                score: score ? score : this.emptyScore(golferConfig),
+                golferConfig: cloneDeep(golferConfig),
+                throwaway: false,
+                isSelected: false
+            };
 
             return golferScore;
         });
@@ -170,31 +174,32 @@ export class DataService {
         const firstName = nameMatch[1];
         const lastName = nameMatch[2];
 
-        const score = new Score();
-
-        score.index = Number.MAX_SAFE_INTEGER;
-        score.isDNF = true;
-        score.toPar = '--';
-        score.relativeScore = Number.MAX_SAFE_INTEGER;
-        score.total = '--';
-        score.totalScore = Number.MAX_SAFE_INTEGER;
-        score.position = '--';
-        score.currentRoundScore = '--';
-        score.thru = '--';
-        score.round1Score = '--';
-        score.round2Score = '--';
-        score.round3Score = '--';
-        score.round4Score = '--';
-        score.fullName = golferConfig.name;
-        score.shortName = `${firstName[0]}. ${lastName}`;
-        score.logoImage = '';
-        score.startTime = null;
-        score.movement = { text: '-', direction: MovementDirection.None };
+        const score: Score = {
+            index: Number.MAX_SAFE_INTEGER,
+            isDNF: true,
+            toPar: '--',
+            relativeScore: Number.MAX_SAFE_INTEGER,
+            total: '--',
+            totalScore: Number.MAX_SAFE_INTEGER,
+            position: '--',
+            currentRoundScore: '--',
+            thru: '--',
+            round1Score: '--',
+            round2Score: '--',
+            round3Score: '--',
+            round4Score: '--',
+            fullName: golferConfig.name,
+            shortName: `${firstName[0]}. ${lastName}`,
+            logoImage: '',
+            startTime: null,
+            movement: { text: '-', direction: MovementDirection.None },
+            espnId: null
+        }
 
         return score;
     }
 
-    private extractScore(row, index): Score {
+    private extractScore(row: jQuery, index: number): Score {
         let isDNF = false;
 
         const toPar: string = row.find('.relativeScore').text();
@@ -244,27 +249,27 @@ export class DataService {
             movementDirection = MovementDirection.None;
         }
 
-        const score = new Score();
-
-        score.index = index;
-        score.isDNF = isDNF;
-        score.toPar = toPar;
-        score.relativeScore = relativeScore;
-        score.total = total;
-        score.totalScore = totalScore;
-        score.position = position;
-        score.currentRoundScore = currentRoundScore;
-        score.thru = thru;
-        score.round1Score = round1Score;
-        score.round2Score = round2Score;
-        score.round3Score = round3Score;
-        score.round4Score = round4Score;
-        score.fullName = fullName;
-        score.shortName = shortName;
-        score.logoImage = logoImage;
-        score.startTime = startTime;
-        score.espnId = espnId;
-        score.movement = { text: movementText, direction: movementDirection };
+        const score: Score = {
+            index: index,
+            isDNF: isDNF,
+            toPar: toPar,
+            relativeScore: relativeScore,
+            total: total,
+            totalScore: totalScore,
+            position: position,
+            currentRoundScore: currentRoundScore,
+            thru: thru,
+            round1Score: round1Score,
+            round2Score: round2Score,
+            round3Score: round3Score,
+            round4Score: round4Score,
+            fullName: fullName,
+            shortName: shortName,
+            logoImage: logoImage,
+            startTime: startTime,
+            espnId: espnId,
+            movement: { text: movementText, direction: movementDirection }
+        }
 
         return score;
     }
@@ -299,14 +304,18 @@ export class DataService {
                 overallToPar = '--';
             }
 
-            const entry = new Entry();
-            entry.name = config.name;
-            entry.golferScores = entryGolferScores;
-            entry.overallRelativeScore = overallRelativeScore;
-            entry.overallTotalScore = overallTotalScore;
-            entry.overallToPar = overallToPar;
-            entry.isDQ = isDQ;
-            entry.contestantId = config.contestantId;
+            const entry: Entry = {
+                name: config.name,
+                golferScores: entryGolferScores,
+                overallRelativeScore,
+                overallTotalScore,
+                overallToPar,
+                isDQ,
+                contestantId: config.contestantId,
+                isSelected: false,
+                position: null,
+                positionNumber: 0
+            };
 
             return entry;
         });
@@ -344,7 +353,7 @@ export class DataService {
         this.titleService.setTitle(title);
     }
 
-    private setSelected(data: PoolData) {
+    private setSelected(data: LiveData) {
         if (this.selectedContestantId !== data.selectedContestantId) {
             data.selectedContestantId = this.selectedContestantId;
             let selectedGolferIds: number[] = [];
@@ -361,16 +370,4 @@ export class DataService {
         }
     }
 
-    private handleError (error: Response | any) {
-        let errMsg: string;
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        console.error(errMsg);
-        return Observable.throw(errMsg);
-    }
 }

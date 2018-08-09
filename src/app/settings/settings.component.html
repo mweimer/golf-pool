@@ -2,7 +2,7 @@
     <div class="form-group">
         <label for="contestantDropdown">Selected Contestant: </label>
         <select id="contestantDropdown" class="form-control" [(ngModel)]="selectedContestantId" (ngModelChange)="contestantSelected()" name="selectedContestantId">
-            <option *ngFor="let contestant of contestants" [value]="contestant.id">{{contestant.name}}</option>
+            <option *ngFor="let contestant of contestants | async" [value]="contestant.id">{{contestant.name}}</option>
         </select>
     </div>
     <div class="form-group">
@@ -10,10 +10,5 @@
         <select id="configDropdown" class="form-control" [(ngModel)]="selectedConfigIndex" (ngModelChange)="configSelected()" name="selectedConfigIndex">
             <option *ngFor="let config of configs; let i = index" [value]="i">{{config.TOURNEY_TITLE}}{{ i===0 ? ' (Current)' : '' }}</option>
         </select>
-    </div>
-    <div>
-        <span *ngIf="notificationStatus.supported && !notificationStatus.granted">Notifications <b>Disabled</b> (To turn on notifications, go into your browser settings and enable them for this domain)</span>
-        <span *ngIf="notificationStatus.supported && notificationStatus.granted">Notifications <b>Enabled</b> (To turn off notifications, go into your browser settings and disable them for this domain)</span>
-        <span *ngIf="!notificationStatus.supported">Notifications <b>Disabled</b> (Your browser does not support notifications)</span>
     </div>
 </form>

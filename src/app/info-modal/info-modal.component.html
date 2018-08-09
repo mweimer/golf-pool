@@ -26,7 +26,7 @@
 		<div class="col-2">
 			<div *ngIf="selectedRound >= 0" ngbDropdown class="round-dropdown">
 		      <button class="btn btn-outline-secondary btn-sm" ngbDropdownToggle>Round {{selectedRound + 1}}</button>
-		      <div class="dropdown-menu">
+		      <div class="dropdown-menu" ngbDropdownMenu>
 		        <button class="dropdown-item" *ngFor="let round of player.rounds" (click)="roundSelected(round)">Round {{round.period}}</button>
 		      </div>
 		    </div>

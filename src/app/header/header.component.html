@@ -1,10 +1,11 @@
-<nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
-    <button class="navbar-toggler navbar-toggler-right" type="button" (click)="toggle()">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
     <a class="navbar-brand" routerLink="">
         <img alt="Golf Pool" src="/assets/logo.png">
     </a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    
 
     <div class="navbar-collapse" [ngbCollapse]="!isOpen">
         <ul class="navbar-nav mr-auto">
@@ -21,7 +22,7 @@
     </div>
 </nav>
 
-<div *ngIf="showAlert" class="alert alert-warning alert-dismissible text-center" role="alert">
+<div *ngIf="showAlert | async" class="alert alert-warning alert-dismissible text-center" role="alert">
     <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
         <span aria-hidden="true">&times;</span>
     </button>

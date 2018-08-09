@@ -1,39 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
-import { PoolData, IAppConfig } from '../models/models';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { LiveData, IAppConfig } from '../models/models';
 import { DataService } from '../services/data.service';
-import { ConfigService } from '../config/config.service';
 import { Constants } from '../config/constants';
 
 @Component({
     selector: 'app-footer',
     templateUrl: './footer.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FooterComponent implements OnInit, OnDestroy {
+export class FooterComponent {
 
-    private dataSubscription: Subscription;
-    private configSubscription: Subscription;
+    refreshTime: string = `Refresh Time: ${Constants.REFRESH_TIME / 1000} seconds`;
+    timeStamp: Observable<Date> = this.dataService.liveData.pipe(map((data: LiveData) => data.timeStamp));
 
-    refreshTime: string;
-    timeStamp: Date;
+    constructor(private dataService: DataService) {}
 
-    constructor(private dataService: DataService, private configService: ConfigService) {}
-
-    ngOnInit(): void {
-        this.dataSubscription = this.dataService.get().subscribe((data: PoolData) => {
-            this.timeStamp = data.timeStamp;
-        });
-
-        this.configSubscription = this.configService.config.subscribe((config: IAppConfig) => {
-            this.refreshTime = `Refresh Time: ${Constants.REFRESH_TIME / 1000} seconds`;
-        });
-    }
-
-    ngOnDestroy() {
-        this.dataSubscription.unsubscribe();
-        this.configSubscription.unsubscribe();
-    }
 }

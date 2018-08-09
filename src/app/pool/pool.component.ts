@@ -1,43 +1,32 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { DatePipe } from '@angular/common';
-
-import { Subscription } from 'rxjs/Subscription'
-
+import { Component, ChangeDetectionStrategy, Inject, LOCALE_ID } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
-import { Entry, PoolData, GolferScore } from '../models/models';
+import { Entry, LiveData, GolferScore } from '../models/models';
 
 @Component({
     selector: 'app-pool',
     templateUrl: './pool.component.html',
-    styleUrls: ['./pool.component.scss']
+    styleUrls: ['./pool.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
+export class PoolComponent {
 
-export class PoolComponent implements OnInit, OnDestroy {
+    entries: Observable<Entry[]> = this.dataService.liveData.pipe(map((data: LiveData) => data.entries));
+    cutline: Observable<{ value: number, type: string }> = this.dataService.liveData.pipe(map((data: LiveData) => data.cutline));
 
-    entries: Entry[];
+    constructor(private dataService: DataService, 
+                private gotoService: GotoService,
+                @Inject(LOCALE_ID) private locale: string) {}
 
-    private subscription: Subscription;
-    private cutline: any;
 
-    constructor(private dataService: DataService, private datePipe: DatePipe, private gotoService: GotoService) {}
-
-    ngOnInit(): void {
-        this.subscription = this.dataService.get().subscribe((data: PoolData) => {
-            this.entries = data.entries;
-            this.cutline = data.cutline;
-        });
-    }
-
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-    }
-
-    getGolferInfo(entry: Entry, index: number): string {
+    getGolferInfo(entry: Entry, cutline: {value: number, type: string }, index: number): string {
         const golferScore: GolferScore = entry.golferScores[index];
-        const thru = golferScore.score.thru ? golferScore.score.thru : this.datePipe.transform(golferScore.score.startTime, 'shortTime');
+        const thru = golferScore.score.thru ? golferScore.score.thru : formatDate(golferScore.score.startTime, 'shortTime', this.locale);
         const name = golferScore.score.shortName;
-        const score = this.cutline && this.cutline.type === 'projected' && golferScore.score.relativeScore > this.cutline.value 
+        const score = cutline && cutline.type === 'projected' && golferScore.score.relativeScore > cutline.value 
             ? `<span class="text-danger">${golferScore.score.toPar}</span>` : golferScore.score.toPar;
         const info =  golferScore.score.isDNF ?  `${name}: ${score}` : `${name}: ${score} (${thru})`;
         return info;
@@ -47,7 +36,7 @@ export class PoolComponent implements OnInit, OnDestroy {
         this.gotoService.gotoGolfer(golferScore.golferConfig.id);
     }
 
-    getGolferClass(entry: Entry, golferIndex: number) {
+    getGolferClass(entry: Entry, golferIndex: number): string {
         if (entry.isDQ) {
             return;
         } else if (entry.golferScores[golferIndex].throwaway) {

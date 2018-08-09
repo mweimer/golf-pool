@@ -1,5 +1,5 @@
 <footer>
     <hr/>
     <div>{{refreshTime}}</div>
-    <div *ngIf="timeStamp">Last refresh: {{timeStamp | date: 'mediumTime'}}</div>
+    <div *ngIf="timeStamp">Last refresh: {{timeStamp | async | date: 'mediumTime'}}</div>
 </footer>
