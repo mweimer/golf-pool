@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { map } from 'rxjs/operators/map';
 import { tap } from 'rxjs/operators/tap';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
 import { InfoModalComponent } from '../info-modal/info-modal.component'
@@ -31,28 +30,28 @@ export class GolfersComponent {
         })
     );
 
-    cutline: Observable<{ value: number, type: string }> = this.dataService.liveData.pipe(map((data: LiveData) => data.cutline));
+    lastInIndex: Observable<number> = this.dataService.liveData.pipe(
+        map((data: LiveData) => {
+            if (data.cutline && data.cutline.type === 'projected') {
+                return data.golfersScores.findIndex(gs => gs.score.relativeScore  >= data.cutline.value + 1) - 1;
+            }
+        }),
+    );
 
-    lastInIndex: Observable<number> = combineLatest(this.golferScores, this.cutline, (golferScores, cutline) => {
-        if (cutline && cutline.type === 'projected') {
-            return golferScores.findIndex(gs => gs.score.relativeScore  >= cutline.value + 1) - 1;
-        }
-    });
+    cutlineDisplay: Observable<string> =this.dataService.liveData.pipe(
+        map((data: LiveData) => {
+            if (data.cutline && data.cutline.type === 'projected') {
+                return data.cutline.value > 0 ? '+' + data.cutline.value.toString() : data.cutline.value.toString();
+            }
+        })    
+    );
 
-    cutlineDisplay: Observable<string> = this.cutline.pipe(map((cutline) => {
-        if (cutline && cutline.type === 'projected') {
-            return cutline.value > 0 ? '+' + cutline.value.toString() : cutline.value.toString();
-        }
-    }));
-
-    highlightedGolferId = new BehaviorSubject<number>(null);
-   
+    highlightedGolferId = new BehaviorSubject<number>(0);
 
     constructor(private dataService: DataService,
                 private simplePageScrollService: SimplePageScrollService,
                 private gotoService: GotoService,
                 private modalService: NgbModal) {}
-
 
     getMovementClass(golferScore: GolferScore): string {
         return MovementDirection[golferScore.score.movement.direction].toLowerCase();

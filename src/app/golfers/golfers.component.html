@@ -21,7 +21,7 @@
             <td>{{golferScore.score.round4Score}}</td>
             <td>{{golferScore.score.total}}</td>
         </tr>
-        <tr *ngIf="!!(lastInIndex | async) && i === (lastInIndex | async)"><td colspan="12" class="text-center">Projected Cut: <b>{{cutlineDisplay | async}}</b></td></tr>
+        <tr *ngIf="i === (lastInIndex | async)"><td colspan="12" class="text-center">Projected Cut: <b>{{cutlineDisplay | async}}</b></td></tr>
         </ng-container>
     </tbody>
 </table>
