@@ -30,7 +30,7 @@ const golferData = [
     { id: 24, name: 'Webb Simpson', espnId: '1614', tier: 'B' },
     { id: 25, name: 'Thorbjorn Olesen', espnId: '5140', tier: 'B' },
     { id: 26, name: 'Bryson DeChambeau', espnId: '10046', tier: 'B' },
-    { id: 27, name: 'Louis Oosthuizen', espnId: '1293', tier: 'B' },
+    { id: 27, name: 'Marc Leishman', espnId: '3351', tier: 'B' },
     { id: 28, name: 'Matt Kuchar', espnId: '257', tier: 'B' },
     { id: 29, name: 'Kyle Stanley', espnId: '1778', tier: 'B' },
 
@@ -169,14 +169,14 @@ const contestantData = [
     { id: 2, name: 'Matt Weimer', entries: [[1, 10, 30, 81], [3, 11, 35, 85], [4, 13, 33, 88]] },
     { id: 3, name: 'Nick Royer', entries: [[1, 11, 34, 82], [3, 11, 34, 81], [7, 14, 36, 82]] },
     { id: 4, name: 'Ryan Aguiar', entries: [[1, 11, 40, 86], [2, 14, 35, 81], [3, 17, 56, 82]] },
-    { id: 5, name: 'Matt Kilianski', entries: [[1, 11, 40, 86], [2, 14, 35, 81], [3, 17, 56, 82]] },
+    { id: 5, name: 'Matt Kilianski', entries: [[1, 14, 47, 99], [8, 10, 35, 95], [4, 28, 49, 95]] },
     { id: 6, name: 'Sean Lafferty', entries: [[3, 14, 42, 81], [6, 10, 30, 86], [9, 28, 35, 102]] },
     { id: 7, name: 'Kyle Bivenour', entries: [[4, 13, 35, 86], [1, 21, 33, 100], [5, 10, 36, 89]] },
     { id: 8, name: 'Drew Serruto', entries: [[1, 14, 30, 85], [7, 10, 34, 108], [2, 13, 36, 102]] },
     { id: 9, name: 'Alex Duff', entries: [[2, 11, 61, 93], [3, 12, 66, 86], [1, 19, 34, 82]] },
     { id: 10, name: 'Andrew Kubaszewski', entries: [[1, 14, 47, 85], [7, 10, 35, 95], [3, 11, 33, 108]] },
     { id: 11, name: 'Tyler Rodman', entries: [[1, 17, 32, 86], [2, 14, 31, 102], [3, 11, 30, 82]] },
-    { id: 12, name: 'Nate Heckmann', entries: [[2, 11, 43, 105], [7, 14, 42, 81], [3, 19, 46, 41]] },
+    { id: 12, name: 'Nate Heckmann', entries: [[2, 11, 43, 105], [7, 14, 42, 81], [3, 19, 41, 85]] },
     { id: 13, name: 'Kevin Donoher', entries: [[1, 14, 54, 104], [3, 17, 39, 103], [6, 28, 36, 106]] },
     { id: 14, name: 'Kevin O\'Brien', entries: [[1, 11, 34, 85], [3, 14, 32, 86], [2, 10, 30, 82]] }
 ];

@@ -169,7 +169,7 @@ const contestantData = [
     { id: 2, name: 'Matt Weimer', entries: [[1, 10, 30, 81], [3, 11, 35, 85], [4, 13, 33, 88]] },
     { id: 3, name: 'Nick Royer', entries: [[1, 11, 34, 82], [3, 11, 34, 81], [7, 14, 36, 82]] },
     { id: 4, name: 'Ryan Aguiar', entries: [[1, 11, 40, 86], [2, 14, 35, 81], [3, 17, 56, 82]] },
-    { id: 5, name: 'Matt Kilianski', entries: [[1, 11, 40, 86], [2, 14, 35, 81], [3, 17, 56, 82]] },
+    { id: 5, name: 'Matt Kilianski', entries: [[1, 14, 47, 99], [8, 10, 35, 95], [4, 28, 49, 95]] },
     { id: 6, name: 'Sean Lafferty', entries: [[3, 14, 42, 81], [6, 10, 30, 86], [9, 28, 35, 102]] },
     { id: 7, name: 'Kyle Bivenour', entries: [[4, 13, 35, 86], [1, 21, 33, 100], [5, 10, 36, 89]] },
     { id: 8, name: 'Drew Serruto', entries: [[1, 14, 30, 85], [7, 10, 34, 108], [2, 13, 36, 102]] },
