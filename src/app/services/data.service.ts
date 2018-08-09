@@ -140,7 +140,7 @@ export class DataService {
             if (golferConfig.espnId) {
                 score = scores.find(s => s.espnId === golferConfig.espnId);
             } 
-            if (!score) {
+            if (!score && golferConfig.espnId) {
                 const altId = golferConfig.espnId.substring(0, golferConfig.espnId.length - 2)
                 const possibleScores = scores.filter(s => s.espnId === altId);
                 if (possibleScores.length > 0) {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import config9 from './config-2018-pga';
 import config8 from './config-2018-the-open';
 import config7 from './config-2018-us-open';
 import config6 from './config-2018-masters';
@@ -21,7 +22,7 @@ export class ConfigService {
     private selectedIndex: number;
 
     constructor() {
-        const configs: Config[] = [config8, config7, config6, config5, config4, config3, config2, config1];
+        const configs: Config[] = [config9, config8, config7, config6, config5, config4, config3, config2, config1];
         this.allConfigs = configs.map(c => new AppConfig(c))
 
         this.selectedIndex = 0;
