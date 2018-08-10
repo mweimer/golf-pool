@@ -125,7 +125,8 @@ export class DataService {
         const cutlineMsgRow = scorePage.find('.leaderboard-table .cutline .msg');
         let cutlineValue, cutlineType; 
         if (cutlineScoreRow.length > 0) {
-            cutlineValue = parseInt(cutlineScoreRow.text(), 10);
+            const text = cutlineScoreRow.text();
+            cutlineValue = text === 'E' ? 0 : parseInt(cutlineScoreRow.text(), 10);
             cutlineType = cutlineMsgRow.text().toLowerCase().includes('projected') ? 'projected' : 'actual';
         }
 
