@@ -1,10 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { SimplePageScrollService } from 'ng2-simple-page-scroll';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { map } from 'rxjs/operators/map';
-import { tap } from 'rxjs/operators/tap';
+import { Observable ,  BehaviorSubject } from 'rxjs';
+import { map ,  tap } from 'rxjs/operators';
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
 import { InfoModalComponent } from '../info-modal/info-modal.component'

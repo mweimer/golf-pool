@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { LiveData, IAppConfig } from '../models/models';
 import { DataService } from '../services/data.service';
 import { Constants } from '../config/constants';

@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import {catchError} from 'rxjs/operators/catchError'
-import {empty} from 'rxjs/observable/empty'
+import { Observable ,  BehaviorSubject , EMPTY } from 'rxjs';
+import {catchError} from 'rxjs/operators'
 
 import { IAppConfig } from '../models/models';
 import { Constants } from '../config/constants';
@@ -40,6 +38,6 @@ export class UpdateService {
             this._status.next(true);
 
         }
-        return empty();
+        return EMPTY;
     }
 }

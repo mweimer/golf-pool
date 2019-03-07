@@ -8,7 +8,9 @@ export class AppConfig implements IAppConfig {
 
     public CONTESTANTS = this.config.contestantData;
 
-    public LEADERBOARD_URL = `http://www.espn.com/golf/leaderboard?tournamentId=${this.config.tourneyId}`;
+    public LEADERBOARD_URL = `https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga&region=us&lang=en&event=${this.config.tourneyId}&showAirings=true`;
+
+    // public LEADERBOARD_URL = `http://www.espn.com/golf/leaderboard?tournamentId=${this.config.tourneyId}`;
 
     public PLAYER_INFO_URL = `http://site.api.espn.com/apis/site/v2/sports/golf/pga/leaderboard/${this.config.tourneyId}/playersummary?player=`;
 

@@ -2,18 +2,15 @@ import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {HttpClient} from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { map } from 'rxjs/operators/map';
-import { tap } from 'rxjs/operators/tap';
-import * as jQuery from 'jquery';
-import { cloneDeep, orderBy, sortBy, union } from 'lodash';
-import {_throw} from 'rxjs/observable/throw';
+import { Observable ,  ReplaySubject , throwError as _throw} from 'rxjs';
+import { map ,  tap } from 'rxjs/operators';
+import { cloneDeep, orderBy, sortBy, union, last } from 'lodash';
 
 import { GolferConfig, EntryConfig, LiveData, Entry, GolferScore, Score, MovementDirection, PlayerInfo, IAppConfig } from '../models/models';
 import { SettingsService } from '../settings/settings.service';
 import { ConfigService } from '../config/config.service';
 import { Constants } from '../config/constants';
+import { EspnData, Competitor, Linescore } from '../models/espn';
 
 @Injectable()
 export class DataService {
@@ -81,9 +78,9 @@ export class DataService {
     }
 
     private updateLiveData() {
-        this.http.get(this.config.LEADERBOARD_URL, {responseType: 'text'})
+        this.http.get(this.config.LEADERBOARD_URL)
             .pipe(
-                map((responseHtml: string) => this.mapLiveData(responseHtml)),
+                map((response: EspnData) => this.mapEspnDataToLiveData(response)),
                 tap((data: LiveData) => {
                     this.setSelected(data);
                     const previousEntries = this.cacheData ? this.cacheData.entries : null;
@@ -97,15 +94,13 @@ export class DataService {
             .subscribe();
     }
 
-    private mapLiveData(responseHtml: string): LiveData {
+    private mapEspnDataToLiveData(response: EspnData): LiveData {
         const now = new Date();
-        const scorePage = jQuery(responseHtml);
-        const golferRows = scorePage.find('.leaderboard-table .player-overview');
-        const scores: Score[] = [];
 
-        golferRows.each((index, row) => {
-            scores.push(this.extractScore(jQuery(row), index));
-        });
+        const competitors = response.events[0].competitions[0].competitors;
+        const sortCompetitors = sortBy(competitors, (competitor: Competitor) => competitor.sortOrder);
+
+        const scores: Score[] = sortCompetitors.map((competitor, index) => this.mapCompetitorToScore(competitor, index));
 
         const golfersScores = this.getGolferScores(scores);
 
@@ -113,26 +108,19 @@ export class DataService {
             timeStamp: now,
             golfersScores,
             entries: this.getEntries(golfersScores),
-            cutline: this.getCutline(scorePage),
+            cutline: this.getCutline(response),
             selectedContestantId: 0
         }
 
         return data;
     }
 
-    private getCutline(scorePage: jQuery) {
-        const cutlineScoreRow = scorePage.find('.leaderboard-table .cutline .cut-score');
-        const cutlineMsgRow = scorePage.find('.leaderboard-table .cutline .msg');
-        let cutlineValue, cutlineType; 
-        if (cutlineScoreRow.length > 0) {
-            const text = cutlineScoreRow.text();
-            cutlineValue = text === 'E' ? 0 : parseInt(cutlineScoreRow.text(), 10);
-            cutlineType = cutlineMsgRow.text().toLowerCase().includes('projected') ? 'projected' : 'actual';
-        }
 
+
+    private getCutline(data: EspnData): { value: number, type: string } {
         return {
-            value: cutlineValue,
-            type: cutlineType
+            value: undefined,
+            type: undefined
         };
     }
 
@@ -199,56 +187,43 @@ export class DataService {
 
         return score;
     }
+    
 
-    private extractScore(row: jQuery, index: number): Score {
-        let isDNF = false;
+    private mapCompetitorToScore(competitor: Competitor, index: number): Score {
+        const isDNF: boolean = competitor.status.type.name === "STATUS_CUT";
 
-        const toPar: string = row.find('.relativeScore').text();
-        let relativeScore = toPar === 'E' ? 0 : parseInt(toPar, 10);
-        if (isNaN(relativeScore)) {
+        const toPar: string = isDNF ? competitor.status.displayValue : competitor.score.displayValue;
+        let relativeScore: number;
+        if (isDNF) {
             relativeScore = Number.MAX_SAFE_INTEGER;
-            isDNF = true;
-        }
-
-        const total: string = row.find('.totalScore').text();
-        let totalScore = total === '--' ? 0 : parseInt(total, 10);
-        if (isNaN(totalScore)) {
-            totalScore = Number.MAX_SAFE_INTEGER;
-        }
-
-        const thru: string = row.find('.thru').text();
-        let startTime;
-        if (thru === '') {
-            const time = row.find('.thru .date-container').attr('data-date');
-            startTime = new Date(time);
         } else {
-            startTime = null;
+            relativeScore = toPar === 'E' ? 0 : parseInt(toPar, 10);
         }
 
-        const position: string = row.find('.position').text();
-        const currentRoundScore: string = row.find('.currentRoundScore').text();
+        const totalScore: number = competitor.score.value;
+        const total: string = totalScore.toString();
+        const position: string = competitor.status.position.displayName;
+        const currentRound: Linescore = last(competitor.linescores);
+        const currentRoundScore: string = currentRound && !isDNF ? currentRound.value.toString() :  '--';
+        const thru: string = competitor.status.displayValue ? competitor.status.displayValue : '--';
+        const round1Score: string = competitor.linescores.length > 0 ? competitor.linescores[0].value.toString() : '--';
+        const round2Score: string = competitor.linescores.length > 1 ? competitor.linescores[1].value.toString() : '--';
+        const round3Score: string = competitor.linescores.length > 2 ? competitor.linescores[2].value.toString() : '--';
+        const round4Score: string = competitor.linescores.length > 3 ? competitor.linescores[3].value.toString() : '--';
+        const fullName: string = competitor.athlete.displayName;
+        const shortName: string = competitor.athlete.displayName;
+        const logoImage: string = competitor.athlete.flag.href;
+        const startTime: Date = competitor.status.teeTime ? new Date(competitor.status.teeTime) : null;
+        const espnId = competitor.id;
 
-        const round1Score: string = row.find('.round1').text();
-        const round2Score: string = row.find('.round2').text();
-        const round3Score: string = row.find('.round3').text();
-        const round4Score: string = row.find('.round4').text();
-        const fullName: string = row.find('.full-name').text();
-        const shortName: string = row.find('.short-name').text();
-        const logoImage: string = row.find('.team-logo img').attr('src');
 
-        const match: string[] = row.attr('class').match(/player-overview-([0-9]{1,5})/);
-        const espnId = match[match.length - 1];
-
-        const movementElement = row.find('.movement');
-        const movementText: string = movementElement.text();
-        let movementDirection: MovementDirection;
-        if (movementElement.hasClass('positive')) {
-            movementDirection = MovementDirection.Positive;
-        } else if (movementElement.hasClass('negative')) {
+        let movementDirection = MovementDirection.None;
+        if (competitor.movement > 0) {
+            movementDirection = MovementDirection.Positive
+        } else if (competitor.movement < 0) {
             movementDirection = MovementDirection.Negative;
-        } else {
-            movementDirection = MovementDirection.None;
         }
+        const movementText = competitor.movement === 0 ? null : Math.abs(competitor.movement).toString();
 
         const score: Score = {
             index: index,
@@ -273,6 +248,7 @@ export class DataService {
         }
 
         return score;
+
     }
 
     private getEntries(golferScores: GolferScore[]): Entry[] {

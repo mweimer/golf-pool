@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Inject, LOCALE_ID } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
 import { Entry, LiveData, GolferScore } from '../models/models';

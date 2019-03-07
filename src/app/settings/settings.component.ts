@@ -1,8 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { concat } from 'lodash';
-import { Observable } from 'rxjs/Observable';
-import { take } from 'rxjs/operators/take';
-import { map } from 'rxjs/operators/map';
+import { Observable } from 'rxjs';
+import { take ,  map } from 'rxjs/operators';
 import { SettingsService } from './settings.service';
 import { ConfigService } from '../config/config.service';
 import { IAppConfig, NotificationStatus } from '../models/models';
