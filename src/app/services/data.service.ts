@@ -207,10 +207,15 @@ export class DataService {
         const position: string = competitor.status.position.displayName;
         const currentRound: Linescore = last(competitor.linescores);
         const currentRoundScore: string = currentRound && !isDNF ? currentRound.value.toString() :  '--';
-        let thru: string = competitor.status.displayValue ? competitor.status.displayValue : '--';
-        if (thru.startsWith('2019')) {
-            thru = DataService.datePipe.transform(thru, 'shortTime');
+
+        let thru: string = '--';
+        if (competitor.status.displayThru) {
+            thru = competitor.status.displayThru;
+        } else if(competitor.status.displayValue) {
+            thru = DataService.datePipe.transform(competitor.status.displayValue, 'shortTime');
         }
+
+        
         const round1Score: string = competitor.linescores.length > 0 ? competitor.linescores[0].value.toString() : '--';
         const round2Score: string = competitor.linescores.length > 1 ? competitor.linescores[1].value.toString() : '--';
         const round3Score: string = competitor.linescores.length > 2 ? competitor.linescores[2].value.toString() : '--';
