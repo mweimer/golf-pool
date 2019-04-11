@@ -13,8 +13,7 @@
             <td>{{golferScore.entryCount}}</td>
             <td>{{golferScore.score.toPar}}</td>
             <td>{{golferScore.score.currentRoundScore}}</td>
-            <td *ngIf="golferScore.score.thru">{{golferScore.score.thru}}</td>
-            <td *ngIf="!golferScore.score.thru">{{golferScore.score.startTime | date:'shortTime'}}</td>
+            <td>{{golferScore.score.thru}}</td>
             <td>{{golferScore.score.round1Score}}</td>
             <td>{{golferScore.score.round2Score}}</td>
             <td>{{golferScore.score.round3Score}}</td>

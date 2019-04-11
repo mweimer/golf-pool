@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, LOCALE_ID } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {HttpClient} from '@angular/common/http';
 
@@ -10,8 +10,8 @@ import { GolferConfig, EntryConfig, LiveData, Entry, GolferScore, Score, Movemen
 import { SettingsService } from '../settings/settings.service';
 import { ConfigService } from '../config/config.service';
 import { Constants } from '../config/constants';
-import { EspnData, Competitor, Linescore } from '../models/espn';
-import {DatePipe} from '@angular/common';
+import {EspnData, Competitor, Linescore, Statistic, Status} from '../models/espn';
+import {formatDate} from '@angular/common';
 
 @Injectable()
 export class DataService {
@@ -22,12 +22,12 @@ export class DataService {
     private selectedContestantId: number = 0;
     private config: IAppConfig;
     private interval: any;
-    private static datePipe: DatePipe = new DatePipe('en-US');
 
     public constructor(private titleService: Title,
                        private http: HttpClient,
                        private settingsService: SettingsService,
-                       private configService: ConfigService) {
+                       private configService: ConfigService,
+                       @Inject(LOCALE_ID) private locale: string) {
 
         this.configService.current.subscribe((config: IAppConfig) => {
             this.config = config;
@@ -182,7 +182,6 @@ export class DataService {
             fullName: golferConfig.name,
             shortName: `${firstName[0]}. ${lastName}`,
             logoImage: '',
-            startTime: null,
             movement: { text: '-', direction: MovementDirection.None },
             espnId: null
         }
@@ -192,54 +191,42 @@ export class DataService {
     
 
     private mapCompetitorToScore(competitor: Competitor, index: number): Score {
-        const isDNF: boolean = competitor.status.type.name === "STATUS_CUT";
+        const status: Status = competitor.status;
+        const scoreToPar: Statistic = competitor.statistics.find(s => s.name === "scoreToPar");
+        const linescores: Linescore[] = competitor.linescores;
+        const currentRound: Linescore = last(linescores);
 
-        const lineScore = competitor.linescores[0];
 
-        let toPar: string = isDNF ? competitor.status.displayValue : lineScore.displayValue;
-        if (toPar === '-') {
-            toPar = competitor.score.displayValue;
-        }
-
-        let relativeScore: number;
-        if (isDNF) {
-            relativeScore = Number.MAX_SAFE_INTEGER;
-        } else {
-            relativeScore = toPar === 'E' ? 0 : parseInt(toPar, 10);
-        }
-
-        const totalScore: number = lineScore.value;
-        const total: string = totalScore.toString();
-        const position: string = competitor.status.position.displayName;
-        const currentRound: Linescore = last(competitor.linescores);
-        const currentRoundScore: string = currentRound && !isDNF ? currentRound.value.toString() :  '--';
-
-        let thru: string = '--';
-        if (competitor.status.displayThru) {
-            thru = competitor.status.displayThru;
-        } else if(competitor.status.displayValue) {
-            thru = DataService.datePipe.transform(competitor.status.displayValue, 'shortTime');
-        }
-
-        
-        const round1Score: string = competitor.linescores.length > 0 ? competitor.linescores[0].value.toString() : '--';
-        const round2Score: string = competitor.linescores.length > 1 ? competitor.linescores[1].value.toString() : '--';
-        const round3Score: string = competitor.linescores.length > 2 ? competitor.linescores[2].value.toString() : '--';
-        const round4Score: string = competitor.linescores.length > 3 ? competitor.linescores[3].value.toString() : '--';
+        const isDNF: boolean = status.type.name === "STATUS_CUT";
+        const toPar: string = scoreToPar.displayValue;
+        const relativeScore: number = isDNF ? Number.MAX_SAFE_INTEGER : scoreToPar.value;
+        const totalScore: number = linescores.map(s => s.value).reduce((prev, curr) => prev + curr, 0);
+        const total: string = totalScore === 0 ? '--' : totalScore.toString();
+        const position: string = status.position.displayName;
+        const currentRoundScore: string = currentRound.displayValue;
+        const round1Score: string = linescores.length > 0 ? linescores[0].value.toString() : '--';
+        const round2Score: string = linescores.length > 1 ? linescores[1].value.toString() : '--';
+        const round3Score: string = linescores.length > 2 ? linescores[2].value.toString() : '--';
+        const round4Score: string = linescores.length > 3 ? linescores[3].value.toString() : '--';
         const fullName: string = competitor.athlete.displayName;
         const shortName: string = competitor.athlete.displayName;
         const logoImage: string = competitor.athlete.flag.href;
-        const startTime: Date = competitor.status.teeTime ? new Date(competitor.status.teeTime) : null;
-        const espnId = competitor.id;
+        const espnId: string = competitor.id;
 
+        let thru: string = '--';
+        if (status.displayThru) {
+            thru = status.displayThru;
+        } else if (status.displayValue) {
+            thru = formatDate(status.displayValue, 'shortTime', this.locale)
+        }
 
-        let movementDirection = MovementDirection.None;
+        let movementDirection: MovementDirection = MovementDirection.None;
         if (competitor.movement > 0) {
             movementDirection = MovementDirection.Positive
         } else if (competitor.movement < 0) {
             movementDirection = MovementDirection.Negative;
         }
-        const movementText = competitor.movement === 0 ? null : Math.abs(competitor.movement).toString();
+        const movementText: string = competitor.movement === 0 ? null : Math.abs(competitor.movement).toString();
 
         const score: Score = {
             index: index,
@@ -258,7 +245,6 @@ export class DataService {
             fullName: fullName,
             shortName: shortName,
             logoImage: logoImage,
-            startTime: startTime,
             espnId: espnId,
             movement: { text: movementText, direction: movementDirection }
         }

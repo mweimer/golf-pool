@@ -87,7 +87,6 @@ export interface Score {
     fullName: string;
     shortName: string;
     logoImage: string;
-    startTime: Date;
     espnId: string;
     movement: {
         text: string;

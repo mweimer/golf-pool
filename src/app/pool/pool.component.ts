@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, Inject, LOCALE_ID } from '@angular/core';
-import { formatDate } from '@angular/common';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataService } from '../services/data.service';
@@ -18,13 +17,12 @@ export class PoolComponent {
     cutline: Observable<{ value: number, type: string }> = this.dataService.liveData.pipe(map((data: LiveData) => data.cutline));
 
     constructor(private dataService: DataService, 
-                private gotoService: GotoService,
-                @Inject(LOCALE_ID) private locale: string) {}
+                private gotoService: GotoService) {}
 
 
     getGolferInfo(entry: Entry, cutline: {value: number, type: string }, index: number): string {
         const golferScore: GolferScore = entry.golferScores[index];
-        const thru = golferScore.score.thru ? golferScore.score.thru : formatDate(golferScore.score.startTime, 'shortTime', this.locale);
+        const thru = golferScore.score.thru;
         const name = golferScore.score.shortName;
         const score = cutline && cutline.type === 'projected' && golferScore.score.relativeScore > cutline.value 
             ? `<span class="text-danger">${golferScore.score.toPar}</span>` : golferScore.score.toPar;
