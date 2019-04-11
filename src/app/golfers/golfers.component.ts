@@ -6,7 +6,7 @@ import { map ,  tap } from 'rxjs/operators';
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
 import { InfoModalComponent } from '../info-modal/info-modal.component'
-import { LiveData, GolferScore, MovementDirection, PlayerInfo } from '../models/models';
+import { LiveData, GolferScore, PlayerInfo } from '../models/models';
 
 @Component({
     selector: 'app-golfers',
@@ -36,7 +36,7 @@ export class GolfersComponent {
         }),
     );
 
-    cutlineDisplay: Observable<string> =this.dataService.liveData.pipe(
+    cutlineDisplay: Observable<string> = this.dataService.liveData.pipe(
         map((data: LiveData) => {
             if (data.cutline && data.cutline.type === 'projected') {
                 if (data.cutline.value === 0) {
@@ -53,10 +53,6 @@ export class GolfersComponent {
                 private simplePageScrollService: SimplePageScrollService,
                 private gotoService: GotoService,
                 private modalService: NgbModal) {}
-
-    getMovementClass(golferScore: GolferScore): string {
-        return MovementDirection[golferScore.score.movement.direction].toLowerCase();
-    }
 
     showGolferDetail(golferScore: GolferScore) {
         if (golferScore.score.espnId) {

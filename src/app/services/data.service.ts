@@ -6,7 +6,7 @@ import { Observable ,  ReplaySubject , throwError as _throw} from 'rxjs';
 import { map ,  tap } from 'rxjs/operators';
 import { cloneDeep, orderBy, sortBy, union, last } from 'lodash';
 
-import { GolferConfig, EntryConfig, LiveData, Entry, GolferScore, Score, MovementDirection, PlayerInfo, IAppConfig } from '../models/models';
+import { GolferConfig, EntryConfig, LiveData, Entry, GolferScore, Score, PlayerInfo, IAppConfig } from '../models/models';
 import { SettingsService } from '../settings/settings.service';
 import { ConfigService } from '../config/config.service';
 import { Constants } from '../config/constants';
@@ -182,7 +182,7 @@ export class DataService {
             fullName: golferConfig.name,
             shortName: `${firstName[0]}. ${lastName}`,
             logoImage: '',
-            movement: { text: '-', direction: MovementDirection.None },
+            movement: { text: '-', class: null },
             espnId: null
         }
 
@@ -195,7 +195,6 @@ export class DataService {
         const scoreToPar: Statistic = competitor.statistics.find(s => s.name === "scoreToPar");
         const linescores: Linescore[] = competitor.linescores;
         const currentRound: Linescore = last(linescores);
-
 
         const isDNF: boolean = status.type.name === "STATUS_CUT";
         const toPar: string = scoreToPar.displayValue;
@@ -212,21 +211,8 @@ export class DataService {
         const shortName: string = competitor.athlete.displayName;
         const logoImage: string = competitor.athlete.flag.href;
         const espnId: string = competitor.id;
-
-        let thru: string = '--';
-        if (status.displayThru) {
-            thru = status.displayThru;
-        } else if (status.displayValue) {
-            thru = formatDate(status.displayValue, 'shortTime', this.locale)
-        }
-
-        let movementDirection: MovementDirection = MovementDirection.None;
-        if (competitor.movement > 0) {
-            movementDirection = MovementDirection.Positive
-        } else if (competitor.movement < 0) {
-            movementDirection = MovementDirection.Negative;
-        }
-        const movementText: string = competitor.movement === 0 ? null : Math.abs(competitor.movement).toString();
+        const thru = this.getThru(status);
+        const movement = this.getMovement(competitor);
 
         const score: Score = {
             index: index,
@@ -246,11 +232,35 @@ export class DataService {
             shortName: shortName,
             logoImage: logoImage,
             espnId: espnId,
-            movement: { text: movementText, direction: movementDirection }
+            movement
         }
 
         return score;
+    }
 
+    private getThru(status: Status): string {
+        let thru: string = '--';
+        if (status.displayThru) {
+            thru = status.displayThru;
+        } else if (status.displayValue) {
+            thru = formatDate(status.displayValue, 'shortTime', this.locale)
+        }
+
+        return thru;
+    }
+
+    private getMovement(competitor: Competitor) {
+        const movement: number = competitor.movement;
+
+        let movementClass: string = 'none';
+        if (movement > 0) {
+            movementClass = 'positive';
+        } else if (movement < 0) {
+            movementClass = 'negative';
+        }
+        const movementText: string = movement === 0 ? null : Math.abs(movement).toString();
+
+        return { text: movementText, class: movementClass };
     }
 
     private getEntries(golferScores: GolferScore[]): Entry[] {

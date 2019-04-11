@@ -90,14 +90,8 @@ export interface Score {
     espnId: string;
     movement: {
         text: string;
-        direction: MovementDirection
+        class: string
     }
-}
-
-export enum MovementDirection {
-    Positive,
-    Negative,
-    None
 }
 
 export interface PlayerInfo {

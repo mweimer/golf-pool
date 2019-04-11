@@ -8,7 +8,7 @@
         <ng-container *ngFor="let golferScore of golferScores | async; let i = index">
         <tr [attr.id]="'golfer-' + golferScore.golferConfig.id" [ngClass]="{'table-success': golferScore.golferConfig.id === (highlightedGolferId | async), 'selected': golferScore.isSelected}" (click)="showGolferDetail(golferScore)"> 
             <td>{{golferScore.score.position}}</td>
-            <td [ngClass]="getMovementClass(golferScore)">{{golferScore.score.movement.text}}</td>
+            <td [ngClass]="golferScore.score.movement.class">{{golferScore.score.movement.text}}</td>
             <td><div *ngIf="golferScore.score.logoImage" class="logo"><img [src]="golferScore.score.logoImage" /></div>{{golferScore.score.fullName}}</td>
             <td>{{golferScore.entryCount}}</td>
             <td>{{golferScore.score.toPar}}</td>
