@@ -253,10 +253,14 @@ export class DataService {
 
     private getThru(status: Status): string {
         let thru: string = '--';
-        if (status.displayThru) {
+        if (status.displayThru && status.displayThru !== '18') {
             thru = status.displayThru;
+        } else if(status.displayThru && status.displayThru == '18') {
+            thru = status.displayValue;
+        } else if (status.displayValue === status.teeTime) {
+            thru = formatDate(status.teeTime, 'shortTime', this.locale)
         } else if (status.displayValue) {
-            thru = formatDate(status.displayValue, 'shortTime', this.locale)
+            thru = status.displayValue;
         }
 
         return thru;
