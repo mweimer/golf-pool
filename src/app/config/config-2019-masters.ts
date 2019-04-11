@@ -114,9 +114,12 @@ const contestantData = [
     { id: 16, name: 'Ryan Aguiar', entries: [[6, 20, 34, 60], [1, 21, 33, 53], [7, 16, 31, 55]] },
     { id: 17, name: 'Max Marshall', entries: [[2, 15, 35, 67], [7, 16, 30, 59], [5, 21, 31, 59]] },
     { id: 18, name: 'Kevin Donoher', entries: [[1, 11, 38, 57], [6, 12, 36, 53], [3, 21, 39, 59]] },
-    { id: 19, name: 'Kyle Bivenour', entries: [[3, 9, 26, 61], [11, 17, 28, 50], [5, 14, 34, 61]] },
+    { id: 19, name: 'Kyle Bivenour', entries: [[3, 9, 26, 61], [11, 17, 28, 50], [5, 14, 34, 54]] },
     { id: 20, name: 'Cameron Weimer', entries: [[1, 16, 38, 63], [3, 15, 32, 63], [4, 21, 31, 59]] },
-    { id: 21, name: 'Drew Serruto', entries: [[1, 13, 33, 61], [3, 11, 30, 57], [6, 14, 38, 63]] }
+    { id: 21, name: 'Drew Serruto', entries: [[1, 13, 33, 61], [3, 11, 30, 57], [6, 14, 38, 63]] },
+    { id: 22, name: 'Tony Drake', entries: [[7, 29, 38, 60], [2, 29, 30, 53], [4, 21, 34, 59]] },
+    { id: 23, name: 'Nick Brohas', entries: [[4, 16, 33, 63], [3, 15, 47, 58], [2, 11, 35, 67]] },
+    { id: 24, name: 'Steven Laake', entries: [[3, 21, 30, 57], [2, 19, 31, 59], [1, 16, 35, 55]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
