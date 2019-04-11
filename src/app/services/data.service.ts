@@ -194,7 +194,13 @@ export class DataService {
     private mapCompetitorToScore(competitor: Competitor, index: number): Score {
         const isDNF: boolean = competitor.status.type.name === "STATUS_CUT";
 
-        const toPar: string = isDNF ? competitor.status.displayValue : competitor.score.displayValue;
+        const lineScore = competitor.linescores[0];
+
+        let toPar: string = isDNF ? competitor.status.displayValue : lineScore.displayValue;
+        if (toPar === '-') {
+            toPar = competitor.score.displayValue;
+        }
+
         let relativeScore: number;
         if (isDNF) {
             relativeScore = Number.MAX_SAFE_INTEGER;
@@ -202,7 +208,7 @@ export class DataService {
             relativeScore = toPar === 'E' ? 0 : parseInt(toPar, 10);
         }
 
-        const totalScore: number = competitor.score.value;
+        const totalScore: number = lineScore.value;
         const total: string = totalScore.toString();
         const position: string = competitor.status.position.displayName;
         const currentRound: Linescore = last(competitor.linescores);
