@@ -158,15 +158,51 @@ function createEntry(worksheet, position, golferConfig) {
    
     const getGolferId = (golferName) => {
         const result = entryFuse.search(golferName);
-        return result[0].id;
+        if (result.length === 0) {
+            console.log("Could not find espn data for entry: " + golferName);
+            return '';
+        }
+
+
+        return result[0];
     }
 
-    const golferId1 = getGolferId(golfer1Name);
-    const golferId2 = getGolferId(golfer2Name);
-    const golferId3 = getGolferId(golfer3Name);
-    const golferId4 = getGolferId(golfer4Name);
+    const golferData1 = getGolferId(golfer1Name);
+    const golferData2 = getGolferId(golfer2Name);
+    const golferData3 = getGolferId(golfer3Name);
+    const golferData4 = getGolferId(golfer4Name);
 
-    return [golferId1, golferId2, golferId3, golferId4];
+    validate(golferData1, 'A');
+    validate(golferData2, 'B');
+    validate(golferData3, 'C');
+    validate(golferData4, 'D');
+
+
+    return [golferData1.id, golferData2.id, golferData3.id, golferData4.id];
+}
+
+function validate(golferData, expectedTier) {
+    const expected = tierToNum(expectedTier);
+    const golferVal = tierToNum(golferData.tier) 
+   
+    if (golferVal < expected) {
+        throw new Error(`Found ${golferData.name} in tier ${golferData.tier}, expected: ${expectedTier}`);
+    }
+}
+
+function tierToNum(tier) {
+    switch (tier) {
+        case 'A':
+            return 1;
+        case 'B':
+            return 2;
+        case 'C':
+            return 3;
+        case 'D':
+            return 4;
+        default:
+            return 5;
+    }
 }
 
 function incrementColumn(row, delta = 1) {

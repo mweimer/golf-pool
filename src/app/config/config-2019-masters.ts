@@ -103,7 +103,7 @@ const contestantData = [
     { id: 5, name: 'Andrew Kaczala', entries: [[6, 11, 49, 58], [3, 19, 34, 75], [7, 27, 44, 64]] },
     { id: 6, name: 'Nate Heckman', entries: [[3, 12, 39, 62], [1, 16, 34, 53], [6, 21, 33, 56]] },
     { id: 7, name: 'David Prevo', entries: [[1, 14, 32, 57], [4, 18, 33, 58], [7, 11, 37, 53]] },
-    { id: 8, name: 'Ian Horwich', entries: [[7, 15, 34, 59], [4, 11, 48, 65], [2, 15, 19, 55]] },
+    { id: 8, name: 'Ian Horwich', entries: [[7, 15, 34, 59], [4, 11, 48, 65], [2, 15, 46, 55]] },
     { id: 9, name: 'Alex Duff', entries: [[4, 11, 51, 68], [1, 21, 34, 60], [10, 17, 30, 54]] },
     { id: 10, name: 'Kevin O\'Brien', entries: [[1, 18, 34, 58], [2, 20, 33, 55], [7, 12, 31, 53]] },
     { id: 11, name: 'Matt Dorow', entries: [[4, 12, 38, 62], [1, 11, 50, 53], [4, 15, 36, 75]] },
@@ -114,12 +114,14 @@ const contestantData = [
     { id: 16, name: 'Ryan Aguiar', entries: [[6, 20, 34, 60], [1, 21, 33, 53], [7, 16, 31, 55]] },
     { id: 17, name: 'Max Marshall', entries: [[2, 15, 35, 67], [7, 16, 30, 59], [5, 21, 31, 59]] },
     { id: 18, name: 'Kevin Donoher', entries: [[1, 11, 38, 57], [6, 12, 36, 53], [3, 21, 39, 59]] },
-    { id: 19, name: 'Kyle Bivenour', entries: [[3, 9, 26, 61], [11, 17, 28, 50], [5, 14, 34, 54]] },
+    { id: 19, name: 'Kyle Bivenour', entries: [[3, 17, 30, 61], [1, 11, 35, 57], [5, 14, 34, 54]] },
     { id: 20, name: 'Cameron Weimer', entries: [[1, 16, 38, 63], [3, 15, 32, 63], [4, 21, 31, 59]] },
     { id: 21, name: 'Drew Serruto', entries: [[1, 13, 33, 61], [3, 11, 30, 57], [6, 14, 38, 63]] },
     { id: 22, name: 'Tony Drake', entries: [[7, 29, 38, 60], [2, 29, 30, 53], [4, 21, 34, 59]] },
     { id: 23, name: 'Nick Brohas', entries: [[4, 16, 33, 63], [3, 15, 47, 58], [2, 11, 35, 67]] },
-    { id: 24, name: 'Steven Laake', entries: [[3, 21, 30, 57], [2, 19, 31, 59], [1, 16, 35, 55]] }
+    { id: 24, name: 'Steven Laake', entries: [[3, 21, 30, 57], [2, 19, 31, 59], [1, 16, 35, 55]] },
+    { id: 25, name: 'Matt Scharrer', entries: [[1, 14, 31, 54], [2, 16, 42, 56], [3, 17, 33, 53]] },
+    { id: 26, name: 'Sean Buckle', entries: [[1, 21, 38, 59], [4, 16, 30, 55], [7, 11, 33, 56]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
