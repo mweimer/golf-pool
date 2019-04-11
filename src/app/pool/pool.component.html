@@ -7,13 +7,26 @@
     <tbody>
         <tr *ngFor="let entry of entries | async" [ngClass]="{'table-danger': entry.isDQ, 'selected': entry.isSelected}">
             <td>{{ entry.position }}</td>
-            <td>{{entry.name}}</td>
-            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[0])" [ngClass]="getGolferClass(entry, 0)" [innerHtml]="getGolferInfo(entry, (cutline | async), 0)"></td>
-            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[1])" [ngClass]="getGolferClass(entry, 1)" [innerHtml]="getGolferInfo(entry, (cutline | async), 1)"></td>
-            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[2])" [ngClass]="getGolferClass(entry, 2)" [innerHtml]="getGolferInfo(entry, (cutline | async), 2)"></td>
-            <td class="golfer-score" (click)="gotoGolfer(entry.golferScores[3])" [ngClass]="getGolferClass(entry, 3)" [innerHtml]="getGolferInfo(entry, (cutline | async), 3)"></td>
-            <th>{{entry.overallToPar}}</th>
+            <td>{{ entry.name }}</td>
+
+            <ng-container *ngTemplateOutlet="cellTemplate; context: {golfer: entry.golferScores[0], danger: entry.danger[0], isDQ: entry.isDQ }"></ng-container>
+            <ng-container *ngTemplateOutlet="cellTemplate; context: {golfer: entry.golferScores[1], danger: entry.danger[1], isDQ: entry.isDQ }"></ng-container>
+            <ng-container *ngTemplateOutlet="cellTemplate; context: {golfer: entry.golferScores[2], danger: entry.danger[2], isDQ: entry.isDQ }"></ng-container>
+            <ng-container *ngTemplateOutlet="cellTemplate; context: {golfer: entry.golferScores[2], danger: entry.danger[3], isDQ: entry.isDQ }"></ng-container>
+
+            <th>{{ entry.overallToPar }}</th>
         </tr>
     </tbody>
 </table>
 
+<ng-template #cellTemplate let-golfer="golfer" let-danger="danger" let-isDQ="isDQ">
+    <td class="golfer-score" (click)="gotoGolfer(golfer)" [ngClass]="{'table-warning': !isDQ && golfer.throwaway, 'table-success': !isDQ && !golfer.throwaway}">
+         <ng-container *ngTemplateOutlet="golferTemplate; context: {golfer: golfer, danger: danger}"></ng-container>
+    </td>
+</ng-template>
+
+<ng-template #golferTemplate let-golfer="golfer" let-danger="danger">
+    {{ golfer.score.shortName }}:
+    <span [ngClass]="{'text-danger': danger}">{{ golfer.score.toPar }}</span>
+    <ng-container *ngIf="!golfer.score.isDNF"> ({{ golfer.score.thru }})</ng-container>
+</ng-template>

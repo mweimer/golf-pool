@@ -4,6 +4,11 @@ import { map } from 'rxjs/operators';
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
 import { Entry, LiveData, GolferScore } from '../models/models';
+import {merge} from 'lodash';
+
+export interface PoolEntry extends Entry {
+    danger: boolean[]
+}
 
 @Component({
     selector: 'app-pool',
@@ -13,34 +18,21 @@ import { Entry, LiveData, GolferScore } from '../models/models';
 })
 export class PoolComponent {
 
-    entries: Observable<Entry[]> = this.dataService.liveData.pipe(map((data: LiveData) => data.entries));
-    cutline: Observable<{ value: number, type: string }> = this.dataService.liveData.pipe(map((data: LiveData) => data.cutline));
+    entries: Observable<PoolEntry[]> = this.dataService.liveData.pipe(
+        map((data: LiveData) => {
+            const isProjectedCut = data.cutline.type === 'projected';
+            return data.entries.map(entry => {
+                const danger = entry.golferScores.map(gs => isProjectedCut && gs.score.relativeScore > data.cutline.value)
+                return merge(entry, { danger });
+            });
+        })
+    );
 
     constructor(private dataService: DataService, 
                 private gotoService: GotoService) {}
 
 
-    getGolferInfo(entry: Entry, cutline: {value: number, type: string }, index: number): string {
-        const golferScore: GolferScore = entry.golferScores[index];
-        const thru = golferScore.score.thru;
-        const name = golferScore.score.shortName;
-        const score = cutline && cutline.type === 'projected' && golferScore.score.relativeScore > cutline.value 
-            ? `<span class="text-danger">${golferScore.score.toPar}</span>` : golferScore.score.toPar;
-        const info =  golferScore.score.isDNF ?  `${name}: ${score}` : `${name}: ${score} (${thru})`;
-        return info;
-    }
-
     gotoGolfer(golferScore: GolferScore) {
         this.gotoService.gotoGolfer(golferScore.golferConfig.id);
-    }
-
-    getGolferClass(entry: Entry, golferIndex: number): string {
-        if (entry.isDQ) {
-            return;
-        } else if (entry.golferScores[golferIndex].throwaway) {
-            return 'table-warning';
-        }
-
-        return 'table-success';
     }
 }

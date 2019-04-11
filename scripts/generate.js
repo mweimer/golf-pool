@@ -156,21 +156,21 @@ function createEntry(worksheet, position, golferConfig) {
     };
     const entryFuse = new Fuse(golferConfig, options);
    
-    const getGolferId = (golferName) => {
+    const getGolferData = (golferName) => {
         const result = entryFuse.search(golferName);
         if (result.length === 0) {
             console.log("Could not find espn data for entry: " + golferName);
-            return '';
+            return null;
         }
 
 
         return result[0];
     }
 
-    const golferData1 = getGolferId(golfer1Name);
-    const golferData2 = getGolferId(golfer2Name);
-    const golferData3 = getGolferId(golfer3Name);
-    const golferData4 = getGolferId(golfer4Name);
+    const golferData1 = getGolferData(golfer1Name);
+    const golferData2 = getGolferData(golfer2Name);
+    const golferData3 = getGolferData(golfer3Name);
+    const golferData4 = getGolferData(golfer4Name);
 
     validate(golferData1, 'A');
     validate(golferData2, 'B');
