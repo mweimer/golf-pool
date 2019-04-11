@@ -11,6 +11,7 @@ import { SettingsService } from '../settings/settings.service';
 import { ConfigService } from '../config/config.service';
 import { Constants } from '../config/constants';
 import { EspnData, Competitor, Linescore } from '../models/espn';
+import {DatePipe} from '@angular/common';
 
 @Injectable()
 export class DataService {
@@ -21,6 +22,7 @@ export class DataService {
     private selectedContestantId: number = 0;
     private config: IAppConfig;
     private interval: any;
+    private static datePipe: DatePipe = new DatePipe('en-US');
 
     public constructor(private titleService: Title,
                        private http: HttpClient,
@@ -205,7 +207,10 @@ export class DataService {
         const position: string = competitor.status.position.displayName;
         const currentRound: Linescore = last(competitor.linescores);
         const currentRoundScore: string = currentRound && !isDNF ? currentRound.value.toString() :  '--';
-        const thru: string = competitor.status.displayValue ? competitor.status.displayValue : '--';
+        let thru: string = competitor.status.displayValue ? competitor.status.displayValue : '--';
+        if (thru.startsWith('2019')) {
+            thru = DataService.datePipe.transform(thru, 'shortTime');
+        }
         const round1Score: string = competitor.linescores.length > 0 ? competitor.linescores[0].value.toString() : '--';
         const round2Score: string = competitor.linescores.length > 1 ? competitor.linescores[1].value.toString() : '--';
         const round3Score: string = competitor.linescores.length > 2 ? competitor.linescores[2].value.toString() : '--';

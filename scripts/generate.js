@@ -16,8 +16,10 @@ if (process.argv.length < 4 || (process.argv.length >= 4 && !/^[0-9]{4,9}$/.test
 }
 
 const tourneyId = process.argv[3];
-const host = `cdn.espn.com`;
-const path = `/core/golf/leaderboard?tournamentId=${tourneyId}&xhr=1`;
+const host = `site.web.api.espn.com`;
+//const path = `/core/golf/leaderboard?tournamentId=${tourneyId}&xhr=1`;
+const path = `/apis/site/v2/sports/golf/leaderboard?league=pga&region=us&lang=en&event=${tourneyId}&showAirings=true`;
+
 
 let golferIdIndex = 1;
 let contestantIdIndex = 1;
@@ -56,7 +58,8 @@ function run(espnData) {
       keys: ['athlete.displayName']
     };
 
-    const espnFuse = new Fuse(espnData.json.competitions[0].competitors, options);
+    const competitions = espnData.events[0].competitions;
+    const espnFuse = new Fuse(competitions[0].competitors, options);
 
     const golferConfig = tierStartingPositions
         .map((position, tierIndex) => createGolferConfig(golfersWorksheet, position, tierIndex, espnFuse))
@@ -174,7 +177,7 @@ function incrementColumn(row, delta = 1) {
 }
 
 function writeConfig(golferConfig, contestantConfig, espnData) {
-    const tourneyTitle = espnData.content.tournamentName;
+    const tourneyTitle = espnData.events[0].name;
 
     const fileName = tourneyTitle.toLowerCase().replace(/\s/g, '-').replace(/\./g, '');
 

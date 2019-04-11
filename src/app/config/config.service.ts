@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  BehaviorSubject } from 'rxjs';
+import config10 from './config-2019-masters';
 import config9 from './config-2018-pga';
 import config8 from './config-2018-the-open';
 import config7 from './config-2018-us-open';
@@ -37,7 +38,7 @@ export class ConfigService {
     }
 
     private initConfig(): IAppConfig {
-        const configs: Config[] = [config9, config8, config7, config6, config5, config4, config3, config2, config1];
+        const configs: Config[] = [config10, config9, config8, config7, config6, config5, config4, config3, config2, config1];
         this.allConfigs = configs.map(c => new AppConfig(c))
 
         return this.allConfigs[this._selectedIndex.getValue()];
