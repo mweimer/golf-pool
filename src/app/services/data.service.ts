@@ -3,8 +3,8 @@ import { Title } from '@angular/platform-browser';
 import {HttpClient} from '@angular/common/http';
 
 import { Observable ,  ReplaySubject , throwError as _throw} from 'rxjs';
-import { map ,  tap } from 'rxjs/operators';
-import { cloneDeep, orderBy, sortBy, union, last } from 'lodash';
+import { map , tap } from 'rxjs/operators';
+import { cloneDeep, orderBy, sortBy, union, last, isNumeric } from 'lodash';
 
 import { GolferConfig, EntryConfig, LiveData, Entry, GolferScore, Score, PlayerInfo, IAppConfig } from '../models/models';
 import { SettingsService } from '../settings/settings.service';
@@ -119,10 +119,23 @@ export class DataService {
 
 
 
-    private getCutline(data: EspnData): { value: number, type: string } {
+    private getCutline(data: EspnData): { value: number, type: string, displayValue: string } {
+        let value = undefined;
+        let type = undefined;
+        let displayValue: string = undefined;
+
+        if (type === 'projected' && isNumeric(value)) {
+            if (value === 0) {
+                displayValue = 'E';
+            } else {
+                displayValue = value > 0 ? '+' + value.toString() : value.toString();
+            }
+        }
+
         return {
-            value: undefined,
-            type: undefined
+            value,
+            type,
+            displayValue
         };
     }
 

@@ -44,6 +44,7 @@ export interface LiveData {
     cutline?: {
         value: number;
         type: string;
+        displayValue: string;
     };
     selectedContestantId: number;
     timeStamp: Date;

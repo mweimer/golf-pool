@@ -36,16 +36,7 @@ export class GolfersComponent {
         }),
     );
 
-    cutlineDisplay: Observable<string> = this.dataService.liveData.pipe(
-        map((data: LiveData) => {
-            if (data.cutline && data.cutline.type === 'projected') {
-                if (data.cutline.value === 0) {
-                    return 'E';
-                }
-                return data.cutline.value > 0 ? '+' + data.cutline.value.toString() : data.cutline.value.toString();
-            }
-        })    
-    );
+    cutlineDisplay: Observable<string> = this.dataService.liveData.pipe(map((data: LiveData) => data.cutline.displayValue));
 
     highlightedGolferId = new BehaviorSubject<number>(0);
 
