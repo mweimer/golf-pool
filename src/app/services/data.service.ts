@@ -268,8 +268,8 @@ export class DataService {
             thru = status.displayThru;
         } else if(status.displayThru && status.displayThru == '18') {
             thru = status.displayValue;
-        } else if (status.displayValue === status.teeTime) {
-            thru = formatDate(status.teeTime, 'shortTime', this.locale)
+        } else if (status.displayValue.startsWith('20')) {
+            thru = formatDate(status.displayValue, 'shortTime', this.locale)
         } else if (status.displayValue) {
             thru = status.displayValue;
         }
