@@ -4,13 +4,13 @@ import {HttpClient} from '@angular/common/http';
 
 import { Observable ,  ReplaySubject , throwError as _throw} from 'rxjs';
 import { map , tap } from 'rxjs/operators';
-import { cloneDeep, orderBy, sortBy, union, last, isNumeric } from 'lodash';
+import { cloneDeep, orderBy, sortBy, union, last } from 'lodash';
 
 import { GolferConfig, EntryConfig, LiveData, Entry, GolferScore, Score, PlayerInfo, IAppConfig } from '../models/models';
 import { SettingsService } from '../settings/settings.service';
 import { ConfigService } from '../config/config.service';
 import { Constants } from '../config/constants';
-import {EspnData, Competitor, Linescore, Statistic, Status} from '../models/espn';
+import {EspnData, Competitor, Linescore, Statistic, Status, Event, Competition} from '../models/espn';
 import {formatDate} from '@angular/common';
 
 @Injectable()
@@ -120,11 +120,19 @@ export class DataService {
 
 
     private getCutline(data: EspnData): { value: number, type: string, displayValue: string } {
+        const event: Event = data.events[0];
+        const competition: Competition = event.competitions[0];
         let value = undefined;
         let type = undefined;
         let displayValue: string = undefined;
 
-        if (type === 'projected' && isNumeric(value)) {
+        if (competition.status.period === event.tournament.cutRound &&
+            competition.status.type.name !== 'STATUS_PLAY_COMPLETE') {
+            value = event.tournament.cutScore;
+            type = 'projected';
+        }
+
+        if (type === 'projected' && value) {
             if (value === 0) {
                 displayValue = 'E';
             } else {
