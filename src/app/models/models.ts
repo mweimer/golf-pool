@@ -1,3 +1,5 @@
+import { Athlete } from "./espn";
+
 // Configuration models
 
 export interface Config {
@@ -92,7 +94,8 @@ export interface Score {
     movement: {
         text: string;
         class: string
-    }
+    },
+    athelete: Athlete;
 }
 
 export interface PlayerInfo {

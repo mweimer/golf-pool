@@ -9,7 +9,11 @@
         <tr [attr.id]="'golfer-' + golfer.golferConfig.id" [ngClass]="{'table-success': golfer.golferConfig.id === (highlightedGolferId | async), 'selected': golfer.isSelected}" (click)="showGolferDetail(golfer)"> 
             <td>{{golfer.score.position}}</td>
             <td [ngClass]="golfer.score.movement.class">{{golfer.score.movement.text}}</td>
-            <td><div *ngIf="golfer.score.logoImage" class="logo"><img [src]="golfer.score.logoImage" /></div>{{golfer.score.fullName}}</td>
+            <td>
+                <div *ngIf="golfer.score.logoImage" class="logo">
+                    <img [src]="golfer.score.logoImage" />
+                </div>{{golfer.score.fullName}}<ng-container *ngIf="golfer.score.athelete?.amateur"> (a)</ng-container>
+            </td>
             <td>{{golfer.entryCount}}</td>
             <td>{{golfer.score.toPar}}</td>
             <td>{{golfer.score.currentRoundScore}}</td>

@@ -204,7 +204,8 @@ export class DataService {
             shortName: `${firstName[0]}. ${lastName}`,
             logoImage: '',
             movement: { text: '-', class: null },
-            espnId: null
+            espnId: null,
+            athelete: null
         }
 
         return score;
@@ -234,6 +235,7 @@ export class DataService {
         const espnId: string = competitor.id;
         const thru = this.getThru(status);
         const movement = this.getMovement(competitor);
+        const athelete = competitor.athlete;
 
         const score: Score = {
             index: index,
@@ -253,7 +255,8 @@ export class DataService {
             shortName: shortName,
             logoImage: logoImage,
             espnId: espnId,
-            movement
+            movement,
+            athelete
         }
 
         return score;
