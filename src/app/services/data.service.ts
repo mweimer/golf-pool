@@ -219,7 +219,7 @@ export class DataService {
         const currentRound: Linescore = last(linescores);
 
         const isDNF: boolean = status.type.name === "STATUS_CUT";
-        const toPar: string = scoreToPar.displayValue;
+        const toPar: string = isDNF ? status.type.shortDetail : scoreToPar.displayValue;
         const relativeScore: number = isDNF ? Number.MAX_SAFE_INTEGER : scoreToPar.value;
         const totalScore: number = linescores.map(s => s.value).reduce((prev, curr) => prev + curr, 0);
         const total: string = totalScore === 0 ? '--' : totalScore.toString();
