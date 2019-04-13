@@ -281,9 +281,9 @@ export class DataService {
         const movement: number = competitor.movement;
 
         let movementClass: string = 'none';
-        if (movement > 0) {
+        if (movement < 0) {
             movementClass = 'positive';
-        } else if (movement < 0) {
+        } else if (movement > 0) {
             movementClass = 'negative';
         }
         const movementText: string = movement === 0 ? null : Math.abs(movement).toString();
