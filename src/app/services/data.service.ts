@@ -224,7 +224,7 @@ export class DataService {
         const totalScore: number = linescores.map(s => s.value).reduce((prev, curr) => prev + curr, 0);
         const total: string = totalScore === 0 ? '--' : totalScore.toString();
         const position: string = status.position.displayName;
-        const currentRoundScore: string = currentRound.displayValue;
+        const currentRoundScore: string = isDNF && status.period >= 3 ? '-' : currentRound.displayValue;
         const round1Score: string = linescores.length > 0 ? linescores[0].value.toString() : '--';
         const round2Score: string = linescores.length > 1 ? linescores[1].value.toString() : '--';
         const round3Score: string = linescores.length > 2 ? linescores[2].value.toString() : '--';
