@@ -237,7 +237,6 @@ export class DataService {
         const movement = this.getMovement(competitor);
         const athelete = competitor.athlete;
 
-        
         const score: Score = {
             index: index,
             isDNF: isDNF,
