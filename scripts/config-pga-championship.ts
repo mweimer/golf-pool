@@ -171,7 +171,14 @@ const contestantData = [
     { id: 4, name: 'Max Marshall', entries: [[2, 17, 44, 109], [5, 18, 55, 95], [1, 11, 60, 106]] },
     { id: 5, name: 'Alex Duff', entries: [[2, 12, 31, 111], [9, 11, 34, 88], [7, 18, 79, 118]] },
     { id: 6, name: 'Ryan Boudouris', entries: [[1, 12, 32, 92], [2, 11, 34, 95], [4, 13, 36, 92]] },
-    { id: 7, name: 'Matt Kilanski', entries: [[1, 19, 33, 92], [8, 11, 36, 88], [2, 19, 71, 95]] }
+    { id: 7, name: 'Matt Kilanski', entries: [[1, 19, 33, 92], [8, 11, 36, 88], [2, 19, 71, 95]] },
+    { id: 8, name: 'Andrew Kubaszewski', entries: [[2, 18, 31, 95], [4, 17, 38, 92], [5, 12, 39, 118]] },
+    { id: 9, name: 'David Prevo', entries: [[2, 12, 32, 100], [4, 15, 52, 102], [1, 16, 42, 98]] },
+    { id: 10, name: 'Cameron Weimer', entries: [[2, 12, 31, 98], [10, 23, 53, 112], [3, 24, 36, 150]] },
+    { id: 11, name: 'Nick Royer', entries: [[9, 11, 31, 85], [10, 12, 35, 85], [1, 11, 34, 85]] },
+    { id: 12, name: 'Drew Serruto', entries: [[2, 15, 36, 100], [4, 13, 42, 109], [5, 11, 31, 112]] },
+    { id: 13, name: 'Steven Laake', entries: [[6, 23, 32, 88], [2, 11, 36, 92], [1, 12, 30, 99]] },
+    { id: 14, name: 'Kevin O\'Brien', entries: [[2, 11, 47, 100], [8, 29, 31, 94], [10, 17, 53, 117]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
