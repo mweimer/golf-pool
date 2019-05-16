@@ -1,4 +1,4 @@
-const tourneyTitle = 'PGA Championship';
+const tourneyTitle = '2018 PGA';
 
 const tourneyId = '401025263';
 
