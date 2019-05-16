@@ -134,7 +134,7 @@ const golferData = [
     { id: 126, name: 'Ryan Armour', espnId: '1750', tier: 'D' },
     { id: 127, name: 'Satoshi Kodaira', espnId: '9076', tier: 'D' },
     { id: 128, name: 'Shaun Norris', espnId: '5057', tier: 'D' },
-    { id: 129, name: 'Vijay Singh', espnId: '392', tier: 'D' },
+    { id: 129, name: 'Shugo Imahira', espnId: '10630', tier: 'D' },
     { id: 130, name: 'Sung-jae Im', espnId: '11382', tier: 'D' },
     { id: 131, name: 'Y.E. Yang', espnId: '1350', tier: 'D' },
     { id: 132, name: 'John Daly', espnId: '97', tier: 'D' },
@@ -170,7 +170,8 @@ const contestantData = [
     { id: 3, name: 'Kyle Bivenour', entries: [[2, 12, 31, 89], [6, 15, 33, 85], [4, 11, 30, 88]] },
     { id: 4, name: 'Max Marshall', entries: [[2, 17, 44, 109], [5, 18, 55, 95], [1, 11, 60, 106]] },
     { id: 5, name: 'Alex Duff', entries: [[2, 12, 31, 111], [9, 11, 34, 88], [7, 18, 79, 118]] },
-    { id: 6, name: 'Ryan Boudouris', entries: [[1, 12, 32, 92], [2, 11, 34, 95], [4, 13, 36, 92]] }
+    { id: 6, name: 'Ryan Boudouris', entries: [[1, 12, 32, 92], [2, 11, 34, 95], [4, 13, 36, 92]] },
+    { id: 7, name: 'Matt Kilanski', entries: [[1, 19, 33, 92], [8, 11, 36, 88], [2, 19, 71, 95]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
