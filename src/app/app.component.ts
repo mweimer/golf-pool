@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
-import { UpdateService } from './services/update.service'
+import { UpdateService } from './services/update.service';
 
 @Component({
     selector: 'app-root',
@@ -10,7 +10,7 @@ import { UpdateService } from './services/update.service'
 
 export class AppComponent {
 
-    constructor(private updateService : UpdateService) {
+    constructor(private updateService: UpdateService) {
         this.updateService.checkForUpdate();
     }
 

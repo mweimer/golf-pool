@@ -16,10 +16,10 @@ import { IAppConfig, NotificationStatus } from '../models/models';
 export class SettingsComponent implements OnInit {
 
     contestants: Observable<{name: string, id: number}[]> = this.configService.current
-        .pipe(map(config => concat([{name: 'none', id: 0}], config.CONTESTANTS.map(c => ({ name: c.name, id: c.id })))))
-   
+        .pipe(map(config => concat([{name: 'none', id: 0}], config.CONTESTANTS.map(c => ({ name: c.name, id: c.id })))));
+
     configs: IAppConfig[] = this.configService.allConfigs;
-    
+
     selectedConfigIndex: string;
     selectedContestantId: string;
 

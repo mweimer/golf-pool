@@ -25,7 +25,7 @@ export class SettingsService {
         if (this.hasLocalStorage) {
             localStorage.setItem(this.selectedContestantKey, value.toString());
         }
-        this._selectedContestantId.next(value)
+        this._selectedContestantId.next(value);
     }
 
     private init() {

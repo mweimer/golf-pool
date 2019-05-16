@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  BehaviorSubject } from 'rxjs';
+import config11 from './config-2019-pga';
 import config10 from './config-2019-masters';
 import config9 from './config-2018-pga';
 import config8 from './config-2018-the-open';
@@ -20,7 +21,7 @@ export class ConfigService {
 
     private _selectedIndex = new BehaviorSubject<number>(0);
     private _current: BehaviorSubject<IAppConfig> = new BehaviorSubject<IAppConfig>(this.initConfig());
-    
+
 
     constructor() {}
 
@@ -38,8 +39,20 @@ export class ConfigService {
     }
 
     private initConfig(): IAppConfig {
-        const configs: Config[] = [config10, config9, config8, config7, config6, config5, config4, config3, config2, config1];
-        this.allConfigs = configs.map(c => new AppConfig(c))
+        const configs: Config[] = [
+            config11,
+            config10,
+            config9,
+            config8,
+            config7,
+            config6,
+            config5,
+            config4,
+            config3,
+            config2,
+            config1
+        ];
+        this.allConfigs = configs.map(c => new AppConfig(c));
 
         return this.allConfigs[this._selectedIndex.getValue()];
     }

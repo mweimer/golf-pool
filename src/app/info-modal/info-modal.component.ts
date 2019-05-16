@@ -11,7 +11,7 @@ import { PlayerInfo } from '../models/models';
 export class InfoModalComponent implements OnInit {
 
     player: PlayerInfo;
-    selectedRound: number
+    selectedRound: number;
     logoImage: string;
 
     cells = ['label', 1, 2, 3, 4, 5, 6, 7, 8, 9, 'out', 10, 11, 12, 13, 14, 15, 16, 17, 18, 'in', 'tot'];
@@ -26,16 +26,16 @@ export class InfoModalComponent implements OnInit {
         if (info && info.rounds && info.rounds.length > 0) {
             const roundsWithScores = info.rounds.filter(r => r.linescores);
             if (roundsWithScores) {
-                this.selectedRound = roundsWithScores.length - 1
+                this.selectedRound = roundsWithScores.length - 1;
                 return;
             }
-        } 
+        }
         this.selectedRound = -1;
     }
 
     getPar(cell: string | number) {
         if (cell === 'label') {
-            return 'Par'
+            return 'Par';
         } else if (!this.hasScores()) {
             return '-';
         } else if (cell === 'out') {
@@ -61,12 +61,13 @@ export class InfoModalComponent implements OnInit {
 
     getScore(cell: string | number) {
         if (cell === 'label') {
-            return 'Score'
+            return 'Score';
         } else if (!this.hasScores()) {
             return '-';
         } else if (cell === 'out') {
-            if (this.player.rounds)
+            if (this.player.rounds) {
             return this.player.rounds[this.selectedRound].outScore;
+            }
         } else if (cell === 'in') {
             return this.player.rounds[this.selectedRound].inScore;
         } else if (cell === 'tot') {

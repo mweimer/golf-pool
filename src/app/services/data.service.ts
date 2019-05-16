@@ -19,7 +19,7 @@ export class DataService {
     private entryConfig: EntryConfig[];
     private _liveData: ReplaySubject<LiveData> = new ReplaySubject<LiveData>(1);
     private cacheData: LiveData = null;
-    private selectedContestantId: number = 0;
+    private selectedContestantId = 0;
     private config: IAppConfig;
     private interval: any;
 
@@ -46,7 +46,7 @@ export class DataService {
                 this.updateTitle(this.cacheData.entries);
                 this.setSelected(this.cacheData);
             } else {
-                this.updateTitle();  
+                this.updateTitle();
             }
         });
     }
@@ -59,7 +59,7 @@ export class DataService {
 
         this.cacheData = null;
 
-        this.updateLiveData()
+        this.updateLiveData();
 
         this.interval = setInterval(() => this.updateLiveData(), Constants.REFRESH_TIME);
     }
@@ -71,7 +71,7 @@ export class DataService {
 
     getPlayerInfo(golferScore: GolferScore): Observable<PlayerInfo> {
         return this.http.get(this.config.PLAYER_INFO_URL + golferScore.score.espnId)
-           .pipe(map((res: PlayerInfo) => this.handlePlayerResponse(res, golferScore)))
+           .pipe(map((res: PlayerInfo) => this.handlePlayerResponse(res, golferScore)));
     }
 
     private handlePlayerResponse(playerInfo: PlayerInfo, golferScore: GolferScore): PlayerInfo {
@@ -112,7 +112,7 @@ export class DataService {
             entries: this.getEntries(golfersScores),
             cutline: this.getCutline(response),
             selectedContestantId: 0
-        }
+        };
 
         return data;
     }
@@ -122,9 +122,9 @@ export class DataService {
     private getCutline(data: EspnData): { value: number, type: string, displayValue: string } {
         const event: Event = data.events[0];
         const competition: Competition = event.competitions[0];
-        let value = undefined;
-        let type = undefined;
-        let displayValue: string = undefined;
+        let value;
+        let type;
+        let displayValue: string;
 
         if (competition.status.period === event.tournament.cutRound &&
             competition.status.type.name !== 'STATUS_PLAY_COMPLETE') {
@@ -150,13 +150,13 @@ export class DataService {
     private getGolferScores(scores: Score[]): GolferScore[] {
         const golferScores: GolferScore[] = this.config.GOLFERS.map(golferConfig => {
 
-           
+
             let score: Score;
             if (golferConfig.espnId) {
                 score = scores.find(s => s.espnId === golferConfig.espnId);
-            } 
+            }
             if (!score && golferConfig.espnId) {
-                const altId = golferConfig.espnId.substring(0, golferConfig.espnId.length - 2)
+                const altId = golferConfig.espnId.substring(0, golferConfig.espnId.length - 2);
                 const possibleScores = scores.filter(s => s.espnId === altId);
                 if (possibleScores.length > 0) {
                     score = possibleScores.find(s => s.fullName === golferConfig.name);
@@ -166,7 +166,7 @@ export class DataService {
                 }
             }
 
- 
+
             const golferScore: GolferScore = {
                 entryCount: this.entryConfig.filter((e: EntryConfig) => e.golferIds.includes(golferConfig.id)).length,
                 score: score ? score : this.emptyScore(golferConfig),
@@ -206,19 +206,21 @@ export class DataService {
             movement: { text: '-', class: null },
             espnId: null,
             athelete: null
-        }
+        };
 
         return score;
     }
-    
+
 
     private mapCompetitorToScore(competitor: Competitor, index: number): Score {
         const status: Status = competitor.status;
-        const scoreToPar: Statistic = competitor.statistics.find(s => s.name === "scoreToPar");
+        const scoreToPar: Statistic = competitor.statistics.length > 0 ?
+            competitor.statistics.find(s => s.name === 'scoreToPar') :
+            { name: 'scoreToPar', displayValue: 'E', value: 0 };
         const linescores: Linescore[] = competitor.linescores;
         const currentRound: Linescore = last(linescores);
 
-        const isDNF: boolean = status.type.name === "STATUS_CUT";
+        const isDNF: boolean = status.type.name === 'STATUS_CUT';
         const toPar: string = isDNF ? status.type.shortDetail : scoreToPar.displayValue;
         const relativeScore: number = isDNF ? Number.MAX_SAFE_INTEGER : scoreToPar.value;
         const totalScore: number = linescores.map(s => s.value).reduce((prev, curr) => prev + curr, 0);
@@ -257,19 +259,19 @@ export class DataService {
             espnId: espnId,
             movement,
             athelete
-        }
+        };
 
         return score;
     }
 
     private getThru(status: Status): string {
-        let thru: string = '--';
+        let thru = '--';
         if (status.displayThru && status.displayThru !== '18') {
             thru = status.displayThru;
-        } else if(status.displayThru && status.displayThru == '18') {
+        } else if (status.displayThru && status.displayThru === '18') {
             thru = status.displayValue;
         } else if (status.displayValue.startsWith('20')) {
-            thru = formatDate(status.displayValue, 'shortTime', this.locale)
+            thru = formatDate(status.displayValue, 'shortTime', this.locale);
         } else if (status.displayValue) {
             thru = status.displayValue;
         }
@@ -280,7 +282,7 @@ export class DataService {
     private getMovement(competitor: Competitor) {
         const movement: number = competitor.movement;
 
-        let movementClass: string = 'none';
+        let movementClass = 'none';
         if (movement < 0) {
             movementClass = 'positive';
         } else if (movement > 0) {
@@ -366,7 +368,8 @@ export class DataService {
                 .reduce((c, n) => c !== null ? c + ', ' + n : n , null);
 
         }
-        const title = positions ? positions + ' - ' + this.config.TOURNEY_TITLE + ' Player Pool' : this.config.TOURNEY_TITLE + ' Player Pool';
+        const title = positions ? positions + ' - ' + this.config.TOURNEY_TITLE + ' Player Pool' :
+        this.config.TOURNEY_TITLE + ' Player Pool';
         this.titleService.setTitle(title);
     }
 

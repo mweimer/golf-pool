@@ -13,7 +13,7 @@ import { Constants } from '../config/constants';
 
 export class FooterComponent {
 
-    refreshTime: string = `Refresh Time: ${Constants.REFRESH_TIME / 1000} seconds`;
+    refreshTime = `Refresh Time: ${Constants.REFRESH_TIME / 1000} seconds`;
     timeStamp: Observable<Date> = this.dataService.liveData.pipe(map((data: LiveData) => data.timeStamp));
 
     constructor(private dataService: DataService) {}

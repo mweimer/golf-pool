@@ -1,4 +1,4 @@
-import { Athlete } from "./espn";
+import { Athlete } from './espn';
 
 // Configuration models
 
@@ -75,7 +75,7 @@ export interface GolferScore {
 
 export interface Score {
     index: number;
-    isDNF: boolean
+    isDNF: boolean;
     toPar: string;
     relativeScore: number;
     total: string;
@@ -94,7 +94,7 @@ export interface Score {
     movement: {
         text: string;
         class: string
-    },
+    };
     athelete: Athlete;
 }
 

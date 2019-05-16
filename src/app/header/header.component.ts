@@ -14,7 +14,7 @@ import { UpdateService } from '../services/update.service';
 export class HeaderComponent {
 
     isOpen = false;
-    showAlert: Observable<boolean>= this.updateService.status;
+    showAlert: Observable<boolean> = this.updateService.status;
 
     constructor(private router: Router, private updateService: UpdateService) {}
 

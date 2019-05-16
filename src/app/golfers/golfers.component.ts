@@ -5,7 +5,7 @@ import { Observable ,  BehaviorSubject } from 'rxjs';
 import { map ,  tap } from 'rxjs/operators';
 import { DataService } from '../services/data.service';
 import { GotoService } from '../services/goto.service';
-import { InfoModalComponent } from '../info-modal/info-modal.component'
+import { InfoModalComponent } from '../info-modal/info-modal.component';
 import { LiveData, GolferScore, PlayerInfo } from '../models/models';
 
 @Component({
@@ -21,7 +21,7 @@ export class GolfersComponent {
         tap(() => {
             const golferId: number = this.gotoService.gotoGolferId;
             if (golferId > 0) {
-                this.highlightedGolferId.next(golferId)
+                this.highlightedGolferId.next(golferId);
                 setTimeout(() => this.simplePageScrollService.scrollToElement('#golfer-' + golferId, 0), 10);
                 setTimeout(() => this.highlightedGolferId.next(null), 3000);
             }
@@ -59,7 +59,7 @@ export class GolfersComponent {
                 profile: {
                     displayName: golferScore.golferConfig.name
                 }
-            }
+            };
             const modal = this.modalService.open(InfoModalComponent, { size: 'lg' });
             const infoModalComponent: InfoModalComponent = modal.componentInstance;
             infoModalComponent.info = info;

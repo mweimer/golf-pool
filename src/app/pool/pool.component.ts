@@ -7,7 +7,7 @@ import { Entry, LiveData, GolferScore } from '../models/models';
 import {merge} from 'lodash';
 
 export interface PoolEntry extends Entry {
-    danger: boolean[]
+    danger: boolean[];
 }
 
 @Component({
@@ -22,13 +22,13 @@ export class PoolComponent {
         map((data: LiveData) => {
             const isProjectedCut = data.cutline.type === 'projected';
             return data.entries.map(entry => {
-                const danger = entry.golferScores.map(gs => isProjectedCut && gs.score.relativeScore > data.cutline.value)
+                const danger = entry.golferScores.map(gs => isProjectedCut && gs.score.relativeScore > data.cutline.value);
                 return merge(entry, { danger });
             });
         })
     );
 
-    constructor(private dataService: DataService, 
+    constructor(private dataService: DataService,
                 private gotoService: GotoService) {}
 
 

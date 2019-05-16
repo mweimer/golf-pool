@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
 import { Observable ,  BehaviorSubject , EMPTY } from 'rxjs';
-import {catchError} from 'rxjs/operators'
+import {catchError} from 'rxjs/operators';
 
 import { IAppConfig } from '../models/models';
 import { Constants } from '../config/constants';
