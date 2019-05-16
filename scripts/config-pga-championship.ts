@@ -179,7 +179,8 @@ const contestantData = [
     { id: 12, name: 'Drew Serruto', entries: [[2, 15, 36, 100], [4, 13, 42, 109], [5, 11, 31, 112]] },
     { id: 13, name: 'Steven Laake', entries: [[6, 23, 32, 88], [2, 11, 36, 92], [1, 12, 30, 99]] },
     { id: 14, name: 'Kevin O\'Brien', entries: [[2, 11, 47, 100], [8, 29, 31, 94], [10, 17, 53, 117]] },
-    { id: 15, name: 'Tony Turgeon', entries: [[1, 11, 30, 85], [2, 12, 31, 86], [4, 15, 35, 88]] }
+    { id: 15, name: 'Tony Turgeon', entries: [[1, 11, 30, 85], [2, 12, 31, 86], [4, 15, 35, 88]] },
+    { id: 16, name: 'Nate Heckman', entries: [[1, 26, 43, 91], [3, 12, 36, 95], [5, 15, 31, 85]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
