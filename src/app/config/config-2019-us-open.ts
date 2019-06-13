@@ -184,7 +184,8 @@ const contestantData = [
     { id: 17, name: 'Nick Royer', entries: [[2, 13, 38, 77], [4, 16, 36, 76], [1, 29, 62, 81]] },
     { id: 18, name: 'Tony Boyle', entries: [[4, 20, 37, 76], [2, 12, 44, 76], [1, 18, 36, 76]] },
     { id: 19, name: 'Tony Drake', entries: [[2, 16, 43, 78], [1, 13, 53, 77], [3, 18, 36, 81]] },
-    { id: 20, name: 'Nick Cocalis', entries: [[2, 18, 37, 76], [2, 16, 51, 102], [6, 20, 37, 102]] }
+    { id: 20, name: 'Nick Cocalis', entries: [[2, 18, 37, 76], [2, 16, 51, 102], [6, 20, 37, 102]] },
+    { id: 21, name: 'Nick Brohas', entries: [[2, 21, 36, 79], [1, 24, 39, 151], [4, 12, 67, 78]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
