@@ -21,6 +21,8 @@ import { DataService } from './services/data.service';
 import { GotoService } from './services/goto.service';
 import { SettingsService } from './settings/settings.service';
 import { UpdateService } from './services/update.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 
 @NgModule({
@@ -43,7 +45,8 @@ import { UpdateService } from './services/update.service';
         HttpClientModule,
         FormsModule,
         Ng2SimplePageScrollModule.forRoot(),
-        NgbModule.forRoot()
+        NgbModule.forRoot(),
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
     ],
     declarations: [
         AppComponent,
