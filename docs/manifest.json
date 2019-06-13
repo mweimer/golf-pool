@@ -1,6 +1,6 @@
 {
-  "name": "Golf Player Pool",
-  "short_name": "Golf Player Pool",
+  "name": "Player Pool",
+  "short_name": "Player Pool",
   "theme_color": "#5EFF33",
   "background_color": "#fafafa",
   "display": "standalone",
