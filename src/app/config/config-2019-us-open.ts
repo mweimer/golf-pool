@@ -170,7 +170,7 @@ const contestantData = [
     { id: 3, name: 'Tim Cableck', entries: [[4, 16, 64, 79], [2, 19, 40, 78], [10, 15, 36, 91]] },
     { id: 4, name: 'Andrew Kubaszewski', entries: [[2, 19, 52, 78], [1, 16, 39, 85], [6, 18, 64, 90]] },
     { id: 5, name: 'Brett Kubaszewski', entries: [[2, 12, 38, 90], [2, 13, 37, 78], [11, 16, 46, 90]] },
-    { id: 6, name: 'Matthew Kilianski', entries: [[6, 16, 38, 75], [8, 13, 54, 85], [4, 16, 40, 81]] },
+    { id: 6, name: 'Matt Kilianski', entries: [[6, 16, 38, 75], [8, 13, 54, 85], [4, 16, 40, 81]] },
     { id: 7, name: 'Alex Duff', entries: [[3, 18, 61, 145], [1, 15, 36, 79], [2, 24, 37, 75]] },
     { id: 8, name: 'Max Marshall', entries: [[5, 12, 37, 78], [1, 16, 42, 81], [2, 20, 46, 77]] },
     { id: 9, name: 'Nate Heckmann', entries: [[2, 20, 36, 79], [3, 12, 45, 91], [10, 18, 40, 85]] },
