@@ -1,4 +1,4 @@
-const tourneyTitle = '2019 US Open';
+const tourneyTitle = 'U.S. Open';
 
 const tourneyId = '401056556';
 
@@ -180,7 +180,10 @@ const contestantData = [
     { id: 13, name: 'Steven Laake', entries: [[1, 16, 38, 79], [3, 23, 48, 78], [2, 13, 40, 83]] },
     { id: 14, name: 'Sean Buckle', entries: [[2, 13, 40, 76], [1, 16, 36, 78], [10, 19, 46, 84]] },
     { id: 15, name: 'Kevin Donoher', entries: [[4, 20, 38, 87], [1, 12, 51, 78], [6, 13, 35, 77]] },
-    { id: 16, name: 'Cameron Weimer', entries: [[3, 24, 36, 78], [4, 13, 50, 91], [6, 16, 44, 83]] }
+    { id: 16, name: 'Cameron Weimer', entries: [[3, 24, 36, 78], [4, 13, 50, 91], [6, 16, 44, 83]] },
+    { id: 17, name: 'Nick Royer', entries: [[2, 13, 38, 77], [4, 16, 36, 76], [1, 29, 62, 81]] },
+    { id: 18, name: 'Tony Boyle', entries: [[4, 20, 37, 76], [2, 12, 44, 76], [1, 18, 36, 76]] },
+    { id: 19, name: 'Tony Drake', entries: [[2, 16, 43, 78], [1, 13, 53, 77], [3, 18, 36, 81]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
