@@ -217,8 +217,8 @@ export class DataService {
         const scoreToPar: Statistic = competitor.statistics.length > 0 ?
             competitor.statistics.find(s => s.name === 'scoreToPar') :
             { name: 'scoreToPar', displayValue: 'E', value: 0 };
-        const linescores: Linescore[] = competitor.linescores;
-        const currentRound: Linescore = last(linescores);
+        const linescores: Linescore[] = competitor.linescores.filter(l => l.value);
+        const currentRound: Linescore = last(competitor.linescores);
 
         const isDNF: boolean = status.type.name === 'STATUS_CUT';
         const toPar: string = isDNF ? status.type.shortDetail : scoreToPar.displayValue;
@@ -280,7 +280,7 @@ export class DataService {
     }
 
     private getMovement(competitor: Competitor) {
-        const movement: number = competitor.movement;
+        const movement: number = competitor.movement || 0;
 
         let movementClass = 'none';
         if (movement < 0) {
