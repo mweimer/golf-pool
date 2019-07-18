@@ -183,7 +183,10 @@ const contestantData = [
     { id: 16, name: 'Rob Stoecklein', entries: [[2, 14, 33, 66], [2, 11, 38, 66], [1, 14, 33, 68]] },
     { id: 17, name: 'Ryan Boudouris', entries: [[1, 29, 31, 69], [2, 15, 38, 66], [6, 11, 31, 89]] },
     { id: 18, name: 'Tim Cableck', entries: [[1, 13, 32, 71], [2, 20, 36, 66], [5, 17, 54, 73]] },
-    { id: 19, name: 'Tony Boyle', entries: [[2, 19, 35, 66], [1, 11, 34, 102], [3, 20, 49, 79]] }
+    { id: 19, name: 'Tony Boyle', entries: [[2, 19, 35, 66], [1, 11, 34, 102], [3, 20, 49, 79]] },
+    { id: 20, name: 'Sean Buckle', entries: [[1, 14, 31, 78], [10, 16, 37, 70], [2, 11, 31, 71]] },
+    { id: 21, name: 'Sauce', entries: [[2, 11, 36, 78], [1, 30, 34, 71], [5, 15, 32, 94]] },
+    { id: 22, name: 'Nate Heckmann', entries: [[10, 12, 40, 68], [4, 15, 43, 74], [1, 21, 50, 78]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };

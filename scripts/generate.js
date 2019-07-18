@@ -25,7 +25,6 @@ if (process.argv.length < 5 || (process.argv.length >= 5 && !/^[0-9]{4,9}$/.test
 const tourneyId = process.argv[4];
 
 const host = `site.web.api.espn.com`;
-//const path = `/core/golf/leaderboard?tournamentId=${tourneyId}&xhr=1`;
 const path = `/apis/site/v2/sports/golf/leaderboard?league=pga&region=us&lang=en&event=${tourneyId}&showAirings=true`;
 
 let golferIdIndex = 1;
