@@ -28,17 +28,11 @@ const host = `site.web.api.espn.com`;
 //const path = `/core/golf/leaderboard?tournamentId=${tourneyId}&xhr=1`;
 const path = `/apis/site/v2/sports/golf/leaderboard?league=pga&region=us&lang=en&event=${tourneyId}&showAirings=true`;
 
-
 let golferIdIndex = 1;
 let contestantIdIndex = 1;
 
 const golferStartingPositions = { column: 'A', row: 2 };
 const contestantStartCellAddress = { column: 'B', row: 2 };
-
-const tiers = { 0: 'A', 1: 'B', 2: 'C', 3: 'D' };
-const golfersSheetName = 'Sheet1';
-const contestantsSheetName = 'Sheet2';
-
 
 getEspnData().then(espnData => {
     run(espnData);
@@ -129,7 +123,7 @@ function createContestantConfig(worksheet, position, golferConfig) {
 
 function createContestant(worksheet, position, golferConfig) {
     const nameCellAddress = position.column + position.row;
-    const name = worksheet[nameCellAddress].v.trim();
+    const name = fixName(worksheet[nameCellAddress].v.trim());
 
     const entry1Pos = { column: incrementColumn(position.column, 1), row: position.row}
     const entry2Pos = { column: incrementColumn(position.column, 1), row: position.row + 1}
@@ -140,6 +134,21 @@ function createContestant(worksheet, position, golferConfig) {
     const entry3 = createEntry(worksheet, entry3Pos, golferConfig);
    
     return { id: contestantIdIndex++, name, entries: [entry1, entry2, entry3]};
+}
+
+function fixName(name) {
+    const lower = name.toLowerCase();
+    let fixedCap = '';
+    let capNextLetter = true
+    for (var i = 0; i < lower.length; i++) {
+        const letter = lower.charAt(i);
+        const newLetter = capNextLetter ? letter.toUpperCase() : letter;
+        capNextLetter = letter === ' ' || letter === '\'';
+        fixedCap = fixedCap + newLetter;
+      }
+    const fixed = fixedCap.replace(/\s[0-9]/, '');
+
+    return fixed;
 }
 
 function createEntry(worksheet, position, golferConfig) {
@@ -216,7 +225,8 @@ function incrementColumn(row, delta = 1) {
 }
 
 function writeConfig(golferConfig, contestantConfig, espnData) {
-    const tourneyTitle = espnData.events[0].name;
+    const event = espnData.events[0];
+    const tourneyTitle = `${event.season.year} ${event.name}`.replace(' Championship', '');
 
     const fileName = tourneyTitle.toLowerCase().replace(/\s/g, '-').replace(/\./g, '');
 
