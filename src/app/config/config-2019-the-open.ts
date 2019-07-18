@@ -165,7 +165,25 @@ const golferData = [
 ];
 
 const contestantData = [
-    { id: 1, name: 'Matt Weimer', entries: [[2, 11, 32, 66], [2, 12, 31, 66], [6, 11, 31, 67]] }
+    { id: 1, name: 'Alex Duff', entries: [[1, 11, 32, 71], [2, 12, 31, 66], [6, 25, 46, 89]] },
+    { id: 2, name: 'Brett Kub', entries: [[2, 13, 34, 106], [2, 15, 33, 66], [2, 19, 32, 66]] },
+    { id: 3, name: 'Cameron Weimer', entries: [[5, 15, 58, 78], [2, 16, 37, 66], [9, 11, 35, 81]] },
+    { id: 4, name: 'Curtis Chapin', entries: [[9, 14, 32, 66], [1, 12, 33, 71], [2, 11, 34, 72]] },
+    { id: 5, name: 'Dan Godshall', entries: [[2, 11, 32, 71], [2, 12, 34, 80], [2, 11, 31, 80]] },
+    { id: 6, name: 'Dave Fleming', entries: [[9, 11, 50, 66], [6, 21, 59, 84], [1, 17, 31, 78]] },
+    { id: 7, name: 'Drew Serruto', entries: [[1, 14, 32, 78], [2, 12, 32, 79], [2, 15, 38, 78]] },
+    { id: 8, name: 'Ian Horwich', entries: [[3, 12, 41, 78], [2, 14, 35, 71], [1, 13, 33, 85]] },
+    { id: 9, name: 'Kevin Donoher', entries: [[2, 11, 38, 80], [1, 26, 31, 68], [4, 28, 34, 84]] },
+    { id: 10, name: 'Kevin O\'Brien', entries: [[2, 19, 34, 69], [1, 14, 33, 78], [7, 15, 32, 74]] },
+    { id: 11, name: 'Kub', entries: [[2, 14, 32, 75], [2, 12, 57, 71], [2, 13, 50, 84]] },
+    { id: 12, name: 'Kyle Bivenour', entries: [[2, 14, 36, 78], [5, 15, 39, 75], [1, 13, 31, 66]] },
+    { id: 13, name: 'Matt Weimer', entries: [[2, 15, 32, 71], [2, 18, 33, 68], [6, 11, 40, 78]] },
+    { id: 14, name: 'Max Marshall', entries: [[2, 11, 36, 77], [4, 16, 32, 73], [8, 13, 50, 75]] },
+    { id: 15, name: 'Nick Cocalis', entries: [[1, 12, 37, 80], [1, 11, 44, 105], [2, 12, 45, 80]] },
+    { id: 16, name: 'Rob Stoecklein', entries: [[2, 14, 33, 66], [2, 11, 38, 66], [1, 14, 33, 68]] },
+    { id: 17, name: 'Ryan Boudouris', entries: [[1, 29, 31, 69], [2, 15, 38, 66], [6, 11, 31, 89]] },
+    { id: 18, name: 'Tim Cableck', entries: [[1, 13, 32, 71], [2, 20, 36, 66], [5, 17, 54, 73]] },
+    { id: 19, name: 'Tony Boyle', entries: [[2, 19, 35, 66], [1, 11, 34, 102], [3, 20, 49, 79]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };

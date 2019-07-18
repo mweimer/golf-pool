@@ -115,7 +115,7 @@ function createContestantConfig(worksheet, position, golferConfig) {
     while (worksheet) {
         if (worksheet[position.column + position.row]) {
             contestants.push(createContestant(worksheet, position, golferConfig));
-            position.row += 6;
+            position.row += 5;
         } else {
             break;
         }
@@ -129,8 +129,8 @@ function createContestant(worksheet, position, golferConfig) {
     const name = worksheet[nameCellAddress].v.trim();
 
     const entry1Pos = { column: position.column, row: position.row + 1}
-    const entry2Pos = { column: incrementColumn(position.column, 1), row: position.row + 1}
-    const entry3Pos = { column: incrementColumn(position.column, 2), row: position.row + 1}
+    const entry2Pos = { column: position.column, row: position.row + 2}
+    const entry3Pos = { column: position.column, row: position.row + 3}
 
     const entry1 = createEntry(worksheet, entry1Pos, golferConfig);
     const entry2 = createEntry(worksheet, entry2Pos, golferConfig);
@@ -141,9 +141,9 @@ function createContestant(worksheet, position, golferConfig) {
 
 function createEntry(worksheet, position, golferConfig) {
     const golfer1Name = worksheet[position.column + position.row].v.trim();
-    const golfer2Name = worksheet[position.column + (position.row + 1)].v.trim();
-    const golfer3Name = worksheet[position.column + (position.row + 2)].v.trim();
-    const golfer4Name = worksheet[position.column + (position.row + 3)].v.trim();
+    const golfer2Name = worksheet[incrementColumn(position.column, 1) + position.row].v.trim();
+    const golfer3Name = worksheet[incrementColumn(position.column, 2) + position.row].v.trim();
+    const golfer4Name = worksheet[incrementColumn(position.column, 3) + position.row].v.trim();
 
     const options = {
       shouldSort: true,
