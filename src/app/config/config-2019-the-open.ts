@@ -1,4 +1,4 @@
-const tourneyTitle = 'The Open Championship';
+const tourneyTitle = '2019 The Open';
 
 const tourneyId = '401056547';
 
