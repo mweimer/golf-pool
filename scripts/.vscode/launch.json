@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Generate config file",
-            "program": "${workspaceRoot}/generate2.js",
-            "args": ["test.xlsx", "401056547"]
+            "program": "${workspaceRoot}/generate.js",
+            "args": ["odds.xlsx", "entries.xlsx", "401056547"]
         }
     ]
 }

@@ -4,18 +4,26 @@ const Fuse = require('fuse.js');
 const http = require('http');
 
 if (process.argv.length < 3 || (process.argv.length >= 3 && !/\.xlsx$/.test(process.argv[2]))) {
-    console.log('Please specify xlsx file.');
+    console.log('Please specify xlsx file for golfers/odds.');
     return;
 }
 
-const inputFile = process.argv[2];
+const golfersFile = process.argv[2];
 
-if (process.argv.length < 4 || (process.argv.length >= 4 && !/^[0-9]{4,9}$/.test(process.argv[3])))  {
+if (process.argv.length < 4 || (process.argv.length >= 4 && !/\.xlsx$/.test(process.argv[3])))  {
+    console.log('Please specify xlsx file for entries');
+    return;
+}
+
+const entriesFile = process.argv[3];
+
+if (process.argv.length < 5 || (process.argv.length >= 5 && !/^[0-9]{4,9}$/.test(process.argv[4])))  {
     console.log('Please specify tourneyId');
     return;
 }
 
-const tourneyId = process.argv[3];
+const tourneyId = process.argv[4];
+
 const host = `site.web.api.espn.com`;
 //const path = `/core/golf/leaderboard?tournamentId=${tourneyId}&xhr=1`;
 const path = `/apis/site/v2/sports/golf/leaderboard?league=pga&region=us&lang=en&event=${tourneyId}&showAirings=true`;
@@ -37,9 +45,10 @@ getEspnData().then(espnData => {
 }).catch(e => console.error(e));
 
 function run(espnData) {
-    const workbook = xlsx.readFile(inputFile);
-    const golfersWorksheet = workbook.Sheets[golfersSheetName];
-    const contestantWorksheet = workbook.Sheets[contestantsSheetName];
+    const golfersWorkbook = xlsx.readFile(golfersFile);
+    const entriesWorkbook = xlsx.readFile(entriesFile);
+    const golfersWorksheet = golfersWorkbook.Sheets[Object.keys(golfersWorkbook.Sheets)[0]]
+    const contestantWorksheet = entriesWorkbook.Sheets[Object.keys(entriesWorkbook.Sheets)[0]]
 
     const options = {
       shouldSort: true,
