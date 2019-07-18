@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Generate config file",
-            "program": "${workspaceRoot}/generate.js",
-            "args": ["the-open-2019.xlsx", "401056547"]
+            "program": "${workspaceRoot}/generate2.js",
+            "args": ["test.xlsx", "401056547"]
         }
     ]
 }

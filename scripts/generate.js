@@ -24,18 +24,12 @@ const path = `/apis/site/v2/sports/golf/leaderboard?league=pga&region=us&lang=en
 let golferIdIndex = 1;
 let contestantIdIndex = 1;
 
-const tierStartingPositions = [
-    { column: 'C', row: 15 }, 
-    { column: 'F', row: 15 }, 
-    { column: 'I', row: 15 }, 
-    { column: 'L', row: 15 }
-];
-
-const contestantStartCellAddress = { column: 'A', row: 1 };
+const golferStartingPositions = { column: 'A', row: 2 };
+const contestantStartCellAddress = { column: 'B', row: 2 };
 
 const tiers = { 0: 'A', 1: 'B', 2: 'C', 3: 'D' };
-const golfersSheetName = 'Player Tiers & Instructions';
-const contestantsSheetName = 'Contestants';
+const golfersSheetName = 'Sheet1';
+const contestantsSheetName = 'Sheet2';
 
 
 getEspnData().then(espnData => {
@@ -61,10 +55,7 @@ function run(espnData) {
     const competitions = espnData.events[0].competitions;
     const espnFuse = new Fuse(competitions[0].competitors, options);
 
-    const golferConfig = tierStartingPositions
-        .map((position, tierIndex) => createGolferConfig(golfersWorksheet, position, tierIndex, espnFuse))
-        .reduce((prev, next) => prev.concat(next));
-
+    const golferConfig = createGolferConfig(golfersWorksheet, espnFuse);
 
     const golferNames = golferConfig.map(g => g.name);
     const duplicates = golferNames.filter((name, index) => {
@@ -81,25 +72,28 @@ function run(espnData) {
     writeConfig(golferConfig, contestantConfig, espnData);
 }
 
-function createGolferConfig(worksheet, tierPosition, tierIndex, espnFuse) {
+function createGolferConfig(worksheet, espnFuse) {
     const tierGolfers = [];
 
+    let { column, row } = golferStartingPositions;
+
     while (true) {
-        const cellAddress = tierPosition.column + tierPosition.row.toString();
+        const cellAddress = column + row.toString();
         const targetCell = worksheet[cellAddress];
+        const tierAddress = incrementColumn(column, 2) + row.toString();
+        const tierCell = worksheet[tierAddress];
         if (targetCell) {
-            tierGolfers.push(createGolfer(targetCell.v, tierIndex, espnFuse));
+            tierGolfers.push(createGolfer(targetCell.v, tierCell.v, espnFuse));
         } else {
             break;
         }
-        tierPosition.row++;
+        row++;
     }
 
     return tierGolfers;
 }
 
-function createGolfer(cellValue, tierIndex, espnFuse) {
-    const tier = tiers[tierIndex];
+function createGolfer(cellValue, tier, espnFuse) {
 
     const spreadsheetName = cellValue.trim();
     const espnResult = espnFuse.search(spreadsheetName)[0];
@@ -115,7 +109,7 @@ function createContestantConfig(worksheet, position, golferConfig) {
     while (worksheet) {
         if (worksheet[position.column + position.row]) {
             contestants.push(createContestant(worksheet, position, golferConfig));
-            position.row += 5;
+            position.row += 3;
         } else {
             break;
         }
@@ -128,9 +122,9 @@ function createContestant(worksheet, position, golferConfig) {
     const nameCellAddress = position.column + position.row;
     const name = worksheet[nameCellAddress].v.trim();
 
-    const entry1Pos = { column: position.column, row: position.row + 1}
-    const entry2Pos = { column: position.column, row: position.row + 2}
-    const entry3Pos = { column: position.column, row: position.row + 3}
+    const entry1Pos = { column: incrementColumn(position.column, 1), row: position.row}
+    const entry2Pos = { column: incrementColumn(position.column, 1), row: position.row + 1}
+    const entry3Pos = { column: incrementColumn(position.column, 1), row: position.row + 2}
 
     const entry1 = createEntry(worksheet, entry1Pos, golferConfig);
     const entry2 = createEntry(worksheet, entry2Pos, golferConfig);
