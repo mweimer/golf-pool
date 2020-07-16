@@ -3,6 +3,7 @@ const fs = require('fs');
 const Fuse = require('fuse.js');
 const http = require('http');
 
+
 if (process.argv.length < 3 || (process.argv.length >= 3 && !/\.xlsx$/.test(process.argv[2]))) {
     console.log('Please specify xlsx file for golfers/odds.');
     return;
@@ -64,7 +65,6 @@ function run(espnData) {
        return golferNames.includes(name, index + 1);
     });
 
-
     if (duplicates.length > 0) {
         console.error('Error: Duplicate names - ' + duplicates.join(', '));
     }
@@ -101,6 +101,13 @@ function createGolfer(cellValue, tier, espnFuse) {
     const espnResult = espnFuse.search(spreadsheetName)[0];
     const name = espnResult ? espnResult.athlete.displayName : spreadsheetName ;
     const espnId = espnResult ? espnResult.athlete.id : '';
+
+    if(!espnResult) {
+        console.warn('No espn data found: ' + spreadsheetName)
+    } 
+    if (spreadsheetName !== name) {
+        console.warn('Names don\'t match exactly: '  + spreadsheetName + ' - ' + name);
+    }
 
     return { id: golferIdIndex++, name, spreadsheetName, espnId, tier };
 }
@@ -170,10 +177,9 @@ function createEntry(worksheet, position, golferConfig) {
     const getGolferData = (golferName) => {
         const result = entryFuse.search(golferName);
         if (result.length === 0) {
-            console.log("Could not find espn data for entry: " + golferName);
+            console.log('Could not find espn data for entry: ' + golferName);
             return null;
         }
-
 
         return result[0];
     }

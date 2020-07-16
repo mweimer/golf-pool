@@ -140,7 +140,25 @@ const golferData = [
 ];
 
 const contestantData = [
-    { id: 1, name: 'Matt Weimer', entries: [[2, 13, 34, 92], [1, 17, 35, 77], [8, 16, 32, 84]] }
+    { id: 1, name: 'Curtis Chapin', entries: [[1, 13, 33, 87], [8, 11, 42, 77], [5, 23, 31, 123]] },
+    { id: 2, name: 'Alex Duff', entries: [[2, 17, 32, 65], [1, 12, 34, 68], [3, 11, 30, 80]] },
+    { id: 3, name: 'Chris Rose', entries: [[2, 29, 36, 67], [8, 28, 52, 66], [2, 13, 30, 66]] },
+    { id: 4, name: 'Kili', entries: [[1, 22, 36, 77], [2, 18, 36, 77], [9, 13, 44, 77]] },
+    { id: 5, name: 'Kaz', entries: [[7, 16, 33, 70], [1, 14, 39, 64], [5, 13, 44, 86]] },
+    { id: 6, name: 'Kendall Kadish', entries: [[9, 22, 37, 96], [1, 14, 33, 62], [3, 21, 31, 70]] },
+    { id: 7, name: 'Max Marshall', entries: [[1, 13, 31, 120], [4, 17, 34, 64], [2, 11, 34, 76]] },
+    { id: 8, name: 'Matt Weimer', entries: [[2, 13, 34, 91], [1, 17, 35, 76], [8, 16, 32, 83]] },
+    { id: 9, name: 'Ian H', entries: [[7, 14, 45, 73], [1, 12, 32, 87], [5, 22, 37, 84]] },
+    { id: 10, name: 'Nate Heckmann', entries: [[4, 22, 45, 84], [7, 12, 34, 62], [2, 21, 47, 66]] },
+    { id: 11, name: 'Ryan Romes', entries: [[9, 13, 48, 65], [1, 18, 42, 64], [2, 21, 31, 75]] },
+    { id: 12, name: 'Lorenzo Washington', entries: [[1, 15, 32, 68], [6, 28, 33, 111], [10, 22, 31, 81]] },
+    { id: 13, name: 'Don', entries: [[1, 13, 36, 80], [7, 22, 44, 76], [4, 19, 57, 90]] },
+    { id: 14, name: 'Kub', entries: [[2, 22, 53, 96], [2, 22, 53, 96], [2, 22, 53, 96]] },
+    { id: 15, name: 'Ryan', entries: [[1, 13, 36, 66], [1, 13, 31, 68], [3, 14, 33, 64]] },
+    { id: 16, name: 'Sean Buckle', entries: [[2, 16, 35, 63], [9, 14, 35, 66], [7, 13, 42, 66]] },
+    { id: 17, name: 'Kevin O\'Brien', entries: [[1, 13, 32, 90], [2, 19, 36, 64], [9, 21, 44, 77]] },
+    { id: 18, name: 'Cameron Weimer', entries: [[2, 12, 30, 77], [8, 13, 32, 91], [3, 12, 47, 103]] },
+    { id: 19, name: 'Ryan Aguiar', entries: [[1, 16, 34, 91], [3, 11, 30, 70], [2, 20, 39, 63]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };

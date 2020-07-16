@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Generate config file",
             "program": "${workspaceRoot}/generate.js",
-            "args": ["odds.xlsx", "entries.xlsx", "401056547"]
+            "args": ["odds.xlsx", "entries.xlsx", "401155461"]
         }
     ]
 }
