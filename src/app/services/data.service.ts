@@ -70,7 +70,7 @@ export class DataService {
     }
 
     getPlayerInfo(golferScore: GolferScore): Observable<PlayerInfo> {
-        return this.http.get(this.config.PLAYER_INFO_URL + golferScore.score.espnId)
+        return this.http.get(this.config.PLAYER_INFO_URL + golferScore.score.espnId + '&_=' + new Date().getTime())
            .pipe(map((res: PlayerInfo) => this.handlePlayerResponse(res, golferScore)));
     }
 
