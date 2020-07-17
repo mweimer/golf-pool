@@ -48,10 +48,11 @@ table {
     }
 }
 
-@media only screen and (max-width: 375px) {
+@media only screen and (max-width: 450px) {
     table td, table th {
         max-width: 40px;
-        word-wrap: break-word;
         font-size: 8px;
+        word-wrap: break-word;
+        word-break: break-word;
     }
 }
