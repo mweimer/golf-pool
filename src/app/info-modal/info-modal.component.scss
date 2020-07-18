@@ -2,6 +2,12 @@
 @import '../../../node_modules/bootstrap/scss/_variables';
 @import '../../../node_modules/bootstrap/scss/mixins/_breakpoints';
 
+
+$red: #f17681;
+$yellow: #fecd31;
+$green: #87c7a1;
+$blue: #7ca9cf;
+
 img.headshot {
 	max-width: 200px;
     width: 100%;
