@@ -161,7 +161,7 @@ const golferData = [
     { id: 153, name: 'Zach J. Johnson', espnId: '9074', tier: 'D' },
     { id: 154, name: 'Joohyung Kim', espnId: '4602673', tier: 'D' },
     { id: 155, name: 'Mike Lorenzo-Vera', espnId: '4272', tier: 'D' },
-    { id: 156, name: 'Vaughn Taylor', espnId: '1185', tier: 'D' }
+    { id: 156, name: 'Alexander Noren', espnId: '3832', tier: 'D' }
 ];
 
 const contestantData = [
