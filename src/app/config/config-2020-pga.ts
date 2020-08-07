@@ -179,15 +179,14 @@ const contestantData = [
     { id: 12, name: 'Ryan A', entries: [[1, 12, 41, 71], [3, 19, 26, 75], [5, 21, 31, 77]] },
     { id: 13, name: 'Alex Duff', entries: [[1, 17, 26, 78], [3, 19, 27, 75], [2, 11, 40, 90]] },
     { id: 14, name: 'Kevin O\'Brien', entries: [[6, 12, 31, 71], [3, 14, 34, 76], [1, 11, 26, 75]] },
-    { id: 15, name: 'Tony Boyle', entries: [[1, 20, 34, 71], [2, 11, 27, 73], [5, 12, 41, 75]] },
-    { id: 16, name: 'Sean Buckle', entries: [[4, 15, 29, 76], [1, 18, 36, 83], [3, 23, 27, 84]] },
-    { id: 17, name: 'Lorenzo Washington', entries: [[5, 18, 52, 75], [6, 20, 35, 78], [3, 23, 38, 95]] },
-    { id: 18, name: 'Evan Slavik', entries: [[6, 23, 59, 94], [2, 20, 61, 77], [4, 24, 41, 90]] },
-    { id: 19, name: 'Bodacious', entries: [[1, 10, 26, 81], [2, 16, 29, 75], [4, 17, 37, 78]] },
-    { id: 20, name: 'Matthew Walker', entries: [[2, 10, 30, 75], [1, 16, 37, 78], [7, 20, 27, 88]] },
-    { id: 21, name: 'Cocker', entries: [[1, 17, 26, 71], [2, 16, 26, 71], [2, 14, 55, 81]] },
-    { id: 22, name: 'Cameron Weimer', entries: [[1, 13, 27, 71], [2, 16, 28, 72], [5, 20, 29, 84]] },
-    { id: 23, name: 'Kili', entries: [[2, 10, 37, 78], [6, 22, 26, 106], [8, 10, 33, 83]] }
+    { id: 15, name: 'Sean Buckle', entries: [[4, 15, 29, 76], [1, 18, 36, 83], [3, 23, 27, 84]] },
+    { id: 16, name: 'Lorenzo Washington', entries: [[5, 18, 52, 75], [6, 20, 35, 78], [3, 23, 38, 95]] },
+    { id: 17, name: 'Evan Slavik', entries: [[6, 23, 59, 94], [2, 20, 61, 77], [4, 24, 41, 90]] },
+    { id: 18, name: 'Bodacious', entries: [[1, 10, 26, 81], [2, 16, 29, 75], [4, 17, 37, 78]] },
+    { id: 19, name: 'Matthew Walker', entries: [[2, 10, 30, 75], [1, 16, 37, 78], [7, 20, 27, 88]] },
+    { id: 20, name: 'Cocker', entries: [[1, 17, 26, 71], [2, 16, 26, 71], [2, 14, 55, 81]] },
+    { id: 21, name: 'Cameron Weimer', entries: [[1, 13, 27, 71], [2, 16, 28, 72], [5, 20, 29, 84]] },
+    { id: 22, name: 'Kili', entries: [[2, 10, 37, 78], [6, 22, 26, 106], [8, 10, 33, 83]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
