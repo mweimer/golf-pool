@@ -153,7 +153,29 @@ const golferData = [
 ];
 
 const contestantData = [
-    { id: 1, name: 'Matt Weimer', entries: [[2, 12, 52, 70], [1, 16, 57, 62], [4, 15, 45, 69]] }
+    { id: 1, name: 'Tim Walker', entries: [[5, 11, 34, 75], [1, 12, 39, 61], [3, 26, 53, 62]] },
+    { id: 2, name: 'Jake Ross', entries: [[1, 12, 37, 67], [4, 13, 34, 76], [3, 29, 31, 64]] },
+    { id: 3, name: 'Matthew Kilianski', entries: [[1, 13, 36, 75], [6, 14, 52, 66], [4, 15, 58, 110]] },
+    { id: 4, name: 'Evan Slavik', entries: [[1, 12, 50, 100], [2, 14, 34, 60], [7, 20, 38, 97]] },
+    { id: 5, name: 'Max Marshall', entries: [[5, 25, 31, 69], [4, 12, 33, 87], [3, 14, 44, 67]] },
+    { id: 6, name: 'Drew Serruto', entries: [[1, 13, 37, 65], [2, 11, 38, 68], [3, 14, 32, 70]] },
+    { id: 7, name: 'Nate Heckmann', entries: [[4, 13, 39, 71], [3, 14, 32, 87], [9, 15, 31, 69]] },
+    { id: 8, name: 'Taylor Rice', entries: [[1, 13, 32, 61], [3, 18, 33, 65], [5, 17, 38, 71]] },
+    { id: 9, name: 'Brian Zwick', entries: [[1, 27, 52, 67], [2, 25, 34, 61], [4, 18, 49, 59]] },
+    { id: 10, name: 'David Reger', entries: [[1, 12, 49, 70], [2, 18, 33, 87], [4, 13, 51, 68]] },
+    { id: 11, name: 'Nick Royer', entries: [[1, 14, 43, 69], [1, 27, 49, 69], [10, 16, 41, 69]] },
+    { id: 12, name: 'Kyle Bivenour', entries: [[1, 11, 37, 65], [2, 15, 53, 68], [1, 12, 32, 62]] },
+    { id: 13, name: 'Will Alexander', entries: [[1, 17, 34, 61], [3, 22, 56, 65], [10, 24, 31, 68]] },
+    { id: 14, name: 'Kevin', entries: [[1, 15, 34, 69], [2, 13, 31, 62], [6, 14, 36, 71]] },
+    { id: 15, name: 'Duff', entries: [[1, 15, 44, 75], [3, 13, 38, 68], [4, 25, 39, 67]] },
+    { id: 16, name: 'Cub', entries: [[1, 17, 31, 87], [1, 19, 32, 68], [1, 24, 52, 83]] },
+    { id: 17, name: 'Bodacious', entries: [[2, 23, 50, 87], [4, 18, 54, 76], [5, 14, 49, 75]] },
+    { id: 18, name: 'Kevin O\'Brien', entries: [[1, 14, 37, 76], [2, 15, 44, 65], [3, 22, 40, 70]] },
+    { id: 19, name: 'Lorenzo Washington', entries: [[8, 13, 41, 75], [4, 14, 31, 71], [5, 15, 35, 114]] },
+    { id: 20, name: 'Cocalis', entries: [[8, 12, 49, 66], [8, 15, 49, 75], [2, 25, 54, 79]] },
+    { id: 21, name: 'David Prevo', entries: [[1, 15, 37, 65], [5, 12, 35, 75], [7, 17, 32, 68]] },
+    { id: 22, name: 'Matt Weimer', entries: [[2, 12, 52, 70], [1, 16, 57, 62], [4, 15, 45, 69]] },
+    { id: 23, name: 'T Drake', entries: [[3, 19, 31, 99], [1, 21, 58, 73], [3, 16, 31, 85]] }
 ];
 
 export default { tourneyTitle, tourneyId, golferData, contestantData };
