@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  BehaviorSubject } from 'rxjs';
+import config16 from './config-2020-us-open';
 import config15 from './config-2020-pga';
 import config14 from './config-2020-memorial';
 import config13 from './config-2019-the-open';
@@ -44,6 +45,7 @@ export class ConfigService {
 
     private initConfig(): IAppConfig {
         const configs: Config[] = [
+            config16,
             config15,
             config14,
             config13,
