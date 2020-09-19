@@ -9,14 +9,17 @@
 
     <div class="navbar-collapse" [ngbCollapse]="!isOpen">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item" [ngClass]="{'active': currentRoute() === 'pool'}">
+            <li class="nav-item" [ngClass]="{'active': (currentRoute | async) === 'pool'}">
                 <a class="nav-link" routerLink="">Pool</a>
             </li>
-            <li class="nav-item" [ngClass]="{'active': currentRoute() === 'golfers'}">
+            <li class="nav-item" [ngClass]="{'active': (currentRoute | async) === 'golfers'}">
                 <a class="nav-link" routerLink="/golfers">Golfers</a>
             </li>
-            <li class="nav-item" [ngClass]="{'active': currentRoute() === 'settings'}">
+            <li class="nav-item" [ngClass]="{'active': (currentRoute | async) === 'settings'}">
                 <a class="nav-link" routerLink="/settings">Settings</a>
+            </li>
+            <li class="nav-item" [ngClass]="{'active': (currentRoute | async) === 'chat'}">
+                <a class="nav-link" routerLink="/chat">Chat</a>
             </li>
         </ul>
     </div>

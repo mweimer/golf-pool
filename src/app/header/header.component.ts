@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { Observable } from 'rxjs';
-
+import { map, filter } from 'rxjs/operators';
 import { UpdateService } from '../services/update.service';
 
 @Component({
@@ -10,25 +10,28 @@ import { UpdateService } from '../services/update.service';
     styleUrls: ['./header.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class HeaderComponent {
 
     isOpen = false;
     showAlert: Observable<boolean> = this.updateService.status;
+    currentRoute: Observable<string> = this.router.events.pipe(
+        filter(event => event instanceof NavigationStart),
+        map((event: any) => {
+            if (event.url === '/') {
+                return 'pool';
+            } else if (event.url === '/golfers') {
+                return 'golfers';
+            } else if (event.url === '/settings') {
+                return 'settings';
+            } else if (event.url === '/chat') {
+                return 'chat';
+            }
+            return '';
+        })
+    );
 
-    constructor(private router: Router, private updateService: UpdateService) {}
+    constructor(private route: ActivatedRoute, private router: Router, private updateService: UpdateService) {}
 
-    currentRoute(): string {
-        if (this.router.url === '/') {
-            return 'pool';
-        } else if (this.router.url === '/golfers') {
-            return 'golfers';
-        } else if (this.router.url === '/settings') {
-            return 'settings';
-        }
-
-        return '';
-    }
 
     toggle() {
         this.isOpen = !this.isOpen;

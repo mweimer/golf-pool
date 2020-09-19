@@ -15,6 +15,7 @@ import { HeaderComponent } from './header/header.component';
 import { InfoModalComponent } from './info-modal/info-modal.component';
 import { PoolComponent } from './pool/pool.component';
 import { SettingsComponent } from './settings/settings.component';
+import { ChatComponent } from './chat/chat.component';
 
 import { ConfigService } from './config/config.service';
 import { DataService } from './services/data.service';
@@ -40,6 +41,10 @@ import { environment } from '../environments/environment';
             {
                 path: 'settings',
                 component: SettingsComponent
+            },
+            {
+                path: 'chat',
+                component: ChatComponent
             }
         ]),
         HttpClientModule,
@@ -55,7 +60,8 @@ import { environment } from '../environments/environment';
         HeaderComponent,
         InfoModalComponent,
         PoolComponent,
-        SettingsComponent
+        SettingsComponent,
+        ChatComponent
     ],
     entryComponents: [
         InfoModalComponent
