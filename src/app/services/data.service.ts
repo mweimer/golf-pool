@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 
 import { Observable ,  ReplaySubject , throwError as _throw} from 'rxjs';
 import { map , tap } from 'rxjs/operators';
-import { cloneDeep, orderBy, sortBy, union, last } from 'lodash';
+import { cloneDeep, orderBy, sortBy, union, last, first } from 'lodash';
 
 import { GolferConfig, EntryConfig, LiveData, Entry, GolferScore, Score, PlayerInfo, IAppConfig } from '../models/models';
 import { SettingsService } from '../settings/settings.service';
@@ -361,14 +361,22 @@ export class DataService {
     }
 
     private updateTitle(entries: Entry[] = null) {
-        let positions = null;
+        let shotsBack = null;
         if (this.selectedContestantId > 0 && entries !== null) {
-            positions = entries.filter(e => e.contestantId === this.selectedContestantId && !e.isDQ)
-                .map(e => e.position)
-                .reduce((c, n) => c !== null ? c + ', ' + n : n , null);
+            const bestEntry: Entry = first(entries.filter(e => e.contestantId === this.selectedContestantId && !e.isDQ));
+            const bestCompetitor: Entry = first(entries.filter(e => e.contestantId !== this.selectedContestantId && !e.isDQ));
 
+            const difference = bestEntry ? bestEntry.overallRelativeScore - bestCompetitor.overallRelativeScore : null;
+
+            if (difference === 0) {
+                shotsBack = 'Tied for lead';
+            } else if (difference > 0) {
+                shotsBack = difference + ` shot${difference > 1 ? 's' : ''} back`;
+            } else if (difference < 0) {
+                shotsBack = (difference * -1) + ' shot lead';
+            }
         }
-        const title = positions ? positions + ' - ' + this.config.TOURNEY_TITLE + ' Player Pool' :
+        const title = shotsBack ? shotsBack + ' - ' + this.config.TOURNEY_TITLE + ' Player Pool' :
         this.config.TOURNEY_TITLE + ' Player Pool';
         this.titleService.setTitle(title);
     }
