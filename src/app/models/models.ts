@@ -48,6 +48,7 @@ export interface LiveData {
         type: string;
         displayValue: string;
     };
+    currentRound: number;
     selectedContestantId: number;
     timeStamp: Date;
 }

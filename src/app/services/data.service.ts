@@ -43,7 +43,7 @@ export class DataService {
             this.selectedContestantId = selectedContestantId;
 
             if (this.cacheData !== null) {
-                this.updateTitle(this.cacheData.entries);
+                this.updateTitle(this.cacheData.entries, this.cacheData.currentRound);
                 this.setSelected(this.cacheData);
             } else {
                 this.updateTitle();
@@ -89,7 +89,7 @@ export class DataService {
 
                     this.cacheData = data;
 
-                    this.updateTitle(data.entries);
+                    this.updateTitle(data.entries, data.currentRound);
                     this._liveData.next(data);
                 })
             )
@@ -99,19 +99,23 @@ export class DataService {
     private mapEspnDataToLiveData(response: EspnData): LiveData {
         const now = new Date();
 
-        const competitors = response.events[0].competitions[0].competitors;
+        const competition = response.events[0].competitions[0];
+        const competitors = competition.competitors;
         const sortCompetitors = sortBy(competitors, (competitor: Competitor) => competitor.sortOrder);
 
         const scores: Score[] = sortCompetitors.map((competitor, index) => this.mapCompetitorToScore(competitor, index));
 
         const golfersScores = this.getGolferScores(scores);
 
+        const currentRound = competition.status.period;
+
         const data: LiveData = {
             timeStamp: now,
             golfersScores,
             entries: this.getEntries(golfersScores),
             cutline: this.getCutline(response),
-            selectedContestantId: 0
+            selectedContestantId: 0,
+            currentRound
         };
 
         return data;
@@ -360,23 +364,29 @@ export class DataService {
         return sortedEntries;
     }
 
-    private updateTitle(entries: Entry[] = null) {
-        let shotsBack = null;
+    private updateTitle(entries: Entry[] = null, currentRound = 1) {
+        let message = null;
         if (this.selectedContestantId > 0 && entries !== null) {
-            const bestEntry: Entry = first(entries.filter(e => e.contestantId === this.selectedContestantId && !e.isDQ));
-            const bestCompetitor: Entry = first(entries.filter(e => e.contestantId !== this.selectedContestantId && !e.isDQ));
 
-            const difference = bestEntry ? bestEntry.overallRelativeScore - bestCompetitor.overallRelativeScore : null;
+            if (currentRound > 3) {
+                const bestEntry: Entry = first(entries.filter(e => e.contestantId === this.selectedContestantId && !e.isDQ));
+                const bestCompetitor: Entry = first(entries.filter(e => e.contestantId !== this.selectedContestantId && !e.isDQ));
+                const shotsBack = bestEntry ? bestEntry.overallRelativeScore - bestCompetitor.overallRelativeScore : null;
 
-            if (difference === 0) {
-                shotsBack = 'Tied for lead';
-            } else if (difference > 0) {
-                shotsBack = difference + ` shot${difference > 1 ? 's' : ''} back`;
-            } else if (difference < 0) {
-                shotsBack = (difference * -1) + ' shot lead';
+                if (shotsBack === 0) {
+                    message = 'Tied for lead';
+                } else if (shotsBack > 0) {
+                    message = shotsBack + ` shot${shotsBack > 1 ? 's' : ''} back`;
+                } else if (shotsBack < 0) {
+                    message = (shotsBack * -1) + ' shot lead';
+                }
+            } else {
+                message = entries.filter(e => e.contestantId === this.selectedContestantId && !e.isDQ)
+                .map(e => e.position)
+                .reduce((c, n) => c !== null ? c + ', ' + n : n , null);
             }
         }
-        const title = shotsBack ? shotsBack + ' - ' + this.config.TOURNEY_TITLE + ' Player Pool' :
+        const title = message ? message + ' - ' + this.config.TOURNEY_TITLE + ' Player Pool' :
         this.config.TOURNEY_TITLE + ' Player Pool';
         this.titleService.setTitle(title);
     }
